@@ -7,7 +7,7 @@
  *
  **/
 
-let bitcore = require('bitcore-lib')
+let bitcore = require('bitcore-lib-btc')
 let bitcoinjs = require('bitcoinjs-lib')
 let config = require('../config')
 
@@ -131,8 +131,10 @@ exports.createRBFSegwitTransaction = function (txhex, addressReplaceMap, feeDelt
 }
 
 exports.generateNewSegwitAddress = function () {
-  let keyPair = bitcoinjs.ECPair.makeRandom()
+  //let keyPair = bitcoinjs.ECPair.makeRandom()
+  let keyPair = new bitcore.PrivateKey();
   let pubKey = keyPair.getPublicKeyBuffer()
+  
 
   let witnessScript = bitcoinjs.script.witnessPubKeyHash.output.encode(bitcoinjs.crypto.hash160(pubKey))
   let scriptPubKey = bitcoinjs.script.scriptHash.output.encode(bitcoinjs.crypto.hash160(witnessScript))
