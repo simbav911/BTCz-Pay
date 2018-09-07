@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bitcoinjs-lib": "^3.3.0",
-    "bitcore-lib": "0.15.0",
+    "bitcore-lib-btcz": "git+https://github.com/bitcoinz-wallets/bitcore-lib-btcz.git#v1.0.2",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "express": "^4.16.2",
@@ -28,6 +28,8 @@
     "sinon": "^4.1.2",
     "standard": "^8.6.0",
     "supertest": "^3.0.0",
-    "winston": "^3.0.0"
+    "winston": "^3.0.0",
+    "zcash": "git+https://github.com/renuzit/zcash.git",
+    "zmq": "^2.15.3"
   }
 }
