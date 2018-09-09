@@ -7,9 +7,9 @@
  *
  **/
 
-let bitcore = require('bitcore-lib-btc')
+let bitcore = require('bitcore-lib-btcz')
 let bitcoinjs = require('bitcoinjs-lib')
-let config = require('../config')
+// let config = require('../config')
 
 // this function and bitcore-lib are kept for backward compatibility
 // TODO: rewrite on bitcoinjs or remove completely
@@ -131,24 +131,28 @@ exports.createRBFSegwitTransaction = function (txhex, addressReplaceMap, feeDelt
 }
 
 exports.generateNewSegwitAddress = function () {
-  //let keyPair = bitcoinjs.ECPair.makeRandom()
-  let keyPair = new bitcore.PrivateKey();
-  let pubKey = keyPair.getPublicKeyBuffer()
-  
+  // let keyPair = bitcoinjs.ECPair.makeRandom()
+  // let keyPair = new bitcore.PrivateKey()
+  // let pubKey = keyPair.getPublicKeyBuffer()
 
-  let witnessScript = bitcoinjs.script.witnessPubKeyHash.output.encode(bitcoinjs.crypto.hash160(pubKey))
-  let scriptPubKey = bitcoinjs.script.scriptHash.output.encode(bitcoinjs.crypto.hash160(witnessScript))
-  let address = bitcoinjs.address.fromOutputScript(scriptPubKey)
+  // let witnessScript = bitcoinjs.script.witnessPubKeyHash.output.encode(bitcoinjs.crypto.hash160(pubKey))
+  // let scriptPubKey = bitcoinjs.script.scriptHash.output.encode(bitcoinjs.crypto.hash160(witnessScript))
+  // let address = bitcoinjs.address.fromOutputScript(scriptPubKey)
 
-  if (config.testnet) {
-    let testnet = bitcoinjs.networks.testnet
-    keyPair = bitcoinjs.ECPair.makeRandom({ network: testnet })
-    address = keyPair.getAddress()
-  }
+  // let address = keyPair.getAddress()
+  // if (config.testnet) {
+  //    let testnet = bitcoinjs.networks.testnet
+  //   keyPair = bitcoinjs.ECPair.makeRandom({ network: testnet })
+  //  address = keyPair.getAddress()
+  // }
+
+  var privateKey = new bitcore.PrivateKey()
+  var address = privateKey.toAddress().toString()
 
   return {
     'address': address,
-    'WIF': keyPair.toWIF()
+    // 'WIF': keyPair.toWIF()
+    'WIF': privateKey.toWIF()
   }
 }
 

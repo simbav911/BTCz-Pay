@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "description": "Self-hosted bitcoin payment gateway",
   "main": "cashier-btc.js",
-  "repository": "https://github.com/Overtorment/Cashier-BTC",
+  "repository": "https://github.com/MarceluCH/Cashier-BTC",
   "license": "WTFPL",
   "author": "Igor Korsakov",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bitcoinjs-lib": "^3.3.0",
-    "bitcore-lib-btcz": "git+https://github.com/bitcoinz-wallets/bitcore-lib-btcz.git#v1.0.2",
+    "bitcore-lib-btcz": "https://github.com/bitcoinz-wallets/bitcore-lib-btcz.git",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "express": "^4.16.2",
@@ -29,7 +29,7 @@
     "standard": "^8.6.0",
     "supertest": "^3.0.0",
     "winston": "^3.0.0",
-    "zcash": "git+https://github.com/renuzit/zcash.git",
+    "zcash": "https://github.com/MarcelusCH/zcash.git",
     "zmq": "^2.15.3"
   }
 }
