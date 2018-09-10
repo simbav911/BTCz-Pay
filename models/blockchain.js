@@ -32,7 +32,7 @@ function getblockchaininfo () {
 }
 
 function listunspent (address) {
-  return client.request('listunspent', [0, 9999999, [address], true])
+  return client.request('listunspent', [0, 9999999, [address]])
 }
 
 function broadcastTransaction (tx) {
