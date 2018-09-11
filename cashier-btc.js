@@ -34,28 +34,65 @@ let rp = require('request-promise')
 app.use(bodyParser.urlencoded({ extended: false })) // parse application/x-www-form-urlencoded
 app.use(bodyParser.json(null)) // parse application/json
 
-global.btcUsd = 7000 // initial
-global.btcEur = 6000
+global.btczUsd = 7000 // initial
+global.btczEur = 6000
+global.btczZar = 6000
+global.btczJpy = 6000
+global.btczChf = 6000
+global.btczRub = 6000
+global.btczCad = 6000
+global.btczGbp = 6000
+global.btczAud = 6000
 
 app.use('/qr', express.static('qr'))
 app.use(require('./controllers/api'))
 app.use(require('./controllers/website'))
 
 let updateExchangeRate = async function (pair) {
-  let json
-  try {
-    json = await rp.get({url: 'https://www.bitstamp.net/api/v2/ticker/' + pair, json: true})
-  } catch (err) {
+
+  let requestOptions = {
+    method: 'GET',
+    uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
+    qs: {
+      symbol: 'BTCZ',
+      convert: pair,
+    },
+    headers: {
+      'X-CMC_PRO_API_KEY': config.coinmarketcap_API
+    },
+    json: true,
+    gzip: true
+  };
+
+  rp(requestOptions).then(response => {
+
+    var json = JSON.stringify(response);
+    var json = JSON.parse(json);
+    logger.log('Get currency exchange rate', [pair, json.data['BTCZ'].quote[pair].price])
+
+    switch (pair) {
+      case 'AUD': global.btczCad = json.data['BTCZ'].quote[pair].price; break
+      case 'GBP': global.btczGbp = json.data['BTCZ'].quote[pair].price; break
+      case 'CAD': global.btczCad = json.data['BTCZ'].quote[pair].price; break
+      case 'RUB': global.btczRub = json.data['BTCZ'].quote[pair].price; break
+      case 'USD': global.btczUsd = json.data['BTCZ'].quote[pair].price; break
+      case 'EUR': global.btczEur = json.data['BTCZ'].quote[pair].price; break
+      case 'ZAR': global.btczZar = json.data['BTCZ'].quote[pair].price; break
+      case 'JPY': global.btczJpy = json.data['BTCZ'].quote[pair].price; break
+      case 'CHF': global.btczChf = json.data['BTCZ'].quote[pair].price; break
+    }
+
+  }).catch((err) => {
     logger.error('updateExchangeRate', err.message)
-  }
-  switch (pair) {
-    case 'btceur': global.btcEur = json.ask; break
-    case 'btcusd': global.btcUsd = json.ask; break
-  }
+  });
+
 }
 
-updateExchangeRate('btcusd').then(updateExchangeRate('btceur'))
-setInterval(() => updateExchangeRate('btcusd').then(updateExchangeRate('btceur')), 5 * 60 * 1000)
+let myArray = ['AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
+myArray.forEach(function(value){
+  updateExchangeRate(value)
+  setInterval(() => updateExchangeRate(value), config.marketrate_refresh * 60 * 1000)
+});
 
 require('./smoke-test')
 require('./deploy-design-docs') // checking design docs in Couchdb

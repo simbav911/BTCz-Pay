@@ -7,6 +7,8 @@ module.exports = {
   'bitcoind': {
     'rpc': 'http://user:pass@127.0.0.1:8332'
   },
+  'coinmarketcap_API': 'xxxxxx-xxxx-xxxx-xxxxxxxxxxxx', // The API key of the CoinMarketCap.com account
+  'marketrate_refresh': 30, // in minutes
   'small_amount_threshhold': 0.005, // amounts higher than that will require confirmed balance
   'process_unpaid_for_period': 24 * 3600 * 1000, // worker that checks status of addresses
   'process_paid_for_period': 30 * 24 * 3600 * 1000 // worker2 that sweeps temporary wallets

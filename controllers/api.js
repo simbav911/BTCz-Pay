@@ -29,11 +29,25 @@ router.get('/request_payment/:expect/:currency/:message/:seller/:customer/:callb
   let exchangeRate, btcToAsk, satoshiToAsk
 
   switch (req.params.currency) {
-    case 'USD': exchangeRate = btcUsd
+    case 'AUD': exchangeRate = btczAud
       break
-    case 'EUR': exchangeRate = btcEur
+    case 'GBP': exchangeRate = btczGbp
       break
-    case 'BTC': exchangeRate = 1
+    case 'CAD': exchangeRate = btczCad
+      break
+    case 'RUB': exchangeRate = btczRub
+      break
+    case 'USD': exchangeRate = btczUsd
+      break
+    case 'EUR': exchangeRate = btczEur
+      break
+    case 'ZAR': exchangeRate = btczZar
+      break
+    case 'JPY': exchangeRate = btczJpy
+      break
+    case 'CHF': exchangeRate = btczChf
+      break
+    case 'BTCZ': exchangeRate = 1
       break
     default:
       return res.send(JSON.stringify({'error': 'bad currency'}))
