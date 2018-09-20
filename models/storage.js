@@ -26,9 +26,9 @@ exports.saveDocumentPromise = function (body) {
   })
 }
 
-exports.getAddressPromise = function (address) {
+exports.getAddressPromise = function (_id) {
   return new Promise(function (resolve, reject) {
-    request.get(config.couchdb + '/' + address, function (error, response, body) {
+    request.get(config.couchdb + '/' + _id, function (error, response, body) {
       if (error) {
         return reject(error)
       }
@@ -95,4 +95,3 @@ exports.getPaidAdressesNewerThanPromise = function (timestamp) {
 exports.saveJobResultsPromise = function (json) {
   return rp.put(config.couchdb + '/' + json._id, { 'json': json })
 }
-

@@ -156,6 +156,10 @@ exports.generateNewSegwitAddress = function () {
   }
 }
 
+exports.isAddressValid = function (address) {
+  return bitcore.Address.isValid(address)
+}
+
 exports.URI = function (paymentInfo) {
   let uri = 'bitcoin:'
   uri += paymentInfo.address

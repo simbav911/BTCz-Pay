@@ -3,3 +3,4 @@ config.js
 qr/
 logs/
 cashier-btc.js.old
+controllers/api.js.old

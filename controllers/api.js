@@ -14,8 +14,7 @@
  *
  */
 
-/* global btcUsd */
-/* global btcEur */
+
 
 let express = require('express')
 let router = express.Router()
@@ -25,7 +24,8 @@ let storage = require('../models/storage')
 let signer = require('../models/signer')
 let logger = require('../utils/logger')
 
-router.get('/request_payment/:expect/:currency/:message/:seller/:customer/:callback_url', function (req, res) {
+// Get payment request - :seller is a address - : customer is a eMail
+router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:callback_url', function (req, res) {
   let exchangeRate, btcToAsk, satoshiToAsk
 
   switch (req.params.currency) {
@@ -71,7 +71,7 @@ router.get('/request_payment/:expect/:currency/:message/:seller/:customer/:callb
     'WIF': address.WIF,
     'address': address.address,
     'doctype': 'address',
-    '_id': address.address
+    '_id': req.id
   }
 
   let paymentInfo = {
@@ -82,10 +82,11 @@ router.get('/request_payment/:expect/:currency/:message/:seller/:customer/:callb
   }
 
   let answer = {
+    'id': req.id,
+    'address': addressData.address,
     'link': signer.URI(paymentInfo),
     'qr': config.base_url_qr + '/generate_qr/' + encodeURIComponent(signer.URI(paymentInfo)),
-    'qr_simple': config.base_url_qr + '/generate_qr/' + addressData.address,
-    'address': addressData.address
+    'qr_simple': config.base_url_qr + '/generate_qr/' + addressData.address
   };
 
   (async function () {
@@ -94,23 +95,30 @@ router.get('/request_payment/:expect/:currency/:message/:seller/:customer/:callb
 
     if (typeof responseBody.error !== 'undefined') { // seller doesnt exist
       logger.log('/request_payment', [ req.id, 'seller doesnt exist. creating...' ])
-      let address = signer.generateNewSegwitAddress()
+      let address = req.params.seller
+
+      // Check if address is valid
+      if (!(signer.isAddressValid(address))){
+        logger.error('/request_payment', [ req.id, 'seller address not valide', address ])
+        return res.send(JSON.stringify({'error': 'seller address not valide'}))
+      }
+
       let sellerData = {
-        'WIF': address.WIF,
-        'address': address.address,
+        'WIF': '',
+        'address': address,
         'timestamp': Date.now(),
-        'seller': req.params.seller,
-        '_id': req.params.seller,
+        'seller': address,
+        '_id': address,
         'doctype': 'seller'
       }
-      logger.log('/request_payment', [ req.id, 'created', req.params.seller, '(', sellerData.address, ')' ])
+      logger.log('/request_payment', [ req.id, 'seller created', req.params.seller, '(', sellerData.address, ')' ])
       await storage.saveSellerPromise(req.params.seller, sellerData)
       await blockchain.importaddress(sellerData.address)
     } else { // seller exists
-      logger.log('/request_payment', [ req.id, 'seller already exists' ])
+      logger.log('/request_payment', [ req.id, 'seller already exists', address ])
     }
 
-    logger.log('/request_payment', [ req.id, 'created address', addressData.address ])
+    logger.log('/request_payment', [ req.id, 'created payment address', addressData.address ])
     await storage.saveAddressPromise(addressData)
     await blockchain.importaddress(addressData.address)
 
@@ -121,102 +129,69 @@ router.get('/request_payment/:expect/:currency/:message/:seller/:customer/:callb
   })
 })
 
-router.get('/check_payment/:address', function (req, res) {
-  let promises = [
-    blockchain.getreceivedbyaddress(req.params.address),
-    storage.getAddressPromise(req.params.address)
-  ]
+// Check payment by the temp given address
+router.get('/api/check_payment/:_id', function (req, res) {
 
-  Promise.all(promises).then((values) => {
-    let received = values[0]
-    let addressJson = values[1]
+  let PayAddress = [storage.getAddressPromise(req.params._id)]
+  Promise.all(PayAddress).then((values) => {
+    let PayAddress = values[0].address
+    let promises = [
+      blockchain.getreceivedbyaddress(PayAddress),
+      storage.getAddressPromise(req.params._id)
+    ]
 
-    if (addressJson && addressJson.btc_to_ask && addressJson.doctype === 'address') {
-      let answer = {
-        'btc_expected': addressJson.btc_to_ask,
-        'btc_actual': received[1].result,
-        'btc_unconfirmed': received[0].result
+    Promise.all(promises).then((values) => {
+      let received = values[0]
+      let addressJson = values[1]
+
+      // Check if gateway is expired
+      if (Date.now() > (addressJson.timestamp+(config.max_payment_valid*60000))) {
+        logger.error('/check_payment', [ req.id, 'gateway expired', req.params.address ])
+        return res.send(JSON.stringify({'error': 'gateway expired'}))
       }
-      res.send(JSON.stringify(answer))
-    } else {
-      logger.error('/check_payment', [ req.id, 'storage error', JSON.stringify(addressJson) ])
-      res.send(JSON.stringify({'error': 'storage error'}))
-    }
+
+      if (addressJson && addressJson.btc_to_ask && addressJson.doctype === 'address') {
+        let answer = {
+          'btc_expected': addressJson.btc_to_ask,
+          'btc_actual': received[1].result,
+          'btc_unconfirmed': received[0].result,
+          'currency': addressJson.currency,
+          'amount': Math.round((addressJson.btc_to_ask * addressJson.exchange_rate) * 100) / 100,
+          'ask_timestamp_start' : addressJson.timestamp,
+          'ask_timestamp_stop' : addressJson.timestamp+(config.max_payment_valid*60000)
+        }
+        res.send(JSON.stringify(answer))
+      } else {
+        logger.error('/check_payment', [ req.id, 'storage error', JSON.stringify(addressJson) ])
+        res.send(JSON.stringify({'error': 'storage error'}))
+      }
+    })
+
   })
 })
 
-router.get('/payout/:seller/:amount/:currency/:address', async function (req, res) {
-  if (req.params.currency !== 'BTC') {
-    return res.send(JSON.stringify({'error': 'bad currency'}))
-  }
-
+router.get('/api/get_btcz_rate', function (req, res) {
   try {
-    let btcToPay = req.params.amount
-    let seller = await storage.getSellerPromise(req.params.seller)
-    if (seller === false || typeof seller.error !== 'undefined') {
-      return res.send(JSON.stringify({'error': 'no such seller'}))
-    }
 
-    let responses = await blockchain.listunspent(seller.address)
-    let amount = 0
-    for (const utxo of responses.result) {
-      if (utxo.confirmations >= 2) {
-        amount += utxo.amount
-      }
-    }
+    let answer = {
+      'AUD': btczAud,
+      'GBP': btczGbp,
+      'CAD': btczCad,
+      'RUB': btczRub,
+      'USD': btczUsd,
+      'EUR': btczEur,
+      'ZAR': btczZar,
+      'JPY': btczJpy,
+      'CHF': btczChf
+    };
 
-    if (amount >= btcToPay) { // balance is ok
-      let unspentOutputs = await blockchain.listunspent(seller.address)
-      logger.log('/payout', [ req.id, 'sending', btcToPay, 'from', req.params.seller, '(', seller.address, ')', 'to', req.params.address ])
-      let createTx = signer.createTransaction
-      if (seller.address[0] === '3') {
-        // assume source address is SegWit P2SH
-        createTx = signer.createSegwitTransaction
-      }
-      let tx = createTx(unspentOutputs.result, req.params.address, btcToPay, 0.0001, seller.WIF, seller.address)
-      logger.log('/payout', [ req.id, 'broadcasting', tx ])
-      let broadcastResult = await blockchain.broadcastTransaction(tx)
-      logger.log('/payout', [ req.id, 'broadcast result:', JSON.stringify(broadcastResult) ])
-      let data = {
-        'seller': req.params.seller,
-        'btc': btcToPay,
-        'tx': tx,
-        'transaction_result': broadcastResult,
-        'to_address': req.params.address,
-        'processed': 'payout_done',
-        'timestamp': Date.now(),
-        'doctype': 'payout'
-      }
-      await storage.savePayoutPromise(data)
-      res.send(JSON.stringify(broadcastResult))
-    } else {
-      logger.log('/payout', [ req.id, 'not enough balance' ])
-      return res.send({'error': 'not enough balance'})
-    }
+    logger.log('/get_btcz_rate', [ req.id, answer ])
+    res.send(JSON.stringify(answer))
+
   } catch (error) {
-    logger.error('/payout', [ req.id, error ])
+    logger.error('/api/get_btcz_rate', [ req.id, error ])
     return res.send({'error': error.message})
   }
-})
-
-router.get('/get_seller_balance/:seller', function (req, res) {
-  (async function () {
-    let seller = await storage.getSellerPromise(req.params.seller)
-    if (seller === false || typeof seller.error !== 'undefined') {
-      logger.log('/get_seller_balance', [ req.id, 'no such seller' ])
-      return res.send(JSON.stringify({'error': 'no such seller'}))
-    }
-
-    let responses = await blockchain.listunspent(seller.address)
-    let answer = 0
-    for (const utxo of responses.result) {
-      answer += utxo.amount
-    }
-    res.send(JSON.stringify(answer))
-  })().catch((error) => {
-    logger.error('/get_seller_balance', [ req.id, error ])
-    res.send(JSON.stringify({'error': error.message}))
-  })
 })
 
 module.exports = router

@@ -71,7 +71,7 @@ let updateExchangeRate = async function (pair) {
     logger.log('Get currency exchange rate', [pair, json.data['BTCZ'].quote[pair].price])
 
     switch (pair) {
-      case 'AUD': global.btczCad = json.data['BTCZ'].quote[pair].price; break
+      case 'AUD': global.btczAud = json.data['BTCZ'].quote[pair].price; break
       case 'GBP': global.btczGbp = json.data['BTCZ'].quote[pair].price; break
       case 'CAD': global.btczCad = json.data['BTCZ'].quote[pair].price; break
       case 'RUB': global.btczRub = json.data['BTCZ'].quote[pair].price; break
@@ -88,7 +88,7 @@ let updateExchangeRate = async function (pair) {
 
 }
 
-let myArray = ['AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
+let myArray = ['USD', 'EUR'] // , 'AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
 myArray.forEach(function(value){
   updateExchangeRate(value)
   setInterval(() => updateExchangeRate(value), config.marketrate_refresh * 60 * 1000)
