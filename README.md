@@ -1,12 +1,12 @@
 BTCz-Pay
 ===================
 
-Self-hosted Node.js Bitcoin payment gateway. Provides REST API (microservice).
-Process Bitcoin payments on your end, securely, with no comission.
+Self-hosted Node.js BitcoinZ payment gateway. Provides REST API (microservice).
+Process BitcoinZ payments on your end, securely, with no comission.
 
 Request payments (invoicing), check payments (whether invoice is paid), receive callbacks if payment is made.
 Aggregate funds on final (aggregational) address.
-Depends on Nodejs v8+, Bitcoin Core, Couchdb for storage.
+Depends on Nodejs v8+, BitcoinZ Core, Couchdb for storage.
 
 * Simple
 * No 3rd parties (works though Bitcoin Core node)
