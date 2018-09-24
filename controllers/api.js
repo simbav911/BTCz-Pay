@@ -23,29 +23,32 @@ let blockchain = require('../models/blockchain')
 let storage = require('../models/storage')
 let signer = require('../models/signer')
 let logger = require('../utils/logger')
+let rp = require('request-promise')
 
-// Get payment request - :seller is a address - : customer is a eMail
+// Get payment request - :seller is a address - :customer is a eMail
 router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:callback_url', function (req, res) {
   let exchangeRate, btcToAsk, satoshiToAsk
 
   switch (req.params.currency) {
-    case 'AUD': exchangeRate = btczAud
-      break
-    case 'GBP': exchangeRate = btczGbp
-      break
-    case 'CAD': exchangeRate = btczCad
-      break
-    case 'RUB': exchangeRate = btczRub
-      break
+    //case 'AUD': exchangeRate = btczAud
+    //  break
+    //case 'GBP': exchangeRate = btczGbp
+    //  break
+    //case 'CAD': exchangeRate = btczCad
+    //  break
+    //case 'RUB': exchangeRate = btczRub
+    //  break
     case 'USD': exchangeRate = btczUsd
       break
     case 'EUR': exchangeRate = btczEur
       break
-    case 'ZAR': exchangeRate = btczZar
-      break
-    case 'JPY': exchangeRate = btczJpy
-      break
+    //case 'ZAR': exchangeRate = btczZar
+    //  break
+    //case 'JPY': exchangeRate = btczJpy
+    //  break
     case 'CHF': exchangeRate = btczChf
+      break
+    case 'BTC': exchangeRate = btczBTC
       break
     case 'BTCZ': exchangeRate = 1
       break
@@ -71,13 +74,13 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:c
     'WIF': address.WIF,
     'address': address.address,
     'doctype': 'address',
+    'state': 0,
     '_id': req.id
   }
 
   let paymentInfo = {
     address: addressData.address,
     message: req.params.message,
-    label: req.params.message,
     amount: satoshiToAsk
   }
 
@@ -145,20 +148,37 @@ router.get('/api/check_payment/:_id', function (req, res) {
       let addressJson = values[1]
 
       // Check if gateway is expired
-      if (Date.now() > (addressJson.timestamp+(config.max_payment_valid*60000))) {
+      if (Date.now() > (addressJson.timestamp+(config.max_payment_valid*60000)) && addressJson.state != "5") {
         logger.error('/check_payment', [ req.id, 'gateway expired', req.params.address ])
-        return res.send(JSON.stringify({'error': 'gateway expired'}))
+        let ErrorAnswer = {
+          'error': 'gateway expired',
+          'generated': addressJson.address,
+          'btcz_expected': addressJson.btc_to_ask,
+          'btcz_actual': received[1].result,
+          'btcz_unconfirmed': received[0].result,
+          'currency': addressJson.currency,
+          'amount': Math.round((addressJson.btc_to_ask * addressJson.exchange_rate) * 100) / 100,
+          'timestamp_start' : addressJson.timestamp,
+          'timestamp_now': Date.now(),
+          'timestamp_stop' : addressJson.timestamp+(config.max_payment_valid*60000),
+          'state': addressJson.state
+        }
+        return res.send(JSON.stringify(ErrorAnswer))
       }
 
       if (addressJson && addressJson.btc_to_ask && addressJson.doctype === 'address') {
         let answer = {
-          'btc_expected': addressJson.btc_to_ask,
-          'btc_actual': received[1].result,
-          'btc_unconfirmed': received[0].result,
+          'generated': addressJson.address,
+          'btcz_expected': addressJson.btc_to_ask,
+          'btcz_actual': received[1].result,
+          'btcz_unconfirmed': received[0].result,
           'currency': addressJson.currency,
           'amount': Math.round((addressJson.btc_to_ask * addressJson.exchange_rate) * 100) / 100,
-          'ask_timestamp_start' : addressJson.timestamp,
-          'ask_timestamp_stop' : addressJson.timestamp+(config.max_payment_valid*60000)
+          'timestamp_start' : addressJson.timestamp,
+          'timestamp_now': Date.now(),
+          'timestamp_stop' : addressJson.timestamp+(config.max_payment_valid*60000),
+          'state': addressJson.state,
+          'tx': addressJson.sweep_result
         }
         res.send(JSON.stringify(answer))
       } else {
@@ -170,19 +190,81 @@ router.get('/api/check_payment/:_id', function (req, res) {
   })
 })
 
+
+// Cancel invoice
+router.get('/api/cancel/:_id', function (req, res) {
+
+  let row = [storage.getDocumentPromise(req.params._id)]
+  Promise.all(row).then((values) => {
+
+    let json = {
+      '_id': req.params._id,
+      '_rev': values[0]._rev,
+      'state': 2,
+      'timestamp': values[0].timestamp,
+      'expect': values[0].expect,
+      'currency': values[0].currency,
+      'exchange_rate': values[0].exchange_rate,
+      'btc_to_ask': values[0].btc_to_ask,
+      'message': values[0].message,
+      'seller': values[0].seller,
+      'customer': values[0].customer,
+      'callback_url': values[0].callback_url,
+      'WIF': values[0].WIF,
+      'address': values[0].address,
+      'doctype': 'address'
+
+    }
+    if ( values[0].state != "5"){storage.saveJobResultsPromise(json)}
+
+  })
+})
+
+
+// accept invoice / continue to barrecode
+router.get('/api/accept/:_id', function (req, res) {
+
+  let row = [storage.getDocumentPromise(req.params._id)]
+  Promise.all(row).then((values) => {
+
+    let json = {
+      '_id': req.params._id,
+      '_rev': values[0]._rev,
+      'state': 1,
+      'timestamp': values[0].timestamp,
+      'expect': values[0].expect,
+      'currency': values[0].currency,
+      'exchange_rate': values[0].exchange_rate,
+      'btc_to_ask': values[0].btc_to_ask,
+      'message': values[0].message,
+      'seller': values[0].seller,
+      'customer': values[0].customer,
+      'callback_url': values[0].callback_url,
+      'WIF': values[0].WIF,
+      'address': values[0].address,
+      'doctype': 'address'
+
+    }
+    storage.saveJobResultsPromise(json)
+
+  })
+})
+
+
 router.get('/api/get_btcz_rate', function (req, res) {
   try {
 
     let answer = {
-      'AUD': btczAud,
-      'GBP': btczGbp,
-      'CAD': btczCad,
-      'RUB': btczRub,
+      //'AUD': btczAud,
+      //'GBP': btczGbp,
+      //'CAD': btczCad,
+      //'RUB': btczRub,
       'USD': btczUsd,
       'EUR': btczEur,
-      'ZAR': btczZar,
-      'JPY': btczJpy,
-      'CHF': btczChf
+      //'ZAR': btczZar,
+      //'JPY': btczJpy,
+      'CHF': btczChf,
+      'BTC': btczBTC
     };
 
     logger.log('/get_btcz_rate', [ req.id, answer ])

@@ -42,9 +42,9 @@ async function processJob (rows) {
     let received = await blockchain.getreceivedbyaddress(json.address)
     logger.log('worker2.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
 
-    if (+received[1].result === +received[0].result && received[0].result > 0) { // balance is ok, need to transfer it
+    if (+received[1].result === +received[0].result && received[0].result > 0 && json.state !=5) { // balance is ok, need to transfer it
       let seller = await storage.getSellerPromise(json.seller)
-      logger.log('worker2.js', [ 'transferring', received[0].result, 'BTC (minus fee) from', json.address, 'to seller', seller.seller, '(', seller.address, ')' ])
+      logger.log('worker2.js', [ 'transferring', received[0].result, 'BTCz (minus fee) from', json.address, 'to seller', seller.seller, '(', seller.address, ')' ])
       let unspentOutputs = await blockchain.listunspent(json.address)
 
       let createTx = signer.createTransaction
@@ -58,6 +58,7 @@ async function processJob (rows) {
       let broadcastResult = await blockchain.broadcastTransaction(tx)
       logger.log('worker2.js', [ 'broadcast result:', JSON.stringify(broadcastResult) ])
 
+      json.state = 5,
       json.processed = 'paid_and_sweeped'
       json.sweep_result = json.sweep_result || {}
       json.sweep_result[Date.now()] = {

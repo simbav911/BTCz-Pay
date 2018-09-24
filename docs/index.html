@@ -1,0 +1,499 @@
+<html>
+
+  <head>
+
+      <title>BTCZ Payment Gateway API</title>
+      <meta name="Description" content="Accept BTCz(BitcoinZ) payments now with out BTCz gateway API! Use our service to create gateways and confirm transactions for your website. ">
+  		<meta name="Keywords" content="pay.btcz.app BTCz BTC Payment Gateway API Crypto Bitcoin Bitcoinz Altcoins Block Chain Cryptography ">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link rel="shortcut icon" href="/images/btc_fav-5.png" sizes="32x32" type="image/x-icon">
+      <meta name="description" content="">
+      <meta name="keywords" content="">
+      <!-- CSS:: FONTS -->
+      <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+      <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700,800" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- CSS:: BOOTSTRAP -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!-- CSS:: ANIMATION -->
+      <!-- CSS:: OWL -->
+      <link rel="stylesheet" href="css/owl.carousel.css">
+      <!-- CSS:: -->
+      <link rel="stylesheet" type="text/css" href="css/reset.css">
+      <link rel="stylesheet" type="text/css" href="css/main.css">
+      <link rel="stylesheet" type="text/css" href="css/custom.css">
+
+      <script>
+          if (!String.prototype.includes) {
+              String.prototype.includes = function(search, start) {
+                  'use strict';
+                  if (typeof start !== 'number') {
+                      start = 0;
+                  }
+
+                  if (start + search.length > this.length) {
+                      return false;
+                  } else {
+                      return this.indexOf(search, start) !== -1;
+                  }
+              };
+          }
+
+          function contact() {
+              var name = $("#c_name").val();
+              var email = $("#c_email").val();
+              var msg = $("#c_msg").val();
+              $.post('api/process.php', {
+                  f: "contact",
+                  p_email: email,
+                  p_message: msg,
+                  p_name: name
+              }, function(result) {
+                  alert(result);
+              });
+          }
+
+
+
+          function createPayGateway() {
+              var address = $("#form1_btczaddress").val();
+              var message = encodeURIComponent($("#form1_message").val());
+              var pingback = encodeURIComponent($("#form1_pingback").val());
+              var amount = $("#form1_amount").val();
+              var currency = $("#form1_currency").val();
+              var customeremail = encodeURIComponent($("#form1_customermail").val());
+
+
+              var request = new XMLHttpRequest();
+
+              request.open('GET', '/api/request_payment/'+amount+'/'+currency+'/'+message+'/'+address+'/'+customeremail+'/'+pingback, true);
+              request.onload = function () {
+
+                // Begin accessing JSON data here
+                var data = JSON.parse(this.response);
+
+                if (request.status >= 200 && request.status < 400) {
+
+
+                    if (data.error !== undefined){
+                      alert(data.error);
+                    } else {
+
+                      $("#f-about_text").css('display', 'block');
+                      $("#gID1").html(data.id);
+                      $("#gID2").html(data.id);
+
+                      //$("#gSecret").html(obj.secret);
+                      $("#gAPI").html(JSON.stringify(data, null, "\t"));
+
+
+                      $("#iFrame").attr('src', "invoice/"+data.id);
+                      $('html, body').animate({
+                          scrollTop: $("#f-about_text").offset().top
+                      }, 1000);
+                  }
+
+                } else {
+                  console.log('error');
+                  alert(result);
+                }
+              }
+
+              request.send();
+
+          }
+
+
+
+
+          function resizeIframe() {
+              var obj = document.getElementById("iFrame");
+              obj.style.height = (obj.contentWindow.document.body.scrollHeight) + 'px';
+              setTimeout('resizeIframe()', 200);
+          }
+      </script>
+
+
+
+  </head>
+
+  <body>
+       <div data-template="3" class="f-wrapper ">
+           <div class="header_topbar">
+               <div class="container">
+                   <div class="row">
+                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10 ">
+                           <div class="ht_left">
+                               <div class="clock">
+                                   <ul>
+                                       <li>UTC</li>
+                                       <li id="hours"></li>
+                                       <li id="point">:</li>
+                                       <li id="min"></li>
+                                       <li id="point-2">:</li>
+                                       <li id="sec"></li>
+                                   </ul>
+                               </div>
+                               <div class="ht_rate">
+                                   <p>
+                                       BTCz/BTC: <span id="Z_BTC"></span> BTCz/USD: <span id="Z_USD"></span> BTCz/EUR: <span id="Z_EUR"></span>
+                                   </p>
+                               </div>
+                           </div>
+                       </div>
+
+                       <!--<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2">
+                           <div class="ht_right clearfix">
+                               <div class="pull-right f-address_switcher">
+                                   <div class="f-selected_add"> <span><img class="img-responsive" alt="Eng flag" src="assets/images/flag-e.png"> <span>English</span></span>
+                                   </div>
+                                   <ul class="f-dropdown" style="display: none;">
+                                       <li data-value="f-address_01">
+                                           <img alt="Eng flag" class="img-responsive" src="assets/images/flag-e.png">English</li>
+                                   </ul>
+                               </div>
+                           </div>
+                       </div>-->
+
+                   </div>
+               </div>
+           </div>
+           <div class="f-header btc_header_home">
+               <div class="f-header_bar btc_header_bar_home">
+                   <div class="container">
+                       <div class="row">
+                           <div class="col-xs-7 col-sm-3 col-md-3 col-lg-3 f-logo" style="padding: 28px 0;">
+                               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                   <a href="/"><img class="img-responsive" width="175px" src="images/btcz_logo.png" alt=""></a>
+                               </div>
+                           </div>
+                           <div class="f-menu_toggle"> <i id="f-menu_toggle" class="fa fa-bars"></i>
+                           </div>
+                           <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 f-nav_sec">
+                               <div class="f-nav">
+                                   <nav>
+                                       <ul>
+                                           <li class="f-active"> <a href="/">Home</a>
+                                           </li>
+
+
+                                           <li class=""> <a href="#" onClick="
+     $('html, body').animate({
+       scrollTop: $('#f-api').offset().top
+     }, 1000);
+         ">API</a>
+                                           </li>
+                                           <li class=""> <a href="#" onClick="
+     $('html, body').animate({
+       scrollTop: $('#plugins').offset().top
+     }, 1000);
+         ">Plugins</a>
+                                           </li>
+                                           <li class=""> <a href="#" onClick="
+     $('html, body').animate({
+       scrollTop: $('#contactUs').offset().top
+     }, 1000);
+         ">Contact</a>
+
+
+
+                                           </li>
+
+
+                                           <li class="quote_btn"> <a target="_blank" href="https://www.mybitcoinzwallet.com/">Get a wallet</a>
+                                           </li>
+                                       </ul>
+                                   </nav>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="f-slider" style="top: 25%;">
+                   <div class="f-slide_text container">
+                       <div class="row">
+                           <div class="col-sm-6 col-md-7">
+                               <h1 style="margin-left: 10px;">BTCZ Open-source Payment Gateway</h1>
+                               <h2 style="margin-left: 10px;">&nbsp;&nbsp;- Create instant payment gateways<br>&nbsp;&nbsp;- No registration necessary<br>&nbsp;&nbsp;- No additional fees<br>&nbsp;&nbsp;- Automatic transactions </h2>
+                           </div>
+                           <div class="col-sm-6 col-md-5">
+                               <form>
+                                   <div class="form-group">
+                                       <input type="text" id="form1_btczaddress" placeholder="Receiver BTCz Address*">
+                                   </div>
+
+                                   <div class="form-group">
+                                       <textarea  type="text"  id="form1_message"  placeholder="Message" rows="5"></textarea>
+                                   </div>
+
+                                   <div class="form-group">
+                                       <input type="text" id="form1_pingback" class="form-control" placeholder="Pingback URL">
+                                   </div>
+
+                                   <div class="form-group">
+                                       <input type="text" id="form1_customermail" class="form-control" placeholder="Customer eMail">
+                                   </div>
+
+                                   <div class="form-group">
+                                       <div class="row">
+                                           <div class="col-xs-6">
+                                               <input type="text" id="form1_amount" class="form-control" placeholder="Amount*">
+                                           </div>
+                                           <div class="col-xs-6">
+                                               <select id="form1_currency">
+                                                 <option value="BTCZ">BTCZ</option>
+                                                 <option value="USD">USD</option>
+                                                 <option value="EUR">EUR</option>
+                                                 <option value="CHF">CHF</option>
+                                               </select>
+                                           </div>
+                                       </div>
+                                   </div>
+
+
+                                   <a onClick="createPayGateway();" class="btn btn-primary">Create Payment Gateway</a> <small>* required<br><br></small>
+                               </form>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <section id="f-about_text" style="display:none;">
+               <div class="f-section f-about_text" style="padding-bottom:10px;">
+                   <div class="container">
+
+                       <div class="row clearfix">
+
+                           <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
+                               <h2>Your payment gateway is live!</h2>
+
+                               <h3>API Response</h3>
+                               <pre><b id="gAPI"></b></pre><br><br>
+                               <h3>Gateway ID</h3>
+                               <pre><b id="gID1"></b></pre><br><br>
+                               <h3>Gateway URL</h3>
+                               <pre>https://pay.btcz.app/invoice/<b id="gID2"></b></pre><br><br>
+
+
+                               <br><br> This is a free service and gateways are limited to 10 active/IP.<br> Please support us by donating<br><br>
+                               <pre><b>[BTCz.in] BTCz</b>: t1NKmPAu8qSkb2L1wM7BnzmqyuovMEKZVZg
+<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ</pre>
+
+
+                           </div>
+
+                           <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
+
+                               <div class="desktop_img">
+
+
+                                   <iframe id="iFrame" width="100%" style="min-height: 725px;" frameborder="0" scrolling="no" onload="resizeIframe()"></iframe>
+
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
+
+
+
+
+           <section id="f-api" style="display:block;" style="padding-top:0px;">
+               <div class="f-section f-about_text" style="padding-top:60px;">
+                   <div class="container">
+                       <div class="row clearfix">
+                           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                               <div class="f-section_head">
+                                   <h2>API Info</h2>
+                               </div>
+                               You can use our API to accept BTCz payments on your website and verify the transaction.
+                               <br><br><br>
+                               <h4>Creating a gateway</h4>
+                               <ul>
+
+                 <br>
+                                   <li>URL:
+                                       <pre>pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:pingback_success</pre>
+                                   </li>
+                                   <li>GET Example:
+                                       <pre>https://pay.btcz.app/api/request_payment/0.01/USD/Hello/t1KhD2unS3KUjcVsANs5ySfxTVE9KTv6K4t/email%40test.test/www.google.ch<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c2b7b1a6fff0f7e4b29dabacb4adaba1a7aca3afa7ff809681b88bacb4adaba1a7f2f2f3e4b29da7bab2abb0a7fff1f2e4b29da7afa3abaeffa7baa3afb2aea782">[email&#160;protected]</a>example.com
+                                   </li>
+
+
+                                   <li>Sample Response:
+                                       <pre>{
+  "id":"c5e9631d-b107-4022-8de5-ae9f0efd03af",
+  "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
+  "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972&message=Hello",
+  "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DHello",
+  "qr_simple":"http://localhost:2222/generate_qr/t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm"
+}</pre>
+                                   </li>
+
+                                   <li>Invoice URL Example:
+                                       <pre>https://pay.btcz.app/invoice/c5e9631d-b107-4022-8de5-ae9f0efd03af</pre>
+                                   </li>
+
+                               </ul>
+                               <br>
+                               <h4>Fetching Data from Existing Gateway</h4>
+                               <ul>
+
+
+                                   <li>URL:
+                                       <pre>https://pay.btcz.app/api/check_payment/:_id</pre>
+                                   </li>
+                                   <li>GET Example:
+                                       <pre>https://pay.btcz.app/api/check_payment/c5e9631d-b107-4022-8de5-ae9f0efd03af</pre>
+                                   </li>
+                                   <li>Sample Response:
+                                       <pre>{
+  "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
+  "btcz_expected":14.77818972,
+  "btcz_actual":0,
+  "btcz_unconfirmed":0,
+  "currency":"USD",
+  "amount":0.01,
+  "timestamp_start":1537815608394,
+  "timestamp_now":1537816142575,
+  "timestamp_stop":1537816808394,
+  "state":0
+}</pre>
+                                   </li>
+                               </ul>
+                               <br>
+
+
+
+
+                               <br>
+                               <h4>Other Information</h4>
+                               <ul>
+                                   <li>States explained (you will only receive a pingback with states 2 and 5):
+                                       <ul>
+                                           <li>0: Awaiting payor to continue</li>
+                                           <li>1: Awaiting payment</li>
+                                           <li>2: Gateway expired</li>
+                                           <li>5: Payment & Pingback completed</li>
+                                       </ul>
+                                   </li>
+                                   <li>Standard tx fee: 0.0001</li>
+                                   <li>TX confirmation count: 2</li>
+
+                               </ul>
+                               <br><br> This is a <b>free</b> and <b>OPEN SOURCE</b> service, please support us by donating<br><br>
+               <pre><b>[pay.btcz.app] BTCz</b>: t1NKmPAu8qSkb2L1wM7BnzmqyuovMEKZVZg
+<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ</pre>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
+
+           <div id="plugins" class="container f-section f-contact_var" style="padding-top:0px;">
+               <div>
+                   <div class="resp-tabs-container hor_1">
+                       <div class="f-tab_single">
+                           <div class="clearfix row">
+                               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
+                                   <div class="f-section_head">
+                                       <h2>Commerce Plugins</h2>
+                                   </div>
+                 <ul>
+                                   <li>
+                                     Comming soon...
+                                   </li>
+                  </ul>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <div id="contactUs" class="container f-section f-contact_var" style="padding-top:0px;">
+               <div>
+                   <div class="resp-tabs-container hor_1">
+                       <div class="f-tab_single">
+                           <div class="clearfix row">
+                               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
+                                   <div class="f-section_head">
+                                       <h2>Contact us</h2>
+                                   </div>
+                                   <div class="f-contact_in">
+
+
+
+                                       <br><br><br><br>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+
+           <footer>
+               <div class="f-footer_strip">
+                   <div class="container">
+                       <div class="row">
+                           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 pull-right f-footer_nav">
+                               <nav>
+                                   <ul>
+                                       <li class="f-active f-has_child"> <a href="/">Home</a>
+                                       </li>
+
+
+                                       <li class=""> <a href="#" onClick="
+     $('html, body').animate({
+       scrollTop: $('#f-api').offset().top
+     }, 1000);
+         ">API</a>
+                                       </li>
+                                           <li class=""> <a href="#" onClick="
+     $('html, body').animate({
+       scrollTop: $('#plugins').offset().top
+     }, 1000);
+         ">Plugins</a>
+                                           </li>
+                                       <li class=""> <a href="#" onClick="
+     $('html, body').animate({
+       scrollTop: $('#contactUs').offset().top
+     }, 1000);
+         ">Contact</a>
+                                       </li>
+                                   </ul>
+                               </nav>
+                           </div>
+                           <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                               <p>Copyright pay.btcz.app ©
+                                   2018. All right reserved
+
+                 </p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </footer>
+       </div>
+       <div class="f-back_to_top" id="f-back_to_top"> <i class="material-icons">arrow_upward</i>
+       </div>
+       <!-- JQUERY:: JQUERY.JS -->
+       <!--<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>-->
+       <script type="text/javascript" src="js/jquery.min.js"></script>
+       <!-- JQUERY:: COOKIE.JS -->
+       <script type="text/javascript" src="js/cookie.js"></script>
+       <!-- JQUERY:: OWL.JS -->
+       <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+       <!-- JQUERY:: COUNTER.JS -->
+       <script type="text/javascript" src="js/jquery.counter.js"></script>
+       <!-- JQUERY:: CUSTOM.JS -->
+       <script type="text/javascript" src="js/custom.js"></script>
+   </body>
+
+
+
+</html>

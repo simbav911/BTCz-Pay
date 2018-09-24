@@ -43,8 +43,13 @@ global.btczRub = 6000
 global.btczCad = 6000
 global.btczGbp = 6000
 global.btczAud = 6000
+global.btczBTC = 6000
 
 app.use('/qr', express.static('qr'))
+app.use('/css', express.static('docs/css'))
+app.use('/js', express.static('docs/js'))
+app.use('/images', express.static('docs/images'))
+
 app.use(require('./controllers/api'))
 app.use(require('./controllers/website'))
 
@@ -80,6 +85,7 @@ let updateExchangeRate = async function (pair) {
       case 'ZAR': global.btczZar = json.data['BTCZ'].quote[pair].price; break
       case 'JPY': global.btczJpy = json.data['BTCZ'].quote[pair].price; break
       case 'CHF': global.btczChf = json.data['BTCZ'].quote[pair].price; break
+      case 'BTC': global.btczBTC = json.data['BTCZ'].quote[pair].price; break
     }
 
   }).catch((err) => {
@@ -88,7 +94,7 @@ let updateExchangeRate = async function (pair) {
 
 }
 
-let myArray = ['USD', 'EUR'] // , 'AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
+let myArray = ['USD', 'EUR', 'BTC', 'CHF'] // 'BTC', 'AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
 myArray.forEach(function(value){
   updateExchangeRate(value)
   setInterval(() => updateExchangeRate(value), config.marketrate_refresh * 60 * 1000)

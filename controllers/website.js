@@ -12,6 +12,8 @@ let router = express.Router()
 let qr = require('qr-image')
 let crypto = require('crypto')
 let fs = require('fs')
+let path = require('path');
+let app = express();
 
 router.get('/generate_qr/:text', function (req, res) {
   let filename
@@ -30,8 +32,13 @@ router.get('/generate_qr/:text', function (req, res) {
 })
 
 router.get('/', function (req, res) {
-  return res.status(200).send('Cashier-BTC reporting for duty')
+  return res.sendFile(path.join(__dirname + '/../docs/index.html'));
 })
+
+router.get('/invoice/:text', function (req, res) {
+  return res.sendFile(path.join(__dirname + '/../docs/invoice.html'));
+})
+
 
 router.use(function (req, res) {
   res.status(404).send('404')

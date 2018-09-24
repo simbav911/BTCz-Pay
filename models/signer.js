@@ -161,7 +161,7 @@ exports.isAddressValid = function (address) {
 }
 
 exports.URI = function (paymentInfo) {
-  let uri = 'bitcoin:'
+  let uri = 'bitcoinz:'
   uri += paymentInfo.address
   uri += '?amount='
   uri += parseFloat((paymentInfo.amount / 100000000))
