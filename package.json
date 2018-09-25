@@ -1,11 +1,11 @@
 {
-  "name": "Cashier-BTC",
-  "version": "2.1.0",
-  "description": "Self-hosted bitcoin payment gateway",
+  "name": "BTCz-Pay",
+  "version": "0.1.0",
+  "description": "Self-hosted BitcoinZ payment gateway",
   "main": "cashier-btc.js",
-  "repository": "https://github.com/MarceluCH/Cashier-BTC",
-  "license": "WTFPL",
-  "author": "Igor Korsakov",
+  "repository": "https://github.com/MarceluCH/BTCz-Pay",
+  "license": "MIT",
+  "author": "Marcelus",
   "scripts": {
     "postinstall": "mkdir qr && chmod 777 qr",
     "test": "nodejs ./node_modules/.bin/standard && nodejs ./node_modules/.bin/mocha --exit tests/*",
