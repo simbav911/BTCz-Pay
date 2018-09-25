@@ -70,30 +70,45 @@ TBD
 API
 ===
 
-### GET /request_payment/:expect/:currency/:message/:seller/:customer/:callback_url
+### GET /api/request_payment/:expect/:currency/:message/:seller/:customer/:callback_url
 
 
-Create a request to pay, supported currencies: BTC, USD, EUR. Non-btc currency is converted to btc using current rate from bitstamp.com.
+Create a request to pay, supported currencies: BTCZ, USD, EUR, CHF. Non-btcz currency is converted to btcz using current rate from conmarketcap.com. 
+
 Returns a json document with QR code to be displayed to the payer, and a unique address for that particular payment (you can use it as invoice id).
-Message will be displayed to the client (for example, you can write "Payment for goods"). Seller and customer - system field, here you can
-write the application that created the request and the payer id. Keep Seller field private, it is also used for payouts.
-Callback_url will be requested once the invoice is paid.
 
-	Example
+Message will be displayed to the client (for example, you can write "Payment for goods"). Seller and customer - system field, here you can write the application that created the request and the payer id. 
 
-		http://localhost:2222/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/treehorn/lebowski/http%3A%2F%2Fgoogle.com%2F
+Keep Seller field private, it is also used for payouts.Callback_url will be requested once the invoice is paid.
 
-### GET /check_payment/:_id
+```
+Example
+http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/treehorn/lebowski/http%3A%2F%2Fgoogle.com%2F
+```
+
+```
+Result:
+{
+  "id":"c5e9631d-b107-4022-8de5-ae9f0efd03af",
+  "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
+  "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972&message=Hello",
+  "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DHello",
+  "qr_simple":"http://localhost:2222/generate_qr/t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm"
+}
+```
+
+### GET /api/check_payment/:_id
 
 
 Check payment by a unique invoice number in the "request_payment" call.
 
-
-	Example
-
-		http://localhost:2222/check_payment/f22c44cb-e26a-4022-864f-00f0d523d48a
+```
+Example
+http://localhost:2222/api/check_payment/f22c44cb-e26a-4022-864f-00f0d523d48a
+```
 
 ```
+Result:
 {
   "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "btcz_expected":14.77818972,
@@ -106,6 +121,15 @@ Check payment by a unique invoice number in the "request_payment" call.
   "timestamp_stop":1537816808394,
   "state":0
 }
+```
+
+### GET /invoice/:_id
+
+Open the invoice with Qr code.
+
+```
+Example
+http://localhost:2222/invoice/f22c44cb-e26a-4022-864f-00f0d523d48a
 ```
 
 
