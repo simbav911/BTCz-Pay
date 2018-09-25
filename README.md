@@ -31,13 +31,14 @@ $ cp config.js.dev config.js
 Edit `config.js`:
 
 * Point it to a new Couchdb database
-* Point it to a Bitcoin Core RPC server
+* Point it to a BitcoinZ Core RPC server
+* Update coinmarketcap API key
 
 Tests
 -----
 
 ```
-$ npm test !! To update !!
+Tests in progress
 ```
 
 Running
@@ -51,7 +52,6 @@ $ nodejs worker2.js
 
 Open [http://localhost:2222](http://localhost:2222) in browser, you should see the website sample.
 That's it, ready to use.
-Use tools like `supervisord` or `foreverjs` to keep it running.
 
 License
 -------
@@ -93,6 +93,6 @@ Check payment by a unique invoice number in the "request_payment" call.
 
 	Example
 
-		http://localhost:2222/check_payment/16FsTPe5JG8yj1P31AqXrMGzu7iAet7NTL
+		http://localhost:2222/check_payment/f22c44cb-e26a-4022-864f-00f0d523d48a
 
 
