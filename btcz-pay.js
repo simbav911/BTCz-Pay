@@ -103,7 +103,7 @@ myArray.forEach(function(value){
 require('./smoke-test')
 require('./deploy-design-docs') // checking design docs in Couchdb
 
-let server = app.listen(config.port, function () {
+let server = app.listen(config.port, '127.0.0.1', function () {
   logger.log('BOOTING UP', ['Listening on port %d', config.port])
 })
 
