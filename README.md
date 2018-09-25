@@ -6,14 +6,14 @@ Process BitcoinZ payments on your end, securely, with no comission.
 
 Request payments (invoicing), check payments (whether invoice is paid), receive callbacks if payment is made.
 Aggregate funds on final (aggregational) address.
-Depends on Nodejs v8+, BitcoinZ Core, Couchdb for storage.
+Depends on Nodejs v8+, BitcoinZ Core, Couchdb for storage and coinmarket.com API for the currency's.
 
 * Simple
-* No 3rd parties (works though Bitcoin Core node)
 * Transactions are signed locally. No private keys leak
-* Battle-tested in production
-* SegWit compatible
 
+Caution
+------------
+This version is a "beta" being tested. Use in production is not recommended. We disclaim all resposability in case of loss of funds related to the use of this software.
 
 Installation
 ------------
@@ -26,6 +26,7 @@ $ cp config.js.dev config.js
 
 * Install [bitcoinz-insight-patched](BITCOIN-CORE-INSTALL.md)
 * Install Couchdb (or use [https://cloudant.com](https://cloudant.com))
+* Need a coinmarketcap.com account.
 
 Edit `config.js`:
 
@@ -55,7 +56,7 @@ Use tools like `supervisord` or `foreverjs` to keep it running.
 License
 -------
 
-[WTFPL](http://www.wtfpl.net/txt/copying/)
+MIT
 
 Author
 ------
@@ -66,19 +67,7 @@ Marcelus
 TODO
 ----
 
-* [x] ~~Get rid of Chain and leave Bitcore only~~
-* [x] ~~Add options to work through bitcoind and other bitcoin network endpoints~~
-* [x] ~~Add tests~~
-* [x] ~~Better abstractioning (add more abstraction layers)~~
-* [x] ~~CI~~
-* [ ] Better logging & error handling
-* [ ] Stats
-* [ ] Better tests
-* [x] ~~Ditch bitcore-lib in favor of bitcoinjs-lib~~
-* [x] ~~SegWit~~
-* [ ] Flexible (user-defined?) fees
-* [ ] BigNumber lib for all numbers handling
-
+TBD
 
 API
 ===
@@ -96,10 +85,10 @@ Callback_url will be requested once the invoice is paid.
 
 		http://localhost:2222/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/treehorn/lebowski/http%3A%2F%2Fgoogle.com%2F
 
-### GET /check_payment/:address
+### GET /check_payment/:_id
 
 
-Check payment by a unique address received in the "request_payment" call.
+Check payment by a unique invoice number in the "request_payment" call.
 
 
 	Example
