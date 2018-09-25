@@ -8,8 +8,6 @@ Request payments (invoicing), check payments (whether invoice is paid), receive 
 Aggregate funds on final (aggregational) address.
 Depends on Nodejs v8+, BitcoinZ Core, Couchdb for storage and coinmarket.com API for the currency's.
 
-* Simple
-* Transactions are signed locally. No private keys leak
 
 Caution
 ------------
@@ -94,5 +92,20 @@ Check payment by a unique invoice number in the "request_payment" call.
 	Example
 
 		http://localhost:2222/check_payment/f22c44cb-e26a-4022-864f-00f0d523d48a
+
+```
+{
+  "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
+  "btcz_expected":14.77818972,
+  "btcz_actual":0,
+  "btcz_unconfirmed":0,
+  "currency":"USD",
+  "amount":0.01,
+  "timestamp_start":1537815608394,
+  "timestamp_now":1537816142575,
+  "timestamp_stop":1537816808394,
+  "state":0
+}
+```
 
 
