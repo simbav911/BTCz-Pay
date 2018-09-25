@@ -1,4 +1,4 @@
-BTCz-Pay
+BTCz-Pay (v0.1.0)
 ===================
 
 Self-hosted Node.js BitcoinZ payment gateway. Provides REST API (microservice).
