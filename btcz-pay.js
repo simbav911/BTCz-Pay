@@ -19,9 +19,6 @@ morgan.token('id', function getId (req) {
 
 let app = express()
 
-app.config(['$locationProvider', function($locationProvider) {
-  $locationProvider.hashPrefix('');
-}]);
 
 app.use(function (req, res, next) {
   req.id = uuid.v4()
