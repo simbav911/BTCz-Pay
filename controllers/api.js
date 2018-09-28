@@ -70,7 +70,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
     'message': req.params.message,
     'seller': req.params.seller,
     'customer': req.params.customer,
-    'callback_url': decodeURIComponent(req.params.pingback),
+    'callback_url': decodeURIComponent(decodeURIComponent(req.params.pingback)),
     'WIF': address.WIF,
     'address': address.address,
     'doctype': 'address',
