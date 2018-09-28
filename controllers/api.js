@@ -26,7 +26,7 @@ let logger = require('../utils/logger')
 let rp = require('request-promise')
 
 // Get payment request - :seller is a address - :customer is a eMail
-router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:callback_url*', function (req, res) {
+router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/*', function (req, res) {
   let exchangeRate, btcToAsk, satoshiToAsk
 
   switch (req.params.currency) {
@@ -70,7 +70,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:c
     'message': req.params.message,
     'seller': req.params.seller,
     'customer': req.params.customer,
-    'callback_url': decodeURIComponent(req.params.callback_url),
+    'callback_url': decodeURIComponent(req.params[5]),
     'WIF': address.WIF,
     'address': address.address,
     'doctype': 'address',
