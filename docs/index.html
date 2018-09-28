@@ -59,7 +59,7 @@
           function createPayGateway() {
               var address = $("#form1_btczaddress").val();
               var message = encodeURIComponent($("#form1_message").val());
-              var pingback = encodeURIComponent($("#form1_pingback").val());
+              var pingback = encodeURIComponent(encodeURIComponent($("#form1_pingback").val()));
               var amount = $("#form1_amount").val();
               var currency = $("#form1_currency").val();
               var customeremail = encodeURIComponent($("#form1_customermail").val());
