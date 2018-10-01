@@ -6,8 +6,7 @@
 * https://github.com/MarcelusCH/BTCz-Pay
 *
 **/
- *
- **/
+
 
 let express = require('express')
 let router = express.Router()
