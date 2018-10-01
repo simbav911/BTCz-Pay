@@ -50,8 +50,8 @@ async function processJob (rows) {
         json.paid_on = Date.now()
         await storage.saveJobResultsPromise(json)
         logger.log('worker.js', 'firing callback: ' + json.callback_url)
-        let uriresult = await rp({ uri: json.callback_url, timeout: 10 * 1000 })
-        logger.log('worker.js', 'callback result: ' + uriresult)
+        await rp({ uri: json.callback_url, timeout: 10 * 1000 })
+        //logger.log('worker.js', 'callback result: ' + uriresult)
         // marked as paid and fired a callback. why not forward funds instantly?
         // because in case of zero-conf accepted balance we wound need to wait for a couple of
         // confirmations till we can forward funds
