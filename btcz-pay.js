@@ -6,8 +6,7 @@
 * https://github.com/MarcelusCH/BTCz-Pay
 *
 **/
- *
- **/
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 let express = require('express')
