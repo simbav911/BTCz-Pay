@@ -231,7 +231,7 @@
                       $("#stage2").css('display', 'none');
                       $("#expired").css('display', 'block');
                       $("#completed").css('display', 'none');
-                      if (data.err_callback_url) {
+                      if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
                               window.top.location.href = data.err_callback_url;
                           }, 3000);
