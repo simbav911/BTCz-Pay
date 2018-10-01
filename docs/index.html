@@ -330,6 +330,10 @@
                                    <li>GET Example:
                                        <pre>https://pay.btcz.app/api/request_payment/1/BTCZ/Hello/t1KhD2unS3KUjcVsANs5ySfxTVE9KTv6K4t/email%40test.test/http%253A%252F%252Fmysite.com%253A2222%252Fapi%252Ftest/http%253A%252F%252Fwww.worldartstamps.com/http%253A%252F%252Fbtcz.app</pre>
                                    </li>
+                                   <li>
+                                      <b>Issue note: </b> Due to a API router issue, the 3 pinback URL's have to be encoded 2 time :
+                                      <pre>encodeURIComponent(encodeURIComponent('https://google.com'))</pre>
+                                   </li>
 
 
                                    <li>Sample Response:
