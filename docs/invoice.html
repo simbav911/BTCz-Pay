@@ -281,7 +281,7 @@
                       $("#infoTop").html(newInfo);
 
 
-                      if (data.success_callback_url) {
+                      if (data.success_callback_url && window.top.location.href != data.success_callback_url) {
                           setTimeout(function() {
                               window.top.location.href = data.success_callback_url;
                           }, 3000);
