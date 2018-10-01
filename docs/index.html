@@ -40,39 +40,48 @@
               };
           }
 
-          function contact() {
-              var name = $("#c_name").val();
-              var email = $("#c_email").val();
-              var msg = $("#c_msg").val();
-              $.post('api/process.php', {
-                  f: "contact",
-                  p_email: email,
-                  p_message: msg,
-                  p_name: name
-              }, function(result) {
-                  alert(result);
-              });
-          }
 
 
 
           function createPayGateway() {
               var address = $("#form1_btczaddress").val();
-              var message = encodeURIComponent($("#form1_message").val());
+              var message = encodeURIComponent(encodeURIComponent($("#form1_message").val()));
               var pingback = encodeURIComponent(encodeURIComponent($("#form1_pingback").val()));
               var amount = $("#form1_amount").val();
               var currency = $("#form1_currency").val();
               var customeremail = encodeURIComponent($("#form1_customermail").val());
 
+              // Check required field
+              if(address==''){
+                alert('Address field empty.');
+                return;
+              }
+              if(amount==''){
+                alert('Amount field empty.')
+                return;
+              }
+
+              // Substitute def.
+              if(message==''){
+                message='empty';
+              }
+              if(pingback==''){
+                pingback=encodeURIComponent(encodeURIComponent('https://google.com'));
+              }
+              if(customeremail==''){
+                customeremail=encodeURIComponent('test.test@.test');
+              }
+
+              var cliPingback_succ = pingback;
+              var cliPingback_err = pingback;
 
               var request = new XMLHttpRequest();
 
-              request.open('GET', '/api/request_payment/'+amount+'/'+currency+'/'+message+'/'+address+'/'+customeremail+'/'+pingback, true);
+              request.open('GET', '/api/request_payment/'+amount+'/'+currency+'/'+message+'/'+address+'/'+customeremail+'/'+pingback+'/'+cliPingback_succ+'/'+cliPingback_err, true);
               request.onload = function () {
 
                 // Begin accessing JSON data here
                 var data = JSON.parse(this.response);
-
                 if (request.status >= 200 && request.status < 400) {
 
 
@@ -316,10 +325,10 @@
 
                  <br>
                                    <li>URL:
-                                       <pre>pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:pingback_success</pre>
+                                       <pre>https://pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:srvPingback/:cliPingbackSuccess/:cliPingbackError</pre>
                                    </li>
                                    <li>GET Example:
-                                       <pre>https://pay.btcz.app/api/request_payment/0.01/USD/Hello/t1KhD2unS3KUjcVsANs5ySfxTVE9KTv6K4t/email%40test.test/www.google.ch<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c2b7b1a6fff0f7e4b29dabacb4adaba1a7aca3afa7ff809681b88bacb4adaba1a7f2f2f3e4b29da7bab2abb0a7fff1f2e4b29da7afa3abaeffa7baa3afb2aea782">[email&#160;protected]</a>example.com
+                                       <pre>https://pay.btcz.app/api/request_payment/1/BTCZ/Hello/t1KhD2unS3KUjcVsANs5ySfxTVE9KTv6K4t/email%40test.test/http%253A%252F%252Fmysite.com%253A2222%252Fapi%252Ftest/http%253A%252F%252Fwww.worldartstamps.com/http%253A%252F%252Fbtcz.app</pre>
                                    </li>
 
 
@@ -360,7 +369,9 @@
   "timestamp_start":1537815608394,
   "timestamp_now":1537816142575,
   "timestamp_stop":1537816808394,
-  "state":0
+  "state":0,
+  [optional] "successURL":"https://mysite_or_IP/result/?Hello=1",
+  [optional] "errURL":"https://mysite_or_IP/result/?Hello=0"
 }</pre>
                                    </li>
                                </ul>
@@ -372,7 +383,7 @@
                                <br>
                                <h4>Other Information</h4>
                                <ul>
-                                   <li>States explained (you will only receive a pingback with states 2 and 5):
+                                   <li>States explained (you will only receive a pingback with states 2-errURL and 5-successURL):
                                        <ul>
                                            <li>0: Awaiting payor to continue</li>
                                            <li>1: Awaiting payment</li>
@@ -382,6 +393,8 @@
                                    </li>
                                    <li>Standard tx fee: 0.0001</li>
                                    <li>TX confirmation count: 2</li>
+                                   <li>State 5 execute the :srvPingback URL (on server side)</li>
+
 
                                </ul>
                                <br><br> This is a <b>free</b> and <b>OPEN SOURCE</b> service, please support us by donating<br><br>

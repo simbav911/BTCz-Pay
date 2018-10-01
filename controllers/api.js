@@ -1,16 +1,15 @@
 /**
- * Cashier-BTC
+ * BTCz-Pay
  * -----------
- * Self-hosted bitcoin payment gateway
+ * Self-hosted bitcoinZ payment gateway
  *
- * License: WTFPL
- * Author: Igor Korsakov
+ * https://github.com/MarcelusCH/BTCz-Pay
  * */
 
 /**
  *
- * Handles all bitcoin payment gateway API calls
- * I.e. all calls responsible for invoicing and paying in BTC only
+ * Handles all bitcoinZ payment gateway API calls
+ * I.e. all calls responsible for invoicing and paying in BTCz
  *
  */
 
@@ -26,7 +25,7 @@ let logger = require('../utils/logger')
 let rp = require('request-promise')
 
 // Get payment request - :seller is a address - :customer is a eMail
-router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:pingback', function (req, res) {
+router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:pingback/:cliPingbackSuccess/:cliPingbackError', function (req, res) {
   let exchangeRate, btcToAsk, satoshiToAsk
 
   switch (req.params.currency) {
@@ -71,6 +70,8 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
     'seller': req.params.seller,
     'customer': req.params.customer,
     'callback_url': decodeURIComponent(decodeURIComponent(req.params.pingback)),
+    'success_callback_url': decodeURIComponent(decodeURIComponent(req.params.cliPingbackSuccess)),
+    'err_callback_url': decodeURIComponent(decodeURIComponent(req.params.cliPingbackError)),
     'WIF': address.WIF,
     'address': address.address,
     'doctype': 'address',
@@ -91,6 +92,8 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
     'qr': config.base_url_qr + '/generate_qr/' + encodeURIComponent(signer.URI(paymentInfo)),
     'qr_simple': config.base_url_qr + '/generate_qr/' + addressData.address
   };
+
+
 
   (async function () {
     logger.log('/request_payment', [ req.id, 'checking seller existance...' ])
@@ -161,7 +164,8 @@ router.get('/api/check_payment/:_id', function (req, res) {
           'timestamp_start' : addressJson.timestamp,
           'timestamp_now': Date.now(),
           'timestamp_stop' : addressJson.timestamp+(config.max_payment_valid*60000),
-          'state': addressJson.state
+          'state': addressJson.state,
+          'err_callback_url': addressJson.err_callback_url
         }
         return res.send(JSON.stringify(ErrorAnswer))
       }
@@ -180,6 +184,22 @@ router.get('/api/check_payment/:_id', function (req, res) {
           'state': addressJson.state,
           'tx': addressJson.sweep_result
         }
+        if (addressJson.state==5) {
+          answer = {
+            'generated': addressJson.address,
+            'btcz_expected': addressJson.btc_to_ask,
+            'btcz_actual': received[1].result,
+            'btcz_unconfirmed': received[0].result,
+            'currency': addressJson.currency,
+            'amount': Math.round((addressJson.btc_to_ask * addressJson.exchange_rate) * 100) / 100,
+            'timestamp_start' : addressJson.timestamp,
+            'timestamp_now': Date.now(),
+            'timestamp_stop' : addressJson.timestamp+(config.max_payment_valid*60000),
+            'state': addressJson.state,
+            'tx': addressJson.sweep_result,
+            'success_callback_url': addressJson.success_callback_url
+          }
+        } 
         res.send(JSON.stringify(answer))
       } else {
         logger.error('/check_payment', [ req.id, 'storage error', JSON.stringify(addressJson) ])
@@ -210,6 +230,8 @@ router.get('/api/cancel/:_id', function (req, res) {
       'seller': values[0].seller,
       'customer': values[0].customer,
       'callback_url': values[0].callback_url,
+      'success_callback_url': values[0].success_callback_url,
+      'err_callback_url': values[0].err_callback_url,
       'WIF': values[0].WIF,
       'address': values[0].address,
       'doctype': 'address'
@@ -240,6 +262,8 @@ router.get('/api/accept/:_id', function (req, res) {
       'seller': values[0].seller,
       'customer': values[0].customer,
       'callback_url': values[0].callback_url,
+      'success_callback_url': values[0].success_callback_url,
+      'err_callback_url': values[0].err_callback_url,
       'WIF': values[0].WIF,
       'address': values[0].address,
       'doctype': 'address'

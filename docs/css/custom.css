@@ -254,6 +254,9 @@ a.button-collapse.top-nav {
 
   .f-section {
     padding: 40px 0 60px; }
+    
+  .f-section_head {
+    padding-top: 200px; }
 
   .f-history_years {
     padding: 0 15px; }
@@ -440,7 +443,7 @@ footer .f-section_head h2::before {
 
 /*.f-header .f-nav li:hover > a {
   color: #fd9410; }*/
-  
+
 
 .f-special_offer .f-offer_text a {
   color: #1e82fe; }

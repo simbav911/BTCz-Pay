@@ -1,14 +1,14 @@
 /**
- * Cashier-BTC
+ * BTCz-Pay
  * -----------
- * Self-hosted bitcoin payment gateway
+ * Self-hosted bitcoinZ payment gateway
  *
- * https://github.com/Overtorment/Cashier-BTC
+ * https://github.com/MarcelusCH/BTCz-Pay
  *
  **/
 
 /**
- * worker iterates through all paid addresses (which are actually hot wallets),
+ * worker.js iterates through all paid addresses (which are actually hot wallets),
  * and sweeps (forwards funds) to seller final (aggregational) wallet
  *
  */
@@ -33,42 +33,48 @@ require('./smoke-test')
 })()
 
 async function processJob (rows) {
-  rows = rows || {}
-  rows.rows = rows.rows || []
+  try {
 
-  for (const row of rows.rows) {
-    let json = row.doc
+    rows = rows || {}
+    rows.rows = rows.rows || []
 
-    let received = await blockchain.getreceivedbyaddress(json.address)
-    logger.log('worker2.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
+    for (const row of rows.rows) {
+      let json = row.doc
 
-    if (+received[1].result === +received[0].result && received[0].result > 0 && json.state !=5) { // balance is ok, need to transfer it
-      let seller = await storage.getSellerPromise(json.seller)
-      logger.log('worker2.js', [ 'transferring', received[0].result, 'BTCz (minus fee) from', json.address, 'to seller', seller.seller, '(', seller.address, ')' ])
-      let unspentOutputs = await blockchain.listunspent(json.address)
+      let received = await blockchain.getreceivedbyaddress(json.address)
+      logger.log('worker2.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
 
-      let createTx = signer.createTransaction
-      if (json.address[0] === '3') {
-        // assume source address is SegWit P2SH
-        // pretty safe to assume that since we generate those addresses
-        createTx = signer.createSegwitTransaction
+      if (+received[1].result === +received[0].result && received[0].result > 0 && json.state !=5 && json.state !=2) { // balance is ok (paid), need to transfer it
+        let seller = await storage.getSellerPromise(json.seller)
+        logger.log('worker2.js', [ 'transferring', received[0].result, 'BTCz (minus fee) from', json.address, 'to seller', seller.seller, '(', seller.address, ')' ])
+        let unspentOutputs = await blockchain.listunspent(json.address)
+
+        let createTx = signer.createTransaction
+        if (json.address[0] === '3') {
+          // assume source address is SegWit P2SH
+          // pretty safe to assume that since we generate those addresses
+          createTx = signer.createSegwitTransaction
+        }
+        let tx = createTx(unspentOutputs.result, seller.address, received[0].result, 0.0001, json.WIF)
+        logger.log('worker2.js', [ 'broadcasting', tx ])
+        let broadcastResult = await blockchain.broadcastTransaction(tx)
+        logger.log('worker2.js', [ 'broadcast result:', JSON.stringify(broadcastResult) ])
+
+        json.state = 5,
+        json.processed = 'paid_and_sweeped'
+        json.sweep_result = json.sweep_result || {}
+        json.sweep_result[Date.now()] = {
+          'tx': tx,
+          'broadcast': broadcastResult
+        }
+
+        await storage.saveJobResultsPromise(json)
+      } else {
+        logger.log('worker2.js', 'balance is not ok, skip')
       }
-      let tx = createTx(unspentOutputs.result, seller.address, received[0].result, 0.0001, json.WIF)
-      logger.log('worker2.js', [ 'broadcasting', tx ])
-      let broadcastResult = await blockchain.broadcastTransaction(tx)
-      logger.log('worker2.js', [ 'broadcast result:', JSON.stringify(broadcastResult) ])
-
-      json.state = 5,
-      json.processed = 'paid_and_sweeped'
-      json.sweep_result = json.sweep_result || {}
-      json.sweep_result[Date.now()] = {
-        'tx': tx,
-        'broadcast': broadcastResult
-      }
-
-      await storage.saveJobResultsPromise(json)
-    } else {
-      logger.log('worker2.js', 'balance is not ok, skip')
     }
+
+  } catch (error) {
+    logger.error('worker2.js', [ error ])
   }
 }

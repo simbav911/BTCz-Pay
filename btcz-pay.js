@@ -1,9 +1,11 @@
 /**
- * Cashier-BTC
- * -----------
- * Self-hosted bitcoin payment gateway
- *
- * https://github.com/Overtorment/Cashier-BTC
+* BTCz-Pay
+* -----------
+* Self-hosted bitcoinZ payment gateway
+*
+* https://github.com/MarcelusCH/BTCz-Pay
+*
+**/
  *
  **/
 
@@ -35,7 +37,7 @@ let rp = require('request-promise')
 app.use(bodyParser.urlencoded({ extended: false })) // parse application/x-www-form-urlencoded
 app.use(bodyParser.json(null)) // parse application/json
 
-global.btczUsd = 7000 // initial
+global.btczUsd = 7000
 global.btczEur = 6000
 global.btczZar = 6000
 global.btczJpy = 6000
