@@ -167,3 +167,4 @@ v0.1.1
 - Corrected server side pingback (in worker.js).
 - Added success & fail (expired) pingback URL for client side (in API return json).
 - Cancel expired gateway check for payment forward (24 hour).
+- Added WP-Woocommerce Plugin (beta)
