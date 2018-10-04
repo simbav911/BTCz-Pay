@@ -199,7 +199,7 @@ router.get('/api/check_payment/:_id', function (req, res) {
             'tx': addressJson.sweep_result,
             'success_callback_url': addressJson.success_callback_url
           }
-        } 
+        }
         res.send(JSON.stringify(answer))
       } else {
         logger.error('/check_payment', [ req.id, 'storage error', JSON.stringify(addressJson) ])
@@ -291,7 +291,7 @@ router.get('/api/get_btcz_rate', function (req, res) {
       'BTC': btczBTC
     };
 
-    logger.log('/get_btcz_rate', [ req.id, answer ])
+    logger.log('/api/get_btcz_rate', [ req.id, answer ])
     res.send(JSON.stringify(answer))
 
   } catch (error) {
@@ -299,5 +299,71 @@ router.get('/api/get_btcz_rate', function (req, res) {
     return res.send({'error': error.message})
   }
 })
+
+
+router.get('/api/stats/CountGateway', function (req, res) {
+  try {
+
+    let gatewayTot = [storage.CountGateway()]
+    Promise.all(gatewayTot).then((values) => {
+
+      let answer = {
+        'nb': JSON.parse(values).total_rows
+      };
+
+      logger.log('/api/stats/CountGateway', [ req.id, answer ])
+      res.send(JSON.stringify(answer))
+
+    })
+
+  } catch (error) {
+    logger.error('/api/stats/CountGateway', [ req.id, error ])
+    return res.send({'error': error.message})
+  }
+})
+
+router.get('/api/stats/CountGatewayExpired', function (req, res) {
+  try {
+
+    let gatewayTot = [storage.CountGatewayExpired()]
+    Promise.all(gatewayTot).then((values) => {
+
+      let answer = {
+        'nb': JSON.parse(values).total_rows
+      };
+
+      logger.log('/api/stats/CountGatewayExpired', [ req.id, answer ])
+      res.send(JSON.stringify(answer))
+
+    })
+
+  } catch (error) {
+    logger.error('/api/stats/CountGatewayExpired', [ req.id, error ])
+    return res.send({'error': error.message})
+  }
+})
+
+router.get('/api/stats/CountGatewayPaid', function (req, res) {
+  try {
+
+    let gatewayTot = [storage.CountGatewayPaid()]
+    Promise.all(gatewayTot).then((values) => {
+
+      let answer = {
+        'nb': JSON.parse(values).total_rows
+      };
+
+      logger.log('/api/stats/CountGatewayPaid', [ req.id, answer ])
+      res.send(JSON.stringify(answer))
+
+    })
+
+  } catch (error) {
+    logger.error('/api/stats/CountGatewayPaid', [ req.id, error ])
+    return res.send({'error': error.message})
+  }
+})
+
+
 
 module.exports = router

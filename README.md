@@ -54,9 +54,10 @@ Running
 -------
 
 ```
-$ nodejs btcz-pay.js
-$ nodejs worker.js
-$ nodejs worker2.js
+nodejs btcz-pay.js
+nodejs worker.js
+nodejs worker2.js
+nodejs worker3.js
 ```
 (For production use [pm2](https://www.npmjs.com/package/pm2))
 
@@ -167,4 +168,5 @@ v0.1.1
 - Corrected server side pingback (in worker.js).
 - Added success & fail (expired) pingback URL for client side (in API return json).
 - Cancel expired gateway check for payment forward (24 hour).
-- Added WP-Woocommerce Plugin (beta)
+- Added Gateway usage statistics.
+- Added WP-Woocommerce Plugin (beta).

@@ -1,11 +1,11 @@
 /**
- * Cashier-BTC
- * -----------
- * Self-hosted bitcoin payment gateway
- *
- * https://github.com/Overtorment/Cashier-BTC
- *
- **/
+* BTCz-Pay
+* -----------
+* Self-hosted bitcoinZ payment gateway
+*
+* https://github.com/MarcelusCH/BTCz-Pay
+*
+**/
 
 /**
  * checks if design docs are deployed

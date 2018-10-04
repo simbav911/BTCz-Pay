@@ -1,11 +1,11 @@
 /**
- * Cashier-BTC
- * -----------
- * Self-hosted bitcoin payment gateway
- *
- * https://github.com/Overtorment/Cashier-BTC
- *
- **/
+* BTCz-Pay
+* -----------
+* Self-hosted bitcoinZ payment gateway
+*
+* https://github.com/MarcelusCH/BTCz-Pay
+*
+**/
 
 let request = require('request')
 let config = require('../config')
@@ -94,4 +94,18 @@ exports.getPaidAdressesNewerThanPromise = function (timestamp) {
 
 exports.saveJobResultsPromise = function (json) {
   return rp.put(config.couchdb + '/' + json._id, { 'json': json })
+}
+
+
+
+exports.CountGateway = function () {
+  return rp.get(config.couchdb + '/_design/stats/_view/all_customer')
+}
+
+exports.CountGatewayExpired = function () {
+  return rp.get(config.couchdb + '/_design/stats/_view/all_customer_state_expired')
+}
+
+exports.CountGatewayPaid = function () {
+  return rp.get(config.couchdb + '/_design/stats/_view/all_customer_state_paid')
 }

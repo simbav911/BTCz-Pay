@@ -1,0 +1,16 @@
+{
+    "_id": "_design\/stats",
+    "comment": "ADDRESS represents single bitcoinz invoice. Its a unique generated address that awaits certain amount of btcz. Once it receives this amount - it changes status and fires callback url",
+    "views": {
+        "all_customer_state_expired": {
+            "map": "function(doc) {\n  if (doc.doctype=='address' && doc.state=='2') {\n               emit(doc.customer + \"-\" + doc.timestamp, doc.processed);\n  }\n}"
+        },
+        "all_customer_state_paid": {
+            "map": "function(doc) {\n  if (doc.doctype=='address' && doc.state=='5') {\n               emit(doc.customer + \"-\" + doc.timestamp, doc.processed);\n  }\n}"
+        },
+        "all_customer": {
+            "map": "function(doc) {\n  if (doc.doctype=='address') {\n               emit(doc.customer + \"-\" + doc.timestamp, doc.processed);\n  }\n}"
+        }
+    },
+    "language": "javascript"
+}

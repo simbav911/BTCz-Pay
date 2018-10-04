@@ -1,11 +1,11 @@
 /**
- * Cashier-BTC
- * -----------
- * Self-hosted bitcoin payment gateway
- *
- * https://github.com/Overtorment/Cashier-BTC
- *
- **/
+* BTCz-Pay
+* -----------
+* Self-hosted bitcoinZ payment gateway
+*
+* https://github.com/MarcelusCH/BTCz-Pay
+*
+**/
 
 let bitcore = require('bitcore-lib-btcz')
 let bitcoinjs = require('bitcoinjs-lib')
@@ -131,20 +131,6 @@ exports.createRBFSegwitTransaction = function (txhex, addressReplaceMap, feeDelt
 }
 
 exports.generateNewSegwitAddress = function () {
-  // let keyPair = bitcoinjs.ECPair.makeRandom()
-  // let keyPair = new bitcore.PrivateKey()
-  // let pubKey = keyPair.getPublicKeyBuffer()
-
-  // let witnessScript = bitcoinjs.script.witnessPubKeyHash.output.encode(bitcoinjs.crypto.hash160(pubKey))
-  // let scriptPubKey = bitcoinjs.script.scriptHash.output.encode(bitcoinjs.crypto.hash160(witnessScript))
-  // let address = bitcoinjs.address.fromOutputScript(scriptPubKey)
-
-  // let address = keyPair.getAddress()
-  // if (config.testnet) {
-  //    let testnet = bitcoinjs.networks.testnet
-  //   keyPair = bitcoinjs.ECPair.makeRandom({ network: testnet })
-  //  address = keyPair.getAddress()
-  // }
 
   var privateKey = new bitcore.PrivateKey()
   var address = privateKey.toAddress().toString()

@@ -574,10 +574,69 @@ function LoadRate(){
 }
 
 
+function LoadStats(){
+
+  var request1 = new XMLHttpRequest();
+  var request2 = new XMLHttpRequest();
+  var request3 = new XMLHttpRequest();
+
+  request1.open('GET', '/api/stats/CountGateway', true);
+  request1.onload = function () {
+
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response);
+
+    if (request1.status >= 200 && request1.status < 400) {
+      $("#TotGateway").html(data.nb);
+    } else {
+      console.log('error');
+    }
+  }
+  request1.send();
+
+
+  request2.open('GET', '/api/stats/CountGatewayExpired', true);
+  request2.onload = function () {
+
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response);
+
+    if (request2.status >= 200 && request2.status < 400) {
+      $("#ExpiredGateway").html(data.nb);
+    } else {
+      console.log('error');
+    }
+  }
+  request2.send();
+
+
+  request3.open('GET', '/api/stats/CountGatewayPaid', true);
+  request3.onload = function () {
+
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response);
+
+    if (request3.status >= 200 && request3.status < 400) {
+      $("#PaidGateway").html(data.nb);
+    } else {
+      console.log('error');
+    }
+  }
+  request3.send();
+
+
+  setTimeout( function() {
+    var actualGW = parseInt($("#TotGateway").html()) - parseInt($("#PaidGateway").html()) - parseInt($("#ExpiredGateway").html());
+    $("#ActualGateway").html(actualGW);
+  }, 1500);
+
+}
+
 
 $(document).ready(function() {
 
   LoadRate()
+  LoadStats()
 
   // Making 2 variable month and day
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
@@ -614,6 +673,7 @@ $(document).ready(function() {
 
 
   setInterval( function() {LoadRate()}, 60000);
+  setInterval( function() {LoadStats()}, 60000);
 
 
 

@@ -39,6 +39,7 @@ async function processJob (rows) {
 
     for (const row of rows.rows) {
       let json = row.doc
+
       let received = await blockchain.getreceivedbyaddress(json.address)
       logger.log('worker.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
       if (
@@ -56,6 +57,7 @@ async function processJob (rows) {
         // because in case of zero-conf accepted balance we wound need to wait for a couple of
         // confirmations till we can forward funds
       }
+
     }
 
   } catch (error) {
