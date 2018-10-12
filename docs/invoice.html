@@ -1,5 +1,5 @@
-    <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
     <head>
         <!-- PAGE TITLE -->
@@ -194,12 +194,21 @@
                   var currentTime = data.timestamp_now;
                   var timeleft = move(startTime, endTime, currentTime);
 
+                  // For SpeedSweep
+                  var SpeedSweepFee = (data.btcz_expected / 100) * data.speed_sweep_fee;
+                  var SpeedSweepInfo = ""
+                  if (SpeedSweepFee>0) {
+                    SpeedSweepInfo="</br><small>(+5% Speed Pay Fee)</small>"
+                  }
 
-                  $("#requestedAmount").html(data.btcz_expected + " BTCz");
-                  $("#paidAmount").html(data.btcz_actual + " BTCz");
-                  $("#amountDue").html((data.btcz_expected - data.btcz_actual) + " BTCz");
+                  // For unconfirmed info
+                  var UnconfirmedPaid = "</br><small>(Unconfirmed: "+data.btcz_unconfirmed+" BTCz)</small>"
+
+                  $("#requestedAmount").html((data.btcz_expected+SpeedSweepFee) + " BTCz"  + SpeedSweepInfo);
+                  $("#paidAmount").html(data.btcz_actual + " BTCz" + UnconfirmedPaid);
+                  $("#amountDue").html(((data.btcz_expected+SpeedSweepFee) - data.btcz_actual) + " BTCz");
                   $(".clock").html(timeConverter(currentTime) + " (UTC)&nbsp;&nbsp;-&nbsp;&nbsp;");
-                  $("#infoToPay").html("Total amount requested:<br><b>"+data.btcz_expected+" BTCz (~"+data.amount+" "+data.currency+")</b>")
+                  $("#infoToPay").html("Total amount requested:<br><b>"+(data.btcz_expected+SpeedSweepFee)+" BTCz (~"+data.amount+" "+data.currency+")</b>" + SpeedSweepInfo)
                   $("#infoTop").html("Invoice number:<br><h4>"+v_id+"</h4>")
 
                   document.title ="pay.btcz.app Invoice " +v_id;
@@ -208,10 +217,11 @@
 
 
                   $("#QRGen").html('<a href="bitcoinz:' + data.generated + '">' + data.generated + '</a>');
-                  $("#QRGenImg").attr("src", "../generate_qr/" + data.generated);
+                  $("#QRGenImg").attr("src", "../generate_qr/bitcoinz%253A" + data.generated + '%253Famount=' + (data.btcz_expected+SpeedSweepFee));
 
 
                   var InvoiceName = "<h4>"+v_id+"</h4>";
+
 
 
                   if (data.state == "0") {
@@ -613,4 +623,4 @@
 
     </body>
 
-    </html>
+</html>

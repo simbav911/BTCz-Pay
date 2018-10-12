@@ -28,7 +28,7 @@ require('./smoke-test')
     let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
     let job = await storage.getPaidAdressesNewerThanPromise(Date.now() - config.process_paid_for_period)
     await processJob(job)
-    await wait(15000)
+    await wait(5000)
   }
 })()
 
@@ -44,18 +44,17 @@ async function processJob (rows) {
       let received = await blockchain.getreceivedbyaddress(json.address)
       logger.log('worker2.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
 
-      if (+received[1].result === +received[0].result && received[0].result > 0 && json.state !=5 && json.state !=2) { // balance is ok (paid), need to transfer it
+
+      // If balance is confirmed (paid), need to transfer it to seller
+      if (+received[1].result === +received[0].result && received[0].result > 0) {
+
         let seller = await storage.getSellerPromise(json.seller)
         logger.log('worker2.js', [ 'transferring', received[0].result, 'BTCz (minus fee) from', json.address, 'to seller', seller.seller, '(', seller.address, ')' ])
         let unspentOutputs = await blockchain.listunspent(json.address)
 
         let createTx = signer.createTransaction
-        if (json.address[0] === '3') {
-          // assume source address is SegWit P2SH
-          // pretty safe to assume that since we generate those addresses
-          createTx = signer.createSegwitTransaction
-        }
-        let tx = createTx(unspentOutputs.result, seller.address, received[0].result, 0.0001, json.WIF)
+        let tx = createTx(unspentOutputs.result, seller.address, received[0].result, config.fee_tx, json.WIF)
+
         logger.log('worker2.js', [ 'broadcasting', tx ])
         let broadcastResult = await blockchain.broadcastTransaction(tx)
         logger.log('worker2.js', [ 'broadcast result:', JSON.stringify(broadcastResult) ])
@@ -69,6 +68,34 @@ async function processJob (rows) {
         }
 
         await storage.saveJobResultsPromise(json)
+
+
+
+      // If balance is unconfirmed (paid) with SpeedSweep true, need to transfer it from tmp wallet
+    } else if (received[0].result >= json.btc_to_ask && received[0].result > 0 && json.speed_sweep==1) {
+
+        let seller = await storage.getSellerPromise(json.seller)
+        logger.log('worker2.js', [ 'transferring unconfirmed', received[0].result, 'BTCz (minus fee) from', config.tmp_address, 'to seller', seller.seller, '(', seller.address, ')' ])
+        let unspentOutputs = await blockchain.listunspent(config.tmp_address)
+
+        let createTx = signer.createTransaction
+        let tx = createTx(unspentOutputs.result, seller.address, json.btc_to_ask, config.fee_tx, config.tmp_address_WIF)
+
+        logger.log('worker2.js', [ 'broadcasting', tx ])
+        let broadcastResult = await blockchain.broadcastTransaction(tx)
+        logger.log('worker2.js', [ 'broadcast result:', JSON.stringify(broadcastResult) ])
+
+        json.state = 5,
+        json.processed = 'paid_and_sweeped_unconfirmed'
+        json.sweep_result = json.sweep_result || {}
+        json.sweep_result[Date.now()] = {
+          'tx': tx,
+          'broadcast': broadcastResult
+        }
+
+        await storage.saveJobResultsPromise(json)
+
+
       } else {
         logger.log('worker2.js', 'balance is not ok, skip')
       }

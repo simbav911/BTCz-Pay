@@ -92,11 +92,13 @@ exports.getPaidAdressesNewerThanPromise = function (timestamp) {
   return rp.get({url: config.couchdb + '/_design/address/_view/paid_by_timestamp?startkey=' + timestamp + '&inclusive_end=true&limit=10000&reduce=false&include_docs=true', json: true})
 }
 
+exports.getPaidUnconfirmedAdressesNewerThanPromise = function (timestamp) {
+  return rp.get({url: config.couchdb + '/_design/address/_view/paid_unconfirmed_by_timestamp?startkey=' + timestamp + '&inclusive_end=true&limit=10000&reduce=false&include_docs=true', json: true})
+}
+
 exports.saveJobResultsPromise = function (json) {
   return rp.put(config.couchdb + '/' + json._id, { 'json': json })
 }
-
-
 
 exports.CountGateway = function () {
   return rp.get(config.couchdb + '/_design/stats/_view/all_customer')

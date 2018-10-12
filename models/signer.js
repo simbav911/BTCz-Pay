@@ -11,8 +11,6 @@ let bitcore = require('bitcore-lib-btcz')
 let bitcoinjs = require('bitcoinjs-lib')
 // let config = require('../config')
 
-// this function and bitcore-lib are kept for backward compatibility
-// TODO: rewrite on bitcoinjs or remove completely
 exports.createTransaction = function (utxos, toAddress, amount, fixedFee, WIF, changeAddress) {
   amount = parseInt((amount * 100000000).toFixed(0))
   fixedFee = parseInt((fixedFee * 100000000).toFixed(0))

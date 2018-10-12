@@ -10,8 +10,10 @@ module.exports = {
   'coinmarketcap_API': 'xxxxxx-xxxx-xxxx-xxxxxxxxxxxx', // The API key of the CoinMarketCap.com account
   'marketrate_refresh': 30, // in minutes
   'max_payment_valid' : 30, // in minute
-  'confirmation_before_forward' : 2, 
-  'small_amount_threshhold': 0.005, // amounts higher than that will require confirmed balance
+  'confirmation_before_forward' : 2,
+  'Fee_tx' : 0.0001,
+  'tmp_address' : 't1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE',  // tmp address to use for speed sweep
+  'tmp_address_WIF' : 'The Private Key of the address',
   'process_unpaid_for_period': 24 * 3600 * 1000, // worker that checks status of addresses
   'process_paid_for_period': 30 * 24 * 3600 * 1000 // worker2 that sweeps temporary wallets
 }

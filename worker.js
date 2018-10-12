@@ -27,7 +27,7 @@ require('./smoke-test')
     let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
     let job = await storage.getUnprocessedAdressesNewerThanPromise(Date.now() - config.process_unpaid_for_period)
     await processJob(job)
-    await wait(15000)
+    await wait(5000)
   }
 })()
 
@@ -42,20 +42,17 @@ async function processJob (rows) {
 
       let received = await blockchain.getreceivedbyaddress(json.address)
       logger.log('worker.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
-      if (
-          (json.btc_to_ask > config.small_amount_threshhold && (received[1].result >= json.btc_to_ask)) ||
-          (json.btc_to_ask <= config.small_amount_threshhold && (received[0].result >= json.btc_to_ask))
-        ) {
-          // paid ok
+
+      // If confirmed is >= as expected or unconfirmed is >= expected and SpeedSweep true, mark as paid
+      if (received[1].result >= json.btc_to_ask || (received[0].result >= (json.btc_to_ask+((json.btc_to_ask/100)*config.speed_sweep_fee))) && json.speed_sweep==1) {
+
         json.processed = 'paid'
         json.paid_on = Date.now()
         await storage.saveJobResultsPromise(json)
         logger.log('worker.js', 'firing callback: ' + json.callback_url)
         await rp({ uri: json.callback_url, timeout: 10 * 1000 })
-        //logger.log('worker.js', 'callback result: ' + uriresult)
-        // marked as paid and fired a callback. why not forward funds instantly?
-        // because in case of zero-conf accepted balance we wound need to wait for a couple of
-        // confirmations till we can forward funds
+
+
       }
 
     }

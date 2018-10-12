@@ -21,7 +21,7 @@ function importaddress (address) {
 function getreceivedbyaddress (address) {
   let reqs = [
     client.request('getreceivedbyaddress', [address, 0]),
-    client.request('getreceivedbyaddress', [address, 3])
+    client.request('getreceivedbyaddress', [address, config.confirmation_before_forward])
   ]
 
   return Promise.all(reqs)

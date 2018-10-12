@@ -96,7 +96,7 @@ let updateExchangeRate = async function (pair) {
 
 }
 
-let myArray = ['USD', 'EUR', 'BTC', 'CHF'] // 'BTC', 'AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
+let myArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB'] // 'BTC', 'AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
 myArray.forEach(function(value){
   updateExchangeRate(value)
   setInterval(() => updateExchangeRate(value), config.marketrate_refresh * 60 * 1000)

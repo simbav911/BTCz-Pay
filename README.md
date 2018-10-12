@@ -42,6 +42,7 @@ Edit `config.js`:
 * Point it to a new Couchdb database
 * Point it to a BitcoinZ Core RPC server
 * Update coinmarketcap API key
+* Add tmp wallet with founds for speed payment
 
 Tests
 -----
@@ -58,6 +59,7 @@ nodejs btcz-pay.js
 nodejs worker.js
 nodejs worker2.js
 nodejs worker3.js
+nodejs worker4.js
 ```
 (For production use [pm2](https://www.npmjs.com/package/pm2))
 
@@ -84,10 +86,10 @@ TODO
 API
 ===
 
-### GET /api/request_payment/:expect/:currency/:message/:sellerAddress/:customerMail/:srvPingback/:cliPingbackSuccess/:cliPingbackError
+### GET /api/request_payment/:expect/:currency/:message/:sellerAddress/:customerMail/:srvPingback/:cliPingbackSuccess/:cliPingbackError/:SpeedSweep
 
 
-Create a request to pay, supported currencies: BTCZ, USD, EUR, CHF. Non-btcz currency is converted to btcz using current rate from coinmarketcap.com.
+Create a request to pay, supported currencies: BTCZ, USD, EUR, CHF, GBP, RUB. Non-btcz currency is converted to btcz using current rate from coinmarketcap.com.
 
 Returns a json document with QR code to be displayed to the payer, and a unique address for that particular payment (you can use it as invoice id).
 
@@ -97,9 +99,13 @@ Keep Seller field private, it is also used for payouts.Callback_url will be requ
 
 The srvPingback (URL) parameter is never returned to the client. This URL is sent from server side, only once the check_result.state = 5 (success), and it could also send some key pare info.
 
+The SpeedSweep parameter is to allow a speed payment (without confirmation). 0=disabled / 1=enabled
+The founds are taken from a tmp wallet that as to be created and stocked before.
+
+
 ```
 Example
-http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/treehorn/lebowski/http%3A%2F%2Fgoogle.com%2F
+http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/treehorn/lebowski/http%3A%2F%2Fgoogle.com%2F/0
 ```
 
 ```
@@ -109,7 +115,7 @@ Result:
   "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972&message=Hello",
   "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DHello",
-  "qr_simple":"http://localhost:2222/generate_qr/t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm"
+  "qr_simple":"http://localhost:2222/generate_qr/bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=0.005"
 }
 ```
 
@@ -127,6 +133,7 @@ Result:
 {
   "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "btcz_expected":14.77818972,
+  "speed_sweep_fee":5,
   "btcz_actual":0,
   "btcz_unconfirmed":0,
   "currency":"USD",
@@ -139,6 +146,8 @@ Result:
   [optional] "errURL":"https://mysite_or_IP/result/?Hello=0"
 }
 ```
+(the speed_sweep_fee is in %)
+
 
 States:
 ```
@@ -161,6 +170,7 @@ http://localhost:2222/invoice/f22c44cb-e26a-4022-864f-00f0d523d48a
 
 UPDATES
 =======
+
 v0.1.1
 ------
 - Updated install instruction.
@@ -170,3 +180,9 @@ v0.1.1
 - Cancel expired gateway check for payment forward (24 hour).
 - Added Gateway usage statistics.
 - Added WP-Woocommerce Plugin (beta).
+
+v0.1.2
+------
+- Added speed payment support.
+- Added unconfirmed founds info in the invoice.
+- Added payment amount in the QR.

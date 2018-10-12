@@ -14,7 +14,6 @@
  */
 
 
-
 let express = require('express')
 let router = express.Router()
 let config = require('../config')
@@ -24,19 +23,19 @@ let signer = require('../models/signer')
 let logger = require('../utils/logger')
 let rp = require('request-promise')
 
-// Get payment request - :seller is a address - :customer is a eMail
-router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:pingback/:cliPingbackSuccess/:cliPingbackError', function (req, res) {
+// Get payment request - :seller is a address - :customer is a eMail - :SpeedSweep as integer 0/1
+router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:pingback/:cliPingbackSuccess/:cliPingbackError/:SpeedSweep', function (req, res) {
   let exchangeRate, btcToAsk, satoshiToAsk
 
   switch (req.params.currency) {
     //case 'AUD': exchangeRate = btczAud
     //  break
-    //case 'GBP': exchangeRate = btczGbp
-    //  break
+    case 'GBP': exchangeRate = btczGbp
+      break
     //case 'CAD': exchangeRate = btczCad
     //  break
-    //case 'RUB': exchangeRate = btczRub
-    //  break
+    case 'RUB': exchangeRate = btczRub
+      break
     case 'USD': exchangeRate = btczUsd
       break
     case 'EUR': exchangeRate = btczEur
@@ -58,6 +57,8 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
   satoshiToAsk = Math.floor((req.params.expect / exchangeRate) * 100000000)
   btcToAsk = satoshiToAsk / 100000000
 
+  let SpeedSweep = Math.floor(req.params.SpeedSweep )
+
   let address = signer.generateNewSegwitAddress()
 
   let addressData = {
@@ -76,6 +77,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
     'address': address.address,
     'doctype': 'address',
     'state': 0,
+    'speed_sweep': SpeedSweep,
     '_id': req.id
   }
 
@@ -90,7 +92,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
     'address': addressData.address,
     'link': signer.URI(paymentInfo),
     'qr': config.base_url_qr + '/generate_qr/' + encodeURIComponent(signer.URI(paymentInfo)),
-    'qr_simple': config.base_url_qr + '/generate_qr/' + addressData.address
+    'qr_simple': config.base_url_qr + '/generate_qr/bitcoinz:' + addressData.address + '?amount=' + btcToAsk
   };
 
 
@@ -99,6 +101,13 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
     logger.log('/request_payment', [ req.id, 'checking seller existance...' ])
     let responseBody = await storage.getSellerPromise(req.params.seller)
 
+    // Check speed sweep and not more than 100 BTCZ
+    if (SpeedSweep==1 && btcToAsk>100){
+      logger.error('/request_payment', [ req.id, 'To high amound for speed sweep', btcToAsk ])
+      return res.send(JSON.stringify({'error': 'To high amound for speed sweep'}))
+    }
+
+
     if (typeof responseBody.error !== 'undefined') { // seller doesnt exist
       logger.log('/request_payment', [ req.id, 'seller doesnt exist. creating...' ])
       let address = req.params.seller
@@ -106,8 +115,10 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
       // Check if address is valid
       if (!(signer.isAddressValid(address))){
         logger.error('/request_payment', [ req.id, 'seller address not valide', address ])
-        return res.send(JSON.stringify({'error': 'seller address not valide'}))
+        return res.send(JSON.stringify({'error': 'Seller address not valide'}))
       }
+
+
 
       let sellerData = {
         'WIF': '',
@@ -135,7 +146,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/:p
   })
 })
 
-// Check payment by the temp given address
+// Check payment by the temp given id
 router.get('/api/check_payment/:_id', function (req, res) {
 
   let PayAddress = [storage.getAddressPromise(req.params._id)]
@@ -170,10 +181,17 @@ router.get('/api/check_payment/:_id', function (req, res) {
         return res.send(JSON.stringify(ErrorAnswer))
       }
 
+      // Check if SpeedSweep
+      let speed_sweep_fee = 0
+      if (addressJson.speed_sweep==1){
+        speed_sweep_fee=config.speed_sweep_fee
+      }
+
       if (addressJson && addressJson.btc_to_ask && addressJson.doctype === 'address') {
         let answer = {
           'generated': addressJson.address,
           'btcz_expected': addressJson.btc_to_ask,
+          'speed_sweep_fee': speed_sweep_fee,
           'btcz_actual': received[1].result,
           'btcz_unconfirmed': received[0].result,
           'currency': addressJson.currency,
@@ -188,6 +206,7 @@ router.get('/api/check_payment/:_id', function (req, res) {
           answer = {
             'generated': addressJson.address,
             'btcz_expected': addressJson.btc_to_ask,
+            'speed_sweep_fee': speed_sweep_fee,
             'btcz_actual': received[1].result,
             'btcz_unconfirmed': received[0].result,
             'currency': addressJson.currency,
@@ -234,6 +253,7 @@ router.get('/api/cancel/:_id', function (req, res) {
       'err_callback_url': values[0].err_callback_url,
       'WIF': values[0].WIF,
       'address': values[0].address,
+      'speed_sweep': values[0].speed_sweep,
       'doctype': 'address'
 
     }
@@ -266,6 +286,7 @@ router.get('/api/accept/:_id', function (req, res) {
       'err_callback_url': values[0].err_callback_url,
       'WIF': values[0].WIF,
       'address': values[0].address,
+      'speed_sweep': values[0].speed_sweep,
       'doctype': 'address'
 
     }
@@ -299,6 +320,12 @@ router.get('/api/get_btcz_rate', function (req, res) {
     return res.send({'error': error.message})
   }
 })
+
+
+
+
+
+
 
 
 router.get('/api/stats/CountGateway', function (req, res) {

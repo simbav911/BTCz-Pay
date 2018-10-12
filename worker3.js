@@ -42,7 +42,7 @@ async function processJob (rows) {
 
       if ((json.state==0 || json.state==1) && (json.timestamp+(config.max_payment_valid*60000)+(120*60000))<=Date.now() ){
         let received = await blockchain.getreceivedbyaddress(json.address)
-        logger.log('worker.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
+        logger.log('worker3.js', [ 'address:', json.address, 'expect:', json.btc_to_ask, 'confirmed:', received[1].result, 'unconfirmed:', received[0].result ])
 
         json.state=2
         await storage.saveJobResultsPromise(json)
@@ -52,6 +52,6 @@ async function processJob (rows) {
     }
 
   } catch (error) {
-    logger.error('worker.js', [ error ])
+    logger.error('worker3.js', [ error ])
   }
 }

@@ -11,6 +11,9 @@
         "paid_by_timestamp": {
             "map": "function(doc) {\n  if (doc.doctype=='address' && doc.timestamp && (doc.processed=='paid')) {\n               emit(doc.timestamp,  new Date( doc.timestamp ).toISOString().replace('T', ' ') );\n  }\n}"
         },
+        "paid_unconfirmed_by_timestamp": {
+            "map": "function(doc) {\n  if (doc.doctype=='address' && doc.timestamp && (doc.processed=='paid_and_sweeped_unconfirmed')) {\n               emit(doc.timestamp,  new Date( doc.timestamp ).toISOString().replace('T', ' ') );\n  }\n}"
+        },
         "paid_and_sweeped_by_timestamp": {
             "map": "function(doc) {\n  if (doc.doctype=='address' && doc.timestamp && (doc.processed=='paid_and_sweeped')) {\n               emit(doc.timestamp, new Date( doc.timestamp ).toISOString().replace('T', ' '));\n  }\n}"
         },

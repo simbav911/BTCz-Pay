@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
   <head>
 
@@ -72,12 +73,17 @@
                 customeremail=encodeURIComponent('test.test@.test');
               }
 
+              var speedSweep = 0;
+              if (document.getElementById("SpeedSweep").checked){
+                speedSweep=1;
+              }
+
               var cliPingback_succ = pingback;
               var cliPingback_err = pingback;
 
               var request = new XMLHttpRequest();
 
-              request.open('GET', '/api/request_payment/'+amount+'/'+currency+'/'+message+'/'+address+'/'+customeremail+'/'+pingback+'/'+cliPingback_succ+'/'+cliPingback_err, true);
+              request.open('GET', '/api/request_payment/'+amount+'/'+currency+'/'+message+'/'+address+'/'+customeremail+'/'+pingback+'/'+cliPingback_succ+'/'+cliPingback_err+'/'+speedSweep, true);
               request.onload = function () {
 
                 // Begin accessing JSON data here
@@ -123,6 +129,12 @@
           }
       </script>
 
+      <style>
+
+
+
+
+      </style>
 
 
   </head>
@@ -256,10 +268,22 @@
                                                  <option value="USD">USD</option>
                                                  <option value="EUR">EUR</option>
                                                  <option value="CHF">CHF</option>
+                                                 <option value="GBP">GBP</option>
+                                                 <option value="RUB">RUB</option>
                                                </select>
                                            </div>
                                        </div>
                                    </div>
+
+
+
+                                   <div class="btn-group" data-toggle="buttons">
+                                     <label class="btn btn-default" id="SpeedSweepLabel">Speed Pay NOT Active</label>
+                                       <input type="checkbox"  id="SpeedSweep" hidden />
+
+
+                                    </div>
+
 
 
                                    <a onClick="createPayGateway();" class="btn btn-primary">Create Payment Gateway</a> <small>* required<br><br></small>
@@ -325,7 +349,7 @@
 
                  <br>
                                    <li>URL:
-                                       <pre>https://pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:srvPingback/:cliPingbackSuccess/:cliPingbackError</pre>
+                                       <pre>https://pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:srvPingback/:cliPingbackSuccess/:cliPingbackError/0</pre>
                                    </li>
                                    <li>GET Example:
                                        <pre>https://pay.btcz.app/api/request_payment/1/BTCZ/Hello/t1KhD2unS3KUjcVsANs5ySfxTVE9KTv6K4t/email%40test.test/http%253A%252F%252Fmysite.com%253A2222%252Fapi%252Ftest/http%253A%252F%252Fwww.worldartstamps.com/http%253A%252F%252Fbtcz.app</pre>
@@ -366,6 +390,7 @@
                                        <pre>{
   "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "btcz_expected":14.77818972,
+  "speed_sweep_fee":5,
   "btcz_actual":0,
   "btcz_unconfirmed":0,
   "currency":"USD",
@@ -376,7 +401,8 @@
   "state":0,
   [optional] "successURL":"https://mysite_or_IP/result/?Hello=1",
   [optional] "errURL":"https://mysite_or_IP/result/?Hello=0"
-}</pre>
+}</pre>(the speed_sweep_fee is in %)
+
                                    </li>
                                </ul>
                                <br>

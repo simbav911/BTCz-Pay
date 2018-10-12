@@ -19,8 +19,8 @@ let app = express();
 router.get('/generate_qr/:text', function (req, res) {
   let filename
   let qrSvg
-  filename = 'qr/' + crypto.createHash('sha1').update(decodeURIComponent(req.params.text)).digest('hex') + '.png'
-  qrSvg = qr.image(decodeURIComponent(req.params.text), { type: 'png' })
+  filename = 'qr/' + crypto.createHash('sha1').update(decodeURIComponent(decodeURIComponent(req.params.text))).digest('hex') + '.png'
+  qrSvg = qr.image(decodeURIComponent(decodeURIComponent(req.params.text)), { type: 'png' })
   qrSvg.pipe(fs.createWriteStream(filename))
   qrSvg.on('end', function () {
     res.redirect(301, '/' + filename)

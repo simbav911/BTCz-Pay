@@ -161,7 +161,7 @@ function add_woocommerce_btcz_gateway() {
 
           $ch = curl_init();
           curl_setopt_array($ch, array(
-              CURLOPT_URL => "$APIUrl/" . urlencode($Amount) . "/" . urlencode($CurrencyCode)  . "/hello/" . urlencode($MerchantAddress) . "/" . urlencode($MerchantEmail) . "/" . $query,
+              CURLOPT_URL => "$APIUrl/" . urlencode($Amount) . "/" . urlencode($CurrencyCode)  . "/hello/" . urlencode($MerchantAddress) . "/" . urlencode($MerchantEmail) . "/" . $query  . "/0" . ,
               CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
               CURLOPT_CUSTOMREQUEST => "GET",
               CURLOPT_HTTPHEADER => array(
