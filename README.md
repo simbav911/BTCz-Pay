@@ -114,7 +114,7 @@ http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebo
 ```
 http://localhost:2222/api/request_payment/?expect=0.005&currency=BTCZ&message=wheres%20the%20money%20lebowski&seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&customerMail=test@test.com&ipnPingback=https%3A%2F%2Fwww.google.com&cliSuccessURL=https%3A%2F%2Fwww.google.com&cliErrorURL=https%3A%2F%2Fwww.google.com&SpeedSweep=0&secret=01234abcd
 
-Expanded:
+**Expanded:**
 http://localhost:2222/api/request_payment/?
      expect=0.005&
      currency=BTCZ&
@@ -130,7 +130,9 @@ http://localhost:2222/api/request_payment/?
 (By using query string, some parameters are optional )
 
 **Parameters definition:**
+
 `expect` = Mandatory - The expected amount to pay.
+
 `currency` = Mandatory - The currency code (supported: BTCZ, BTC, USD, EUR, CHF, GBP, RUB).
 `seller` = Mandatory - The seller BTCz address.
 `ipnPingback` = Mandatory - The IPN URL to get (from server side) once paid or expired.
@@ -207,7 +209,9 @@ On success paid or expired, the gateway pingback to the defined `ipnPingback` ur
 
 **Pingback url example**
 `https://yourDomaine.com/yourPath/?and=yourParam&secret=01234abcd&state=5`
+
 or
+
 `https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2`
 
 
