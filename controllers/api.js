@@ -31,6 +31,12 @@ let logger = require('../utils/logger')
 let rp = require('request-promise')
 
 
+router.get('/test/pingback/', function (req, res) {
+  let secret = req.query.secret
+  let state = req.query.state
+  logger.log('/test/pingback/', [ 'secret : ', secret, 'state : ', state ])
+})
+
 // -----------------------------------------------------------------------------
 // Get payment request with optional parameters (as query)
 // -----------------------------------------------------------------------------
@@ -300,6 +306,8 @@ router.get('/api/check_payment/:_id', function (req, res) {
 // -----------------------------------------------------------------------------
 router.get('/api/cancel/:_id', function (req, res) {
 
+  logger.log('/api/cancel/', ['cancel invoice: ', req.params._id])
+
   let row = [storage.getDocumentPromise(req.params._id)]
   Promise.all(row).then((values) => {
 
@@ -321,6 +329,7 @@ router.get('/api/cancel/:_id', function (req, res) {
       'WIF': values[0].WIF,
       'address': values[0].address,
       'speed_sweep': values[0].speed_sweep,
+      'secret': values[0].secret,
       'doctype': 'address'
 
     }
@@ -336,7 +345,7 @@ router.get('/api/cancel/:_id', function (req, res) {
       }
 
       // Fire server side pingback
-      logger.log('api.js', 'firing expired callback: ' + URLset)
+      logger.log('/api/cancel/', ['firing expired callback: ' , URLset])
       rp({ uri: URLset, timeout: 2000 })
 
     }
@@ -350,7 +359,7 @@ router.get('/api/cancel/:_id', function (req, res) {
 // -----------------------------------------------------------------------------
 router.get('/api/accept/:_id', function (req, res) {
 
-  logger.log('accept/', 'accept invoice: ', req.params._id)
+  logger.log('accept/', [ 'accept invoice: ', req.params._id])
 
   let row = [storage.getDocumentPromise(req.params._id)]
   Promise.all(row).then((values) => {
@@ -373,6 +382,7 @@ router.get('/api/accept/:_id', function (req, res) {
       'WIF': values[0].WIF,
       'address': values[0].address,
       'speed_sweep': values[0].speed_sweep,
+      'secret': values[0].secret,
       'doctype': 'address'
 
     }
@@ -401,7 +411,6 @@ router.get('/api/get_btcz_rate', function (req, res) {
       'BTC': btczBTC
     };
 
-    logger.log('/api/get_btcz_rate', [ req.id, answer ])
     res.send(JSON.stringify(answer))
 
   } catch (error) {
@@ -424,7 +433,6 @@ router.get('/api/stats/CountGateway', function (req, res) {
         'nb': JSON.parse(values).total_rows
       };
 
-      logger.log('/api/stats/CountGateway', [ req.id, answer ])
       res.send(JSON.stringify(answer))
 
     })
@@ -445,7 +453,6 @@ router.get('/api/stats/CountGatewayExpired', function (req, res) {
         'nb': JSON.parse(values).total_rows
       };
 
-      logger.log('/api/stats/CountGatewayExpired', [ req.id, answer ])
       res.send(JSON.stringify(answer))
 
     })
@@ -466,7 +473,6 @@ router.get('/api/stats/CountGatewayPaid', function (req, res) {
         'nb': JSON.parse(values).total_rows
       };
 
-      logger.log('/api/stats/CountGatewayPaid', [ req.id, answer ])
       res.send(JSON.stringify(answer))
 
     })

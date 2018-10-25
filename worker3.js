@@ -64,7 +64,7 @@ async function processJob (rows) {
         }
 
         // Fire server side pingback
-        logger.log('worker3.js', 'firing expired callback: ' + URLset)
+        logger.log('worker3.js', 'firing expired callback: ' , URLset)
         await rp({ uri: URLset, timeout: 2000 })
 
       }

@@ -27,7 +27,7 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 
 ;(async () => {
   while (1) {
-    logger.log('worker.js', '.')
+    logger.log('worker.js', ['.'])
     let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
     let job = await storage.getUnprocessedAdressesNewerThanPromise(
                               Date.now() - config.process_unpaid_for_period)
@@ -47,9 +47,7 @@ async function processJob (rows) {
 
       // Check recieved amount by the address - 0 unconfirmed / 1 confirmed
       let received = await blockchain.getreceivedbyaddress(json.address)
-      logger.log('worker.js', [ 'address:', json.address, 'expect:',
-                  json.btc_to_ask, 'confirmed:', received[1].result,
-                  'unconfirmed:', received[0].result ])
+      logger.log('worker.js', [ 'address:', json.address, 'expect:',json.btc_to_ask, 'confirmed:', received[1].result,'unconfirmed:', received[0].result ])
 
       // If confirmed is >= as expected or unconfirmed is >= expected
       // and SpeedSweep true, mark as paid
@@ -71,7 +69,7 @@ async function processJob (rows) {
         }
 
         // Fire server side pingback
-        logger.log('worker.js', 'firing success callback: ' + URLset)
+        logger.log('worker.js', ['firing success callback: ' , URLset])
         await rp({ uri: URLset, timeout: 2000 })
 
       } // end if
