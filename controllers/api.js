@@ -75,9 +75,9 @@ router.get('/api/request_payment/', function (req, res) {
   // redirect to the main router
   return res.redirect('/api/request_payment/'+expect+'/'+currency+'/'
                       +message+'/'+seller+'/'+customer+'/'
-                      +encodeURIComponent(ipnPingback)+'/'
-                      +encodeURIComponent(cliSuccessURL)+'/'
-                      +encodeURIComponent(cliErrorURL)+'/'
+                      +encodeURIComponent(encodeURIComponent(ipnPingback))+'/'
+                      +encodeURIComponent(encodeURIComponent(cliSuccessURL))+'/'
+                      +encodeURIComponent(encodeURIComponent(cliErrorURL))+'/'
                       +SpeedSweep+'/'+secret)
 
 }) // --------------------------------------------------------------------------
@@ -124,9 +124,9 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
     'message': req.params.message,
     'seller': req.params.seller,
     'customer': req.params.customer,
-    'callback_url': decodeURIComponent(req.params.pingback),
-    'success_callback_url': decodeURIComponent(req.params.cliPingbackSuccess),
-    'err_callback_url': decodeURIComponent(req.params.cliPingbackError),
+    'callback_url': decodeURIComponent(decodeURIComponent(req.params.pingback)),
+    'success_callback_url': decodeURIComponent(decodeURIComponent(req.params.cliPingbackSuccess)),
+    'err_callback_url': decodeURIComponent(decodeURIComponent(req.params.cliPingbackError)),
     'WIF': address.WIF,
     'address': address.address,
     'doctype': 'address',
