@@ -70,7 +70,7 @@ async function processJob (rows) {
 
         // Fire server side pingback
         logger.log('worker.js', ['firing success callback: ' , URLset])
-        await rp({ uri: URLset, timeout: 2000 })
+        rp({ uri: URLset, timeout: 2000 })
 
       } // end if
     } // end for
