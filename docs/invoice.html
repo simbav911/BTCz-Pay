@@ -205,6 +205,9 @@
 
                   // For unconfirmed info
                   var UnconfirmedPaid = "</br><small>(Unconfirmed: "+data.btcz_unconfirmed+" BTCz)</small>"
+                  if (data.btcz_actual >= data.btcz_expected){
+                    UnconfirmedPaid=""
+                  }
 
                   $("#requestedAmount").html((data.btcz_expected+SpeedSweepFee) + " BTCz"  + SpeedSweepInfo);
                   $("#paidAmount").html(data.btcz_actual + " BTCz" + UnconfirmedPaid);
@@ -268,7 +271,7 @@
                       var Amount_HTML = "";
                       if (OverPayment > 0){Amount_HTML = "<br>Amount Overpaid: <b>" + OverPayment + " BTCz</b>";}
 
-                      var newInfo = "<h3>This invoice has been paid!</h3>Address: <b>" + data.generated + "</b><br><br>Amount Requested: <b>" + data.btcz_expected + " BTCz</b><br>Amount Received: <b>" + data.btcz_actual + " BTCz</b><br><br>Associated Transactions:";
+                      var newInfo = "<h3>This invoice has been paid!</h3>Address: <b>" + data.generated + "</b><br><br>Amount Requested: <b>" + data.btcz_expected + " BTCz</b><br>Amount Received: <b>" + data.btcz_actual + " BTCz " + UnconfirmedPaid +"</b><br><br>Associated Transactions:";
 
                       var jsonArray =JSON.stringify(data.tx)
                       console.log(jsonArray); // 1537807193895
