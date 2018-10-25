@@ -132,7 +132,6 @@ http://localhost:2222/api/request_payment/?
 **Parameters definition:**
 
 `expect` = Mandatory - The expected amount to pay.
-
 `currency` = Mandatory - The currency code (supported: BTCZ, BTC, USD, EUR, CHF, GBP, RUB).
 `seller` = Mandatory - The seller BTCz address.
 `ipnPingback` = Mandatory - The IPN URL to get (from server side) once paid or expired.
@@ -208,12 +207,11 @@ http://localhost:2222/invoice/f22c44cb-e26a-4022-864f-00f0d523d48a
 On success paid or expired, the gateway pingback to the defined `ipnPingback` url set by the request_payment/ call. The `secret` and the `state` is appended.
 
 **Pingback url example**
-`https://yourDomaine.com/yourPath/?and=yourParam&secret=01234abcd&state=5`
-
+```
+https://yourDomaine.com/yourPath/?and=yourParam&secret=01234abcd&state=5
 or
-
-`https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2`
-
+https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2
+```
 
 UPDATES
 =======
