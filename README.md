@@ -113,8 +113,9 @@ http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebo
 **Example with query string:**
 ```
 http://localhost:2222/api/request_payment/?expect=0.005&currency=BTCZ&message=wheres%20the%20money%20lebowski&seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&customerMail=test@test.com&ipnPingback=https%3A%2F%2Fwww.google.com&cliSuccessURL=https%3A%2F%2Fwww.google.com&cliErrorURL=https%3A%2F%2Fwww.google.com&SpeedSweep=0&secret=01234abcd
-
+```
 **Expanded:**
+```
 http://localhost:2222/api/request_payment/?
      expect=0.005&
      currency=BTCZ&
@@ -130,17 +131,16 @@ http://localhost:2222/api/request_payment/?
 (By using query string, some parameters are optional )
 
 **Parameters definition:**
-
-`expect` = Mandatory - The expected amount to pay.
-`currency` = Mandatory - The currency code (supported: BTCZ, BTC, USD, EUR, CHF, GBP, RUB).
-`seller` = Mandatory - The seller BTCz address.
-`ipnPingback` = Mandatory - The IPN URL to get (from server side) once paid or expired.
-`message` = Optional - An optional message.
-`customerMail` = Optional - The customer eMail
-`cliSuccessURL` = Optional - The URL to redirect browser on success.
-`cliErrorURL` = Optional - The URL to redirect browser on expired.
-`SpeedSweep` = Optional - Use speed checkout (0=disabled / 1=enabled), default is 0.
-`secret` = Optional - The secret phrase that is appended to IPN call. If not set, the gateway generate a random one.
+- `expect` = Mandatory - The expected amount to pay.
+- `currency` = Mandatory - The currency code (supported: BTCZ, BTC, USD, EUR, CHF, GBP, RUB).
+- `seller` = Mandatory - The seller BTCz address.
+- `ipnPingback` = Mandatory - The IPN URL to get (from server side) once paid or expired.
+- `message` = Optional - An optional message.
+- `customerMail` = Optional - The customer eMail
+- `cliSuccessURL` = Optional - The URL to redirect browser on success.
+- `cliErrorURL` = Optional - The URL to redirect browser on expired.
+- `SpeedSweep` = Optional - Use speed checkout (0=disabled / 1=enabled), default is 0.
+- `secret` = Optional - The secret phrase that is appended to IPN call. If not set, the gateway generate a random one.
 
 **JSON result:**
 ```
