@@ -35,6 +35,7 @@ router.get('/test/pingback/', function (req, res) {
   let secret = req.query.secret
   let state = req.query.state
   logger.log('/test/pingback/', [ 'secret : ', secret, 'state : ', state ])
+  return
 })
 
 // -----------------------------------------------------------------------------
