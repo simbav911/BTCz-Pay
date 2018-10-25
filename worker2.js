@@ -1,17 +1,23 @@
 /**
- * BTCz-Pay
- * -----------
- * Self-hosted bitcoinZ payment gateway
- *
- * https://github.com/MarcelusCH/BTCz-Pay
- *
- **/
+* ==============================================================================
+* BTCz-Pay
+* ==============================================================================
+*
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
+* https://github.com/MarcelusCH/BTCz-Pay
+*
+* ------------------------------------------------------------------------------
+* worker2.js                                           Independent nodejs worker
+* ------------------------------------------------------------------------------
+*
+* worker.js iterates through all paid addresses (which are actually hot wallets),
+* and sweeps (forwards funds) to seller final (aggregational) wallet
+*
+* ==============================================================================
+*/
 
-/**
- * worker.js iterates through all paid addresses (which are actually hot wallets),
- * and sweeps (forwards funds) to seller final (aggregational) wallet
- *
- */
 
 let storage = require('./models/storage')
 let config = require('./config')

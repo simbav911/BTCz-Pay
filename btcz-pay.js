@@ -1,41 +1,67 @@
 /**
+* ==============================================================================
 * BTCz-Pay
-* -----------
-* Self-hosted bitcoinZ payment gateway
+* ==============================================================================
 *
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
 *
-**/
-
+* ------------------------------------------------------------------------------
+* btcz-pay.js                                                  Main nodejs start
+* ------------------------------------------------------------------------------
+*
+* Load the application server and set options
+* Set the WebApp needed path (css, js, images,...)
+* Load the API controlers
+* Load/set currency exchange rate refreshing
+* Startup the application server
+*
+* ==============================================================================
+*/
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 let express = require('express')
 let morgan = require('morgan')
 let uuid = require('node-uuid')
-let logger = require('./utils/logger')
+let bodyParser = require('body-parser')
+let rp = require('request-promise')
+
+let logger = require('./utils/logger')      // Load the logger module
+let config = require('./config')            // Load configuration file
+require('./smoke-test')                     // Checking DB & BtcZ node RPC
+require('./deploy-design-docs')             // Checking design docs in Couchdb
 
 morgan.token('id', function getId (req) {
   return req.id
 })
 
 let app = express()
-
-
 app.use(function (req, res, next) {
   req.id = uuid.v4()
   next()
 })
-app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'))
 
+// Application options
+app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] \
+    ":method :url HTTP/:http-version" :status :res[content-length] \
+    ":referrer" ":user-agent"'))
 app.set('trust proxy', 'loopback')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json(null))
 
-let bodyParser = require('body-parser')
-let config = require('./config')
-let rp = require('request-promise')
+// WebApp needed path
+app.use('/qr', express.static('qr'))
+app.use('/css', express.static('docs/css'))
+app.use('/js', express.static('docs/js'))
+app.use('/images', express.static('docs/images'))
 
-app.use(bodyParser.urlencoded({ extended: false })) // parse application/x-www-form-urlencoded
-app.use(bodyParser.json(null)) // parse application/json
+// Load API controlers
+app.use(require('./controllers/api'))
+app.use(require('./controllers/website'))
 
+// Curencies exchange rate global variables
 global.btczUsd = 7000
 global.btczEur = 6000
 global.btczZar = 6000
@@ -47,14 +73,7 @@ global.btczGbp = 6000
 global.btczAud = 6000
 global.btczBTC = 6000
 
-app.use('/qr', express.static('qr'))
-app.use('/css', express.static('docs/css'))
-app.use('/js', express.static('docs/js'))
-app.use('/images', express.static('docs/images'))
-
-app.use(require('./controllers/api'))
-app.use(require('./controllers/website'))
-
+// Currency exchange rate update function
 let updateExchangeRate = async function (pair) {
 
   let requestOptions = {
@@ -75,7 +94,8 @@ let updateExchangeRate = async function (pair) {
 
     var json = JSON.stringify(response);
     var json = JSON.parse(json);
-    logger.log('Get currency exchange rate', [pair, json.data['BTCZ'].quote[pair].price])
+    logger.log('Get currency exchange rate',
+                [pair, json.data['BTCZ'].quote[pair].price])
 
     switch (pair) {
       case 'AUD': global.btczAud = json.data['BTCZ'].quote[pair].price; break
@@ -96,15 +116,15 @@ let updateExchangeRate = async function (pair) {
 
 }
 
-let myArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB'] // 'BTC', 'AUD', 'GBP', 'CAD', 'RUB', 'USD', 'EUR', 'ZAR', 'JPY', 'CHF']
-myArray.forEach(function(value){
+// Refresh each currency exchange rate by interval
+let CurArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB']
+CurArray.forEach(function(value){
   updateExchangeRate(value)
-  setInterval(() => updateExchangeRate(value), config.marketrate_refresh * 60 * 1000)
-});
+  setInterval(() => updateExchangeRate(value),
+                      config.marketrate_refresh * 60 * 1000)
+})
 
-require('./smoke-test')
-require('./deploy-design-docs') // checking design docs in Couchdb
-
+// Startup server
 let server = app.listen(config.port, '127.0.0.1', function () {
   logger.log('BOOTING UP', ['Listening on port %d', config.port])
 })

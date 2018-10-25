@@ -1,17 +1,25 @@
 /**
+* ==============================================================================
 * BTCz-Pay
-* -----------
-* Self-hosted bitcoinZ payment gateway
+* ==============================================================================
 *
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
 *
-**/
-
-/**
- * worker iterates through all addresses,
- * marks expired after 2 hour more than expired
- * in case of client is away
+* ------------------------------------------------------------------------------
+* worker2.js                                           Independent nodejs worker
+* ------------------------------------------------------------------------------
+*
+* worker iterates through all addresses,
+* marks expired after 2 hour more than expired
+* in case of client is away
+*
+* ==============================================================================
 */
+
+
 
 let rp = require('request-promise')
 let storage = require('./models/storage')
@@ -46,6 +54,18 @@ async function processJob (rows) {
 
         json.state=2
         await storage.saveJobResultsPromise(json)
+
+        // Set URL parameter
+        let URLset = json.callback_url
+        if (URLset.indexOf('?') !== -1) {
+          URLset = URLset +'&secret='+json.secret+'&state=2'
+        } else {
+          URLset = URLset +'?secret='+json.secret+'&state=2'
+        }
+
+        // Fire server side pingback
+        logger.log('worker3.js', 'firing expired callback: ' + URLset)
+        await rp({ uri: URLset, timeout: 2000 })
 
       }
 

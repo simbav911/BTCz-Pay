@@ -1,4 +1,4 @@
-BTCz-Pay (beta v0.1.1)
+BTCz-Pay (beta v0.1.3)
 ===================
 
 Self-hosted Node.js BitcoinZ payment gateway. Provides REST API (microservice).
@@ -86,7 +86,7 @@ TODO
 API
 ===
 
-### GET /api/request_payment/:expect/:currency/:message/:sellerAddress/:customerMail/:srvPingback/:cliPingbackSuccess/:cliPingbackError/:SpeedSweep
+### GET /api/request_payment/:expect/:currency/:message/:sellerAddress/:customerMail/:ipnPingback/:cliCallbackSuccess/:cliCallbackError/:SpeedSweep/:secret
 
 
 Create a request to pay, supported currencies: BTCZ, USD, EUR, CHF, GBP, RUB. Non-btcz currency is converted to btcz using current rate from coinmarketcap.com.
@@ -97,21 +97,55 @@ Message will be displayed to the client (for example, you can write "Payment for
 
 Keep Seller field private, it is also used for payouts.Callback_url will be requested once the invoice is paid.
 
-The srvPingback (URL) parameter is never returned to the client. This URL is sent from server side, only once the check_result.state = 5 (success), and it could also send some key pare info.
+The ipnPingback (URL) parameter is never returned to the client. This URL is sent from server side, only once the check_result.state = 5 (success) or check_result.state = 2 (expired), and it could also send some key pare info.
 
 The SpeedSweep parameter is to allow a speed payment (without confirmation). 0=disabled / 1=enabled
 The founds are taken from a tmp wallet that as to be created and stocked before.
 
+The secret parameter is the secret phrase returned for the IPN pingback.
 
+**Example full router path:**
 ```
-Example
-http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/treehorn/lebowski/http%3A%2F%2Fgoogle.com%2F/0
+http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE/test@test.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/0/01234abcd
 ```
+(By using full router path, all parameters are mandatory)
 
+**Example with query string:**
 ```
-Result:
+http://localhost:2222/api/request_payment/?expect=0.005&currency=BTCZ&message=wheres%20the%20money%20lebowski&seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&customerMail=test@test.com&ipnPingback=https%3A%2F%2Fwww.google.com&cliSuccessURL=https%3A%2F%2Fwww.google.com&cliErrorURL=https%3A%2F%2Fwww.google.com&SpeedSweep=0&secret=01234abcd
+
+Expanded:
+http://localhost:2222/api/request_payment/?
+     expect=0.005&
+     currency=BTCZ&
+     message=wheres%20the%20money%20lebowski&
+     seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&
+     customerMail=test@test.com&
+     ipnPingback=https%3A%2F%2Fwww.google.com&
+     cliSuccessURL=https%3A%2F%2Fwww.google.com&
+     cliErrorURL=https%3A%2F%2Fwww.google.com&
+     SpeedSweep=0&
+     secret=01234abcd
+```
+(By using query string, some parameters are optional )
+
+**Parameters definition:**
+`expect` = Mandatory - The expected amount to pay.
+`currency` = Mandatory - The currency code (supported: BTCZ, BTC, USD, EUR, CHF, GBP, RUB).
+`seller` = Mandatory - The seller BTCz address.
+`ipnPingback` = Mandatory - The IPN URL to get (from server side) once paid or expired.
+`message` = Optional - An optional message.
+`customerMail` = Optional - The customer eMail
+`cliSuccessURL` = Optional - The URL to redirect browser on success.
+`cliErrorURL` = Optional - The URL to redirect browser on expired.
+`SpeedSweep` = Optional - Use speed checkout (0=disabled / 1=enabled), default is 0.
+`secret` = Optional - The secret phrase that is appended to IPN call. If not set, the gateway generate a random one.
+
+**JSON result:**
+```
 {
   "id":"c5e9631d-b107-4022-8de5-ae9f0efd03af",
+  "secret":"01234abcd",
   "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972&message=Hello",
   "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DHello",
@@ -119,17 +153,18 @@ Result:
 }
 ```
 
-### GET /api/check_payment/:_id
+### GET /api/check_payment/:id
 
 
-Check payment by a unique invoice number returned by the "request_payment.id" call. Only state 2 (expired/err) and 5 (success) return a ping back URL.
+Check payment by a unique invoice number returned by the "request_payment.id" call. Only state 2 (expired/err) and 5 (success) return a callback URL.
+
+**Example**
 ```
-Example
 http://localhost:2222/api/check_payment/f22c44cb-e26a-4022-864f-00f0d523d48a
 ```
 
+**JSON result:**
 ```
-Result:
 {
   "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "btcz_expected":14.77818972,
@@ -149,7 +184,7 @@ Result:
 (the speed_sweep_fee is in %)
 
 
-States:
+**States:**
 ```
 0=Initialized
 1=Accepted
@@ -157,15 +192,23 @@ States:
 5=Success
 ```
 
-### GET /invoice/:_id
+### GET /invoice/:id
 
 Open/return the invoice template info with Qr code (as iframe).
 
+**Example**
 ```
-Example
 http://localhost:2222/invoice/f22c44cb-e26a-4022-864f-00f0d523d48a
 ```
 
+### IPN Pingback
+
+On success paid or expired, the gateway pingback to the defined `ipnPingback` url set by the request_payment/ call. The `secret` and the `state` is appended.
+
+**Pingback url example**
+`https://yourDomaine.com/yourPath/?and=yourParam&secret=01234abcd&state=5`
+or
+`https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2`
 
 
 UPDATES
@@ -186,3 +229,14 @@ v0.1.2
 - Added speed payment support.
 - Added unconfirmed founds info in the invoice.
 - Added payment amount in the QR.
+
+v0.1.3
+------
+- Added secret phrase return in JSON by request_payment/ call.
+- Added invoice state and secret param in IPN pingback.
+- added IPN pingback by expired state=2.
+- Manage optional parameters by query string (?) instead of router path (/).
+- Solved double url encoding issue.
+- Rewrite of some code parts.
+- Updated Web UI API explication with examples.
+- Added website icon.

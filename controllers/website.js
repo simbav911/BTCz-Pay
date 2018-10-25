@@ -1,11 +1,23 @@
 /**
+* ==============================================================================
 * BTCz-Pay
-* -----------
-* Self-hosted bitcoinZ payment gateway
+* ==============================================================================
 *
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
 *
-**/
+* ------------------------------------------------------------------------------
+* website.js                                             Required by btcz-pay.js
+* ------------------------------------------------------------------------------
+*
+* Handles the bitcoinZ website pages requests
+* I.e. the requests for invoicing templates page,
+* the FAQ page, the index page or the qr code generating page.
+*
+* ==============================================================================
+*/
 
 
 let express = require('express')
@@ -15,6 +27,7 @@ let crypto = require('crypto')
 let fs = require('fs')
 let path = require('path');
 let app = express();
+
 
 router.get('/generate_qr/:text', function (req, res) {
   let filename
@@ -32,9 +45,11 @@ router.get('/generate_qr/:text', function (req, res) {
   })
 })
 
+
 router.get('/', function (req, res) {
   return res.sendFile(path.join(__dirname + '/../docs/index.html'));
 })
+
 
 router.get('/invoice/:text', function (req, res) {
   return res.sendFile(path.join(__dirname + '/../docs/invoice.html'));

@@ -1,9 +1,22 @@
-
 /**
- * simple smoke tests check accessibility of
- * database and RPC
- *
- */
+* ==============================================================================
+* BTCz-Pay
+* ==============================================================================
+*
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
+* https://github.com/MarcelusCH/BTCz-Pay
+*
+* ------------------------------------------------------------------------------
+* smoke-test.js                                      Required by other processes
+* ------------------------------------------------------------------------------
+*
+* Simple smoke tests to check accessibility of database and RPC
+* Log error into consol and exit on error with code 1 or 2
+*
+* ==============================================================================
+*/
 
 let bitcoind = require('./models/blockchain')
 let rp = require('request-promise')
@@ -15,7 +28,7 @@ let assert = require('assert')
     let info = await bitcoind.getblockchaininfo()
     assert(info.result.chain)
   } catch (err) {
-    console.log('Bitcoin Core RPC problem: ', err)
+    console.log('BitcoinZ Core RPC problem: ', err)
     process.exit(1)
   }
 
@@ -23,7 +36,7 @@ let assert = require('assert')
     let couchdb = await rp.get({url: config.couchdb, json: true})
     assert(couchdb.db_name)
   } catch (err) {
-    console.log('couchdb problem: ', err)
-    process.exit(1)
+    console.log('Couchdb problem: ', err)
+    process.exit(2)
   }
 })()

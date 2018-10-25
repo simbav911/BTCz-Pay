@@ -8,7 +8,9 @@
   		<meta name="Keywords" content="pay.btcz.app BTCz BTC Payment Gateway API Crypto Bitcoin Bitcoinz Altcoins Block Chain Cryptography ">
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-      <link rel="shortcut icon" href="/images/btc_fav-5.png" sizes="32x32" type="image/x-icon">
+      <link rel="shortcut icon" href="/images/icoBTCZ.png" sizes="32x32" type="image/x-icon">
+      <link rel="apple-touch-icon" type="image/png" href="/images/icoBTCZ.png">
+      <link rel="icon" type="image/png" sizes="144x144" href="/images/icoBTCZ.png">
       <meta name="description" content="">
       <meta name="keywords" content="">
       <!-- CSS:: FONTS -->
@@ -46,8 +48,8 @@
 
           function createPayGateway() {
               var address = $("#form1_btczaddress").val();
-              var message = encodeURIComponent(encodeURIComponent($("#form1_message").val()));
-              var pingback = encodeURIComponent(encodeURIComponent($("#form1_pingback").val()));
+              var message = encodeURIComponent($("#form1_message").val());
+              var pingback = encodeURIComponent($("#form1_pingback").val());
               var amount = $("#form1_amount").val();
               var currency = $("#form1_currency").val();
               var customeremail = encodeURIComponent($("#form1_customermail").val());
@@ -64,13 +66,13 @@
 
               // Substitute def.
               if(message==''){
-                message='empty';
+                message='na';
               }
               if(pingback==''){
-                pingback=encodeURIComponent(encodeURIComponent('https://google.com'));
+                pingback=encodeURIComponent('https://google.com');
               }
               if(customeremail==''){
-                customeremail=encodeURIComponent('test.test@.test');
+                customeremail=encodeURIComponent('na');
               }
 
               var speedSweep = 0;
@@ -78,12 +80,10 @@
                 speedSweep=1;
               }
 
-              var cliPingback_succ = pingback;
-              var cliPingback_err = pingback;
 
               var request = new XMLHttpRequest();
 
-              request.open('GET', '/api/request_payment/'+amount+'/'+currency+'/'+message+'/'+address+'/'+customeremail+'/'+pingback+'/'+cliPingback_succ+'/'+cliPingback_err+'/'+speedSweep, true);
+              request.open('GET', '/api/request_payment/?expect='+amount+'&currency='+currency+'&message='+message+'&seller='+address+'&customerMail='+customeremail+'&ipnPingback='+pingback+'&SpeedSweep='+speedSweep, true);
               request.onload = function () {
 
                 // Begin accessing JSON data here

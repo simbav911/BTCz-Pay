@@ -1,17 +1,24 @@
 /**
+* ==============================================================================
 * BTCz-Pay
-* -----------
-* Self-hosted bitcoinZ payment gateway
+* ==============================================================================
 *
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
 *
-**/
-
-/**
- * worker iterates through all addresses,
- * get paid_and_sweeped_unconfirmed, wait confirmation
- * and pay to tmp address
+* ------------------------------------------------------------------------------
+* worker2.js                                           Independent nodejs worker
+* ------------------------------------------------------------------------------
+*
+* worker iterates through all addresses,
+* get paid_and_sweeped_unconfirmed, wait confirmation
+* and pay to tmp address (for speed pay)
+*
+* ==============================================================================
 */
+
 
 let storage = require('./models/storage')
 let config = require('./config')

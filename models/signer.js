@@ -1,15 +1,26 @@
 /**
+* ==============================================================================
 * BTCz-Pay
-* -----------
-* Self-hosted bitcoinZ payment gateway
+* ==============================================================================
 *
+* Version 0.1.3 beta
+*
+* Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
 *
-**/
+* ------------------------------------------------------------------------------
+* signer.js                                          Required by other processes
+* ------------------------------------------------------------------------------
+*
+*
+*
+* ==============================================================================
+*/
 
 let bitcore = require('bitcore-lib-btcz')
 let bitcoinjs = require('bitcoinjs-lib')
-// let config = require('../config')
+var validUrl = require('valid-url');
+
 
 exports.createTransaction = function (utxos, toAddress, amount, fixedFee, WIF, changeAddress) {
   amount = parseInt((amount * 100000000).toFixed(0))
@@ -142,6 +153,14 @@ exports.generateNewSegwitAddress = function () {
 
 exports.isAddressValid = function (address) {
   return bitcore.Address.isValid(address)
+}
+
+exports.isUrlValid = function (ThisURL) {
+  if (validUrl.isUri(ThisURL)){
+      return true
+  } else {
+      return false
+  }
 }
 
 exports.URI = function (paymentInfo) {
