@@ -209,7 +209,9 @@ On success paid or expired, the gateway pingback to the defined `ipnPingback` ur
 **Pingback url example**
 ```
 https://yourDomaine.com/yourPath/?and=yourParam&secret=01234abcd&state=5
+```
 or
+```
 https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2
 ```
 
