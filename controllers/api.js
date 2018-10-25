@@ -350,6 +350,8 @@ router.get('/api/cancel/:_id', function (req, res) {
 // -----------------------------------------------------------------------------
 router.get('/api/accept/:_id', function (req, res) {
 
+  logger.log('accept/', 'accept invoice: ', req.params._id)
+
   let row = [storage.getDocumentPromise(req.params._id)]
   Promise.all(row).then((values) => {
 
@@ -374,7 +376,7 @@ router.get('/api/accept/:_id', function (req, res) {
       'doctype': 'address'
 
     }
-    if ( values[0].state != "0"){storage.saveJobResultsPromise(json)}
+    if ( values[0].state == "0"){storage.saveJobResultsPromise(json)}
 
   })
 }) // --------------------------------------------------------------------------

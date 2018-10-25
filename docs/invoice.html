@@ -8,7 +8,9 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta http-equiv="ETag" content="1111">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <link rel="shortcut icon" href="../images/btc_fav-5.png" sizes="32x32" type="image/x-icon">
+        <link rel="shortcut icon" href="../images/icoBTCZ.png" sizes="32x32" type="image/x-icon">
+        <link rel="apple-touch-icon" type="image/png" href="../images/icoBTCZ.png">
+        <link rel="icon" type="image/png" sizes="144x144" href="../images/icoBTCZ.png">
         <meta name="description" content="">
         <meta name="keywords" content="">
         <!-- CSS:: FONTS -->
@@ -413,6 +415,7 @@
             }
 
             function submitAddr() {
+
               request.open('GET', '/api/accept/'+v_id, true);
               request.send();
 

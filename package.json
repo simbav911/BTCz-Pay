@@ -28,8 +28,10 @@
     "sinon": "^4.1.2",
     "standard": "^8.6.0",
     "supertest": "^3.0.0",
+    "valid-url": "^1.0.9",
     "winston": "^3.0.0",
     "zcash": "https://github.com/MarcelusCH/zcash.git",
-    "zmq": "^2.15.3"
+    "zmq": "^2.15.3",
+    "valid-url": "^1.0.9"
   }
 }

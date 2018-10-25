@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-
   <head>
+
 
       <title>BTCZ Payment Gateway API</title>
       <meta name="Description" content="Accept BTCz(BitcoinZ) payments now with out BTCz gateway API! Use our service to create gateways and confirm transactions for your website. ">
@@ -13,21 +13,18 @@
       <link rel="icon" type="image/png" sizes="144x144" href="/images/icoBTCZ.png">
       <meta name="description" content="">
       <meta name="keywords" content="">
-      <!-- CSS:: FONTS -->
       <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
       <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700,800" rel="stylesheet">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!-- CSS:: BOOTSTRAP -->
       <link rel="stylesheet" href="css/bootstrap.min.css">
-      <!-- CSS:: ANIMATION -->
-      <!-- CSS:: OWL -->
       <link rel="stylesheet" href="css/owl.carousel.css">
-      <!-- CSS:: -->
       <link rel="stylesheet" type="text/css" href="css/reset.css">
       <link rel="stylesheet" type="text/css" href="css/main.css">
       <link rel="stylesheet" type="text/css" href="css/custom.css">
 
+
       <script>
+
           if (!String.prototype.includes) {
               String.prototype.includes = function(search, start) {
                   'use strict';
@@ -43,9 +40,9 @@
               };
           }
 
-
-
-
+          // ---------------------------------------------
+          // Btn "Creat Payment Gateway"
+          // ---------------------------------------------
           function createPayGateway() {
               var address = $("#form1_btczaddress").val();
               var message = encodeURIComponent($("#form1_message").val());
@@ -64,7 +61,7 @@
                 return;
               }
 
-              // Substitute def.
+              // Substitute defauld
               if(message==''){
                 message='na';
               }
@@ -75,14 +72,14 @@
                 customeremail=encodeURIComponent('na');
               }
 
+              // Check speed checkout
               var speedSweep = 0;
               if (document.getElementById("SpeedSweep").checked){
                 speedSweep=1;
               }
 
-
+              // Call the request_payment/ API route
               var request = new XMLHttpRequest();
-
               request.open('GET', '/api/request_payment/?expect='+amount+'&currency='+currency+'&message='+message+'&seller='+address+'&customerMail='+customeremail+'&ipnPingback='+pingback+'&SpeedSweep='+speedSweep, true);
               request.onload = function () {
 
@@ -90,57 +87,44 @@
                 var data = JSON.parse(this.response);
                 if (request.status >= 200 && request.status < 400) {
 
+                  // If no error, update UI wit the gateway info
+                  if (!data.error){
 
-                    if (data.error !== undefined){
-                      alert(data.error);
-                    } else {
+                    $("#f-about_text").css('display', 'block');
+                    $("#gID1").html(data.id);
+                    $("#gID2").html(data.id);
+                    $("#gAPI").html(JSON.stringify(data, null, "\t"));
 
-                      $("#f-about_text").css('display', 'block');
-                      $("#gID1").html(data.id);
-                      $("#gID2").html(data.id);
+                    $("#iFrame").attr('src', "invoice/"+data.id);
+                    $('html, body').animate({
+                        scrollTop: $("#f-about_text").offset().top
+                    }, 1000);
 
-                      //$("#gSecret").html(obj.secret);
-                      $("#gAPI").html(JSON.stringify(data, null, "\t"));
-
-
-                      $("#iFrame").attr('src', "invoice/"+data.id);
-                      $('html, body').animate({
-                          scrollTop: $("#f-about_text").offset().top
-                      }, 1000);
+                  } else {
+                    alert(data.error);
                   }
 
                 } else {
-                  console.log('error');
-                  alert(result);
+                  alert('Error retrieving API');
                 }
               }
-
               request.send();
-
           }
-
-
-
 
           function resizeIframe() {
               var obj = document.getElementById("iFrame");
               obj.style.height = (obj.contentWindow.document.body.scrollHeight) + 'px';
               setTimeout('resizeIframe()', 200);
           }
+
       </script>
-
-      <style>
-
-
-
-
-      </style>
-
 
   </head>
 
   <body>
        <div data-template="3" class="f-wrapper ">
+
+           <!-- Top Header of the page  -->
            <div class="header_topbar">
                <div class="container">
                    <div class="row">
@@ -157,30 +141,18 @@
                                    </ul>
                                </div>
                                <div class="ht_rate">
-                                   <p>
-                                       BTCz/BTC: <span id="Z_BTC"></span> BTCz/USD: <span id="Z_USD"></span> BTCz/EUR: <span id="Z_EUR"></span>
-                                   </p>
+                                   <p>BTCz/BTC: <span id="Z_BTC"></span> BTCz/USD: <span id="Z_USD"></span> BTCz/EUR: <span id="Z_EUR"></span></p>
                                </div>
                            </div>
                        </div>
-
-                       <!--<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2">
-                           <div class="ht_right clearfix">
-                               <div class="pull-right f-address_switcher">
-                                   <div class="f-selected_add"> <span><img class="img-responsive" alt="Eng flag" src="assets/images/flag-e.png"> <span>English</span></span>
-                                   </div>
-                                   <ul class="f-dropdown" style="display: none;">
-                                       <li data-value="f-address_01">
-                                           <img alt="Eng flag" class="img-responsive" src="assets/images/flag-e.png">English</li>
-                                   </ul>
-                               </div>
-                           </div>
-                       </div>-->
-
                    </div>
                </div>
            </div>
+
+           <!-- Top of the page / API Test Form  -->
            <div class="f-header btc_header_home">
+
+               <!-- Menu barre  -->
                <div class="f-header_bar btc_header_bar_home">
                    <div class="container">
                        <div class="row">
@@ -197,31 +169,27 @@
                                        <ul>
                                            <li class="f-active"> <a href="/">Home</a>
                                            </li>
-
-
-                                           <li class=""> <a href="#" onClick="
-     $('html, body').animate({
-       scrollTop: $('#f-api').offset().top
-     }, 1000);
-         ">API</a>
+                                           <li class="">
+                                             <a href="#" onClick="
+                                               $('html, body').animate({
+                                                 scrollTop: $('#f-api').offset().top
+                                               }, 1000);
+                                                   ">API</a>
                                            </li>
-                                           <li class=""> <a href="#" onClick="
-     $('html, body').animate({
-       scrollTop: $('#plugins').offset().top
-     }, 1000);
-         ">Plugins</a>
+                                           <li class="">
+                                             <a href="#" onClick="
+                                               $('html, body').animate({
+                                                 scrollTop: $('#plugins').offset().top
+                                               }, 1000);
+                                                   ">Plugins</a>
                                            </li>
-                                           <li class=""> <a href="#" onClick="
-     $('html, body').animate({
-       scrollTop: $('#contactUs').offset().top
-     }, 1000);
-         ">Contact</a>
-
-
-
+                                           <li class="">
+                                             <a href="#" onClick="
+                                               $('html, body').animate({
+                                                 scrollTop: $('#contactUs').offset().top
+                                               }, 1000);
+                                                   ">Contact</a>
                                            </li>
-
-
                                            <li class="quote_btn"> <a target="_blank" href="https://www.mybitcoinzwallet.com/">Get a wallet</a>
                                            </li>
                                        </ul>
@@ -231,6 +199,8 @@
                        </div>
                    </div>
                </div>
+
+               <!-- API test FORM and WEB UI short description section  -->
                <div class="f-slider" style="top: 25%;">
                    <div class="f-slide_text container">
                        <div class="row">
@@ -293,39 +263,40 @@
                    </div>
                </div>
            </div>
+
+           <!-- LIVE GATEWAY section / Display info about the gateway -->
            <section id="f-about_text" style="display:none;">
                <div class="f-section f-about_text" style="padding-bottom:10px;">
                    <div class="container">
-
                        <div class="row clearfix">
 
+                          <!-- Live gateway informations  -->
                            <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
+
                                <h2>Your payment gateway is live!</h2>
 
                                <h3>API Response</h3>
                                <pre><b id="gAPI"></b></pre><br><br>
                                <h3>Gateway ID</h3>
                                <pre><b id="gID1"></b></pre><br><br>
-                               <h3>Gateway URL</h3>
+                               <h3>Gateway template URL</h3>
                                <pre>https://pay.btcz.app/invoice/<b id="gID2"></b></pre><br><br>
 
-
-                               <br><br> This is a free service and gateways are limited to 10 active/IP.<br> Please support us by donating<br><br>
-                               <pre><b>[BTCz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE
-<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ</pre>
-
+                               <br> This is a free and open-source service, please support us by donating.<br><br>
+<pre>
+<b>[BTCz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE
+<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ
+</pre>
 
                            </div>
 
+                           <!-- Gateway Invoice template  -->
                            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
-
                                <div class="desktop_img">
-
-
                                    <iframe id="iFrame" width="100%" style="min-height: 725px;" frameborder="0" scrolling="no" onload="resizeIframe()"></iframe>
-
                                </div>
                            </div>
+
                        </div>
                    </div>
                </div>
@@ -333,61 +304,106 @@
 
 
 
-
            <section id="f-api" style="display:block;" style="padding-top:0px;">
                <div class="f-section f-about_text" style="padding-top:60px;">
                    <div class="container">
                        <div class="row clearfix">
+
                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
                                <div class="f-section_head">
                                    <h2>API Info</h2>
                                </div>
-                               You can use our API to accept BTCz payments on your website and verify the transaction.
-                               <br><br><br>
+
+                               <p>You can use our API to accept BTCz payments on your website and verify the transaction.</p>
+
                                <h4>Creating a gateway</h4>
                                <ul>
 
-                 <br>
-                                   <li>URL:
-                                       <pre>https://pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:srvPingback/:cliPingbackSuccess/:cliPingbackError/0</pre>
+                                   <li><b>API ROUTE:</b>
+                                       <pre>/api/request_payment/:expect/:currency/:message/:sellerAddress/:customerMail/:ipnPingback/:cliCallbackSuccess/:cliCallbackError/:SpeedSweep/:secret</pre>
                                    </li>
-                                   <li>GET Example:
-                                       <pre>https://pay.btcz.app/api/request_payment/1/BTCZ/Hello/t1KhD2unS3KUjcVsANs5ySfxTVE9KTv6K4t/email%40test.test/http%253A%252F%252Fmysite.com%253A2222%252Fapi%252Ftest/http%253A%252F%252Fwww.worldartstamps.com/http%253A%252F%252Fbtcz.app</pre>
+                                   <li><b>GET Example full router path:</b>
+                                       <pre>https://pay.btcz.app/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE/test@test.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/0/01234abcd</pre>
                                    </li>
-                                   <li>
-                                      <b>Issue note: </b> Due to a API router issue, the 3 pinback URL's have to be encoded 2 time :
-                                      <pre>encodeURIComponent(encodeURIComponent('https://google.com'))</pre>
+                                   <li><b>GET Example with query string:</b>
+                                      <pre>https://pay.btcz.app/api/request_payment/?expect=0.005&currency=BTCZ&message=wheres%20the%20money%20lebowski&seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&customerMail=test@test.com&ipnPingback=https%3A%2F%2Fwww.google.com&cliSuccessURL=https%3A%2F%2Fwww.google.com&cliErrorURL=https%3A%2F%2Fwww.google.com&SpeedSweep=0&secret=01234abcd</pre>
+                                   </li>
+                                   <li><b>Expanded:</b>
+<pre>
+https://pay.btcz.app/api/request_payment/?
+  expect=0.005&
+  currency=BTCZ&
+  message=wheres%20the%20money%20lebowski&
+  seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&
+  customerMail=test@test.com&
+  ipnPingback=https%3A%2F%2Fwww.google.com&
+  cliSuccessURL=https%3A%2F%2Fwww.google.com&
+  cliErrorURL=https%3A%2F%2Fwww.google.com&
+  SpeedSweep=0&
+  secret=01234abcd
+</pre>
+                                   </li>
+                                    <li>
+                                      <b>Notes: </b>
+                                      <ul>
+                                        <li>By using full router path, all parameters are mandatory.</li>
+                                        <li>By using query string, some parameters are optional.</li>
+                                        <li>If the secret is not set, the gateway will generate a 20 bytes hex string.</li>
+                                        <li>Encode the URL's to awoid routing issue.</li>
+                                      </ul>
+                                    </li>
+
+                                   <li></br><b>Parameters definition:</b>
+                                     <ul>
+                                       <li><b>expect</b> : [Mandatory] The expected amount to pay.</li>
+                                       <li><b>currency</b> : [Mandatory] The currency code (supported: BTCZ, BTC, USD, EUR, CHF, GBP, RUB).</li>
+                                       <li><b>seller</b> : [Mandatory] The seller BTCz address.</li>
+                                       <li><b>ipnPingback</b> : [Mandatory] The IPN URL to get (from server side) once paid or expired.</li>
+                                       <li><b>message</b> : [Optional] An optional message.</li>
+                                       <li><b>customerMail</b> : [Optional] The customer eMail</li>
+                                       <li><b>cliSuccessURL</b> : [Optional] The URL to redirect browser on success.</li>
+                                       <li><b>cliErrorURL</b> : [Optional] The URL to redirect browser on expired.</li>
+                                       <li><b>SpeedSweep</b> : [Optional] Use speed checkout (0=disabled / 1=enabled), default is 0.</li>
+                                       <li><b>secret</b> : [Optional] The secret phrase that is appended to IPN call. If not set, the gateway generate a random one.</li>
+                                     </ul>
                                    </li>
 
-
-                                   <li>Sample Response:
-                                       <pre>{
+                                   <li></br><b>Sample JSON Response:</b>
+<pre>
+{
   "id":"c5e9631d-b107-4022-8de5-ae9f0efd03af",
+  "secret":"01234abcd",
   "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972&message=Hello",
   "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DHello",
   "qr_simple":"http://localhost:2222/generate_qr/t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm"
-}</pre>
+}
+</pre>
                                    </li>
 
-                                   <li>Invoice URL Example:
+                                   <li><b>Invoice URL template:</b>
                                        <pre>https://pay.btcz.app/invoice/4d30ed16-d729-4ee5-aeaa-d6787e79b90c</pre>
                                    </li>
 
                                </ul>
-                               <br>
+
+                               <br><br>
+
                                <h4>Fetching Data from Existing Gateway</h4>
                                <ul>
 
 
-                                   <li>URL:
-                                       <pre>https://pay.btcz.app/api/check_payment/:_id</pre>
+                                   <li><b>API ROUTE:</b>
+                                       <pre>/api/check_payment/:id</pre>
                                    </li>
-                                   <li>GET Example:
+
+                                   <li><b>GET Example:</b>
                                        <pre>https://pay.btcz.app/api/check_payment/4d30ed16-d729-4ee5-aeaa-d6787e79b90c</pre>
                                    </li>
-                                   <li>Sample Response:
-                                       <pre>{
+                                   <li><b>Sample Response:</b>
+<pre>
+{
   "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "btcz_expected":14.77818972,
   "speed_sweep_fee":5,
@@ -401,9 +417,19 @@
   "state":0,
   [optional] "successURL":"https://mysite_or_IP/result/?Hello=1",
   [optional] "errURL":"https://mysite_or_IP/result/?Hello=0"
-}</pre>(the speed_sweep_fee is in %)
+}
+</pre>
 
                                    </li>
+
+                                   <li>
+                                     <b>Notes: </b>
+                                     <ul>
+                                       <li>The speed_sweep_fee is in %. (5% for speed checkout, no extra fee for standard checkout)</li>
+                                       <li>Use the "id" from the request_payment/ call JSON return.</li>
+                                     </ul>
+                                   </li>
+
                                </ul>
                                <br>
 
@@ -411,25 +437,38 @@
 
 
                                <br>
-                               <h4>Other Information</h4>
+                               <h4>Other Informations</h4>
+
                                <ul>
-                                   <li>States explained (you will only receive a pingback with states 2-errURL and 5-successURL):
+                                   <li><b>States explained</b>
                                        <ul>
                                            <li>0: Awaiting payor to continue</li>
                                            <li>1: Awaiting payment</li>
                                            <li>2: Gateway expired</li>
-                                           <li>5: Payment & Pingback completed</li>
+                                           <li>5: Payment & IPN Pingback completed</li>
                                        </ul>
                                    </li>
-                                   <li>Standard tx fee: 0.0001</li>
-                                   <li>TX confirmation count: 2</li>
-                                   <li>State 5 execute the :srvPingback URL (on server side)</li>
 
+                                   <li><b>IPN pingback:</b>
+                                       <ul>
+                                           <li>On success paid or expired, the gateway pingback to the defined ipnPingback url set by the request_payment/ call. The secret and the state is appended.
+                                            <pre>https://yourDomaine.com/yourPath/?and=yourParam&secret=01234abcd&state=5</pre>
+                                            <pre>https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2</pre>
+                                           </li>
+                                       </ul>
+                                   </li>
+
+                                   <li><b>More:</b>
+                                       <ul>
+                                         <li>You will only receive a callback URL in the JSON with states 2-errURL and 5-successURL</li>
+                                         <li>Standard tx fee: 0.0001</li>
+                                         <li>TX confirmation count: 2</li>
+                                         <li>State 2 and 5 execute the :ipnPingback URL (on server side)</li>
+                                       </ul>
+                                   </li>
 
                                </ul>
-                               <br><br> This is a <b>free</b> and <b>OPEN SOURCE</b> service, please support us by donating<br><br>
-               <pre><b>[pay.btcz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE
-<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ</pre>
+
                            </div>
                        </div>
                    </div>
@@ -508,6 +547,12 @@
                                                          <a href="https://forum.btcz.rocks/t/community-hosted-payment-gateway/842">https://forum.btcz.rocks/t/community-hosted-payment-gateway/842</a>
                                                        </li>
                                       </ul>
+
+                                      <br><br> This is a <b>free</b> and <b>OPEN SOURCE</b> service, please support us by donating<br><br>
+<pre>
+<b>[pay.btcz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE
+<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ
+</pre>
 
                                         <br><br><br><br>
                                    </div>
