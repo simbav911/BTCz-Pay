@@ -321,13 +321,13 @@
                                <ul>
 
                                    <li><b>API ROUTE:</b>
-                                       <pre>/api/request_payment/:expect/:currency/:message/:sellerAddress/:customerMail/:ipnPingback/:cliCallbackSuccess/:cliCallbackError/:SpeedSweep/:secret</pre>
+                                       <pre>/api/request_payment/:expect/:currency/:message/:seller/:customerMail/:ipnPingback/:cliCallbackSuccess/:cliCallbackError/:SpeedSweep/:secret</pre>
                                    </li>
                                    <li><b>GET Example full router path:</b>
-                                       <pre>https://pay.btcz.app/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE/test@test.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/0/01234abcd</pre>
+                                       <pre>https://pay.btcz.app/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE/test@test.com/https%253A%252F%252Fwww.google.com/https%253A%252F%252Fwww.google.com/https%253A%252F%252Fwww.google.com/0/01234abcd</pre>
                                    </li>
                                    <li><b>GET Example with query string:</b>
-                                      <pre>https://pay.btcz.app/api/request_payment/?expect=0.005&currency=BTCZ&message=wheres%20the%20money%20lebowski&seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&customerMail=test@test.com&ipnPingback=https%3A%2F%2Fwww.google.com&cliSuccessURL=https%3A%2F%2Fwww.google.com&cliErrorURL=https%3A%2F%2Fwww.google.com&SpeedSweep=0&secret=01234abcd</pre>
+                                      <pre>https://pay.btcz.app/api/request_payment/?expect=1.235&amp;currency=BTCZ&message=wheres%20the%20money%20lebowski&seller=t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE&customerMail=test@test.com&ipnPingback=https%3A%2F%2Fwww.google.com&cliSuccessURL=https%3A%2F%2Fwww.google.com&cliErrorURL=https%3A%2F%2Fwww.google.com&SpeedSweep=0&secret=01234abcd</pre>
                                    </li>
                                    <li><b>Expanded:</b>
 <pre>
@@ -350,7 +350,11 @@ https://pay.btcz.app/api/request_payment/?
                                         <li>By using full router path, all parameters are mandatory.</li>
                                         <li>By using query string, some parameters are optional.</li>
                                         <li>If the secret is not set, the gateway will generate a 20 bytes hex string.</li>
-                                        <li>Encode the URL's to awoid routing issue.</li>
+                                        <li>Encode the URL's to awoid routing issue:</li>
+                                          <ul>
+                                              <li>Simple URL encoding by using GET with query string.</li>
+                                              <li>Double URL encoding by using GET with full router path.</li>
+                                          </ul>
                                       </ul>
                                     </li>
 

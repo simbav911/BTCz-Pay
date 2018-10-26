@@ -106,7 +106,7 @@ The secret parameter is the secret phrase returned for the IPN pingback.
 
 **Example full router path:**
 ```
-http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE/test@test.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/https%3A%2F%2Fwww.google.com/0/01234abcd
+http://localhost:2222/api/request_payment/0.005/BTCZ/wheres%20the%20money%20lebowski/t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE/test@test.com/https%253A%252F%252Fwww.google.com/https%253A%252F%252Fwww.google.com/https%253A%252F%252Fwww.google.com/0/01234abcd
 ```
 (By using full router path, all parameters are mandatory)
 
@@ -240,7 +240,7 @@ v0.1.3
 - Added invoice state and secret param in IPN pingback.
 - added IPN pingback by expired state=2.
 - Manage optional parameters by query string (?) instead of router path (/).
-- Solved double url encoding issue.
+- Solved double url encoding issue (by using query string). For route full path, you should use double url encoding.
 - Rewrite of some code parts.
 - Updated Web UI API explication with examples.
 - Added website icon.
