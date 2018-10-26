@@ -1,4 +1,4 @@
-WooCommerce BTCz Plugin (beta v0.1.0)
+WooCommerce BTCz Plugin (beta v0.1.3)
 ===================
 
 
