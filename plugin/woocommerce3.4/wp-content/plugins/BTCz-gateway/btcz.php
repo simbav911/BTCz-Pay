@@ -5,7 +5,7 @@
  * Author:              BTCz.app
  * Author URI:          https://pay.BTCz.app
  * License:             MIT
- * Version:             0.1.0
+ * Version:             0.1.3
  * Requires at least:   3.4
  *
  */
@@ -161,7 +161,7 @@ function add_woocommerce_btcz_gateway() {
 
           $ch = curl_init();
           curl_setopt_array($ch, array(
-              CURLOPT_URL => "$APIUrl/" . urlencode($Amount) . "/" . urlencode($CurrencyCode)  . "/hello/" . urlencode($MerchantAddress) . "/" . urlencode($MerchantEmail) . "/" . $query  . "/0" . ,
+              CURLOPT_URL => "$APIUrl/" . urlencode($Amount) . "/" . urlencode($CurrencyCode)  . "/na/" . urlencode($MerchantAddress) . "/" . urlencode($MerchantEmail) . "/" . $query . "/0/0123abcd",
               CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
               CURLOPT_CUSTOMREQUEST => "GET",
               CURLOPT_HTTPHEADER => array(
@@ -171,7 +171,7 @@ function add_woocommerce_btcz_gateway() {
 
           //curl_setopt($ch, CURLOPT_URL, $url);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1 ($MerchantEmail)");
+          curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1.3 ($MerchantEmail)");
 
           $result = curl_exec($ch);
           $info = curl_getinfo($ch);
@@ -230,7 +230,8 @@ function add_woocommerce_btcz_gateway() {
     			if(isset($uID) && !empty($uID) && strlen($uID) == 36) {
 
     				$InvoiceURL = "https://pay.btcz.app/invoice/".$uID;
-    				echo 'Please pay below:<br><br><iframe id="iFrame" style="min-height: 765px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no" onload="resizeIframe()"></iframe>';
+            echo $order->get_checkout_order_received_url();
+            echo 'Please pay below:<br><br><iframe id="iFrame" style="min-height: 835px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no" onload="resizeIframe()"></iframe>';
     				echo "<script type=\"text/javascript\">
     				function resizeIframe() {
     					var obj = document.getElementById(\"iFrame\");
@@ -381,17 +382,7 @@ function view_order_custom($order_id) {
     return false;
 
 
-    // Check if contains ''//localhost' - for test server -----------------------------------------------------------------------------------------------------
-    if (strpos($order->get_checkout_order_received_url(), '//localhost') !== false && json_decode($result)->state==5 && $order->get_status() != 'completed') {
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $order->get_checkout_order_received_url());
-      curl_setopt($ch, CURLOPT_HEADER, false);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_exec($ch);
-      curl_close($ch);
 
-      echo "Test server localhost just updated server API callback.</br>";
-    }
 
   ?>
     <h2>Payment details</h2>
@@ -401,11 +392,25 @@ function view_order_custom($order_id) {
 
   $InvoiceURL = "https://pay.btcz.app/invoice/" . $order->get_transaction_id($this);
   if (json_decode($result)->state==1){
-    echo '<iframe id="iFrame" style="min-height: 785px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no"></iframe>';
+    echo '<iframe id="iFrame" style="min-height: 890px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no"></iframe>';
   } else if (json_decode($result)->state==0) {
     echo '<iframe id="iFrame" style="min-height: 420px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no"></iframe>';
   } else {
-    echo '<iframe id="iFrame" style="min-height: 400px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no"></iframe>';
+    echo '<iframe id="iFrame" style="min-height: 500px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no"></iframe>';
+  }
+
+  if (json_decode($result)->state==2){
+    if (!$order->update_status('cancelled')){
+      $order->add_order_note("Gateway API information: " . $result);
+      $order->update_status( 'cancelled');
+      $order->save();
+    }
+  } else if (json_decode($result)->state==5) {
+    if (!$order->update_status('completed')){
+      $order->add_order_note("Gateway API information: " . $result);
+      $order->update_status( 'completed');
+      $order->save();
+    }
   }
 
 
@@ -456,12 +461,22 @@ function callback_handler($order_id) {
     $InvoiceURL = "https://pay.btcz.app/invoice/" . $order->get_transaction_id($this);
     echo '<iframe id="iFrame" style="min-height: 400px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no"></iframe>';
 
+    if (json_decode($result)->state==2){
+      if (!$order->update_status('cancelled')){
+        $order->add_order_note("Gateway API information: " . $result);
+        $order->update_status( 'cancelled');
+        $order->save();
+      }
+    } else if (json_decode($result)->state==5) {
+      if (!$order->update_status('completed')){
+        $order->add_order_note("Gateway API information: " . $result);
+        $order->update_status( 'completed');
+        $order->save();
+      }
+    }
 
 
 
 
-    $order->add_order_note("Gateway API information: " . $result);
-    $order->update_status( 'completed');
-    $order->save();
 
 }
