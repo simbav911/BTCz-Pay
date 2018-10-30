@@ -244,9 +244,9 @@
                       $("#stage2").css('display', 'none');
                       $("#expired").css('display', 'block');
                       $("#completed").css('display', 'none');
-                      if (data.errURL && window.top.location.href != data.errURL) {
+                      if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
-                              window.top.location.href = data.errURL;
+                              window.top.location.href = data.err_callback_url;
                           }, 3000);
                       }
                   } else if (data.state == "3") {
@@ -294,9 +294,9 @@
                       $("#infoTop").html(newInfo);
 
 
-                      if (data.successURL && window.top.location.href != data.successURL) {
+                      if (data.success_callback_url && window.top.location.href != data.success_callback_url) {
                           setTimeout(function() {
-                              window.top.location.href = data.successURL;
+                              window.top.location.href = data.success_callback_url;
                           }, 3000);
                       }
                   }
