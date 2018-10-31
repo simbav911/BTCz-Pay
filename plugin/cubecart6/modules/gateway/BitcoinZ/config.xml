@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <installer version="1.0">
   <info>
-	<uid>BTCz.in</uid>
+	<uid>BTCz.app</uid>
 	<type>gateway</type>
 	<mobile_optimized>true</mobile_optimized>
 	<name><![CDATA[Bitcoinz]]></name>
@@ -9,8 +9,8 @@
 	<version>1.0.0</version>
 	<minVersion>5.0.0</minVersion>
 	<maxVersion>6.*.*</maxVersion>
-	<creator><![CDATA[BTCz.in]]></creator>
-	<homepage><![CDATA[https://BTCz.in]]></homepage>
+	<creator><![CDATA[BTCz.app]]></creator>
+	<homepage><![CDATA[https://pay.BTCz.app]]></homepage>
 	<block>false</block>
   </info>
 </installer>
