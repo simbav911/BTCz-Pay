@@ -28,18 +28,23 @@ Usage example
 ----------------
 
 Checkout:
+
 ![](https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/img/Cubecart1.png)
 
 Accept:
+
 ![](https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/img/Cubecart2.png)
 
 Pay:
+
 ![](https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/img/Cubecart3.png)
 
 Done:
+
 ![](https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/img/Cubecart4.png)
 
 Admin automatique notes:
+
 ![](https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/img/Cubecart5.png)
 
 
