@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions version="1.0">
+ <group name="bitcoinz">
+  <string name="sk_live"><![CDATA[Secret Key *]]></string>
+  <string name="address"><![CDATA[BTCz Merchant Address *]]></string>
+  <string name="email"><![CDATA[Merchant Email *]]></string>
+ </group>
+</definitions>
