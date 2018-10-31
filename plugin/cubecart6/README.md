@@ -15,10 +15,10 @@ sudo unzip Cubecart-BTCz-0.1.zip -d /var/www/html/cubecart/
 
 Change owner of the `BitcoinZ/` folder:
 ```
-sudo chown -R www-data:www-data /var/www/html/cubecart/modules/gateway/Bitcoinz/
+sudo chown -R www-data:www-data /var/www/html/cubecart/modules/gateway/BitcoinZ/
 ```
 
-Log into your Cubecart admin panel, goto Extensions->Manage extensions and activate "Bitcoinz Payment Gateway" plugin:
+Log into your Cubecart admin panel, goto "Extensions->Manage extensions" and activate "Bitcoinz Payment Gateway" plugin:
 ![](https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/img/Cubecart-ManageExtensions.png)
 
 Clic on the "edit" button, change the "Secret key" and the "BTCz Merchand Address", clic save:
