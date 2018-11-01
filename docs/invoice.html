@@ -246,8 +246,9 @@
                       $("#completed").css('display', 'none');
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
+                            console.log(data.err_callback_url);
                             window.top.postMessage(data.err_callback_url, '*');
-                              window.top.location.href = data.err_callback_url;
+                            window.top.location.href = data.err_callback_url;
                           }, 3000);
                       }
                   } else if (data.state == "3") {
@@ -275,7 +276,7 @@
                       var newInfo = "<h3>This invoice has been paid!</h3>Address: <b>" + data.generated + "</b><br><br>Amount Requested: <b>" + data.btcz_expected + " BTCz</b><br>Amount Received: <b>" + data.btcz_actual + " BTCz " + UnconfirmedPaid +"</b><br><br>Associated Transactions:";
 
                       var jsonArray =JSON.stringify(data.tx)
-                      console.log(jsonArray); // 1537807193895
+                      //console.log(jsonArray); // 1537807193895
 
 
 
@@ -283,7 +284,7 @@
                       var tx_array = tx_array[4].toString();
                       var tx_array = tx_array.split(",");
 
-                      console.log(tx_array[0]);
+                      //console.log(tx_array[0]);
 
                       //var arrayLength = tx_array.length;
                       //for (var i = 0; i < arrayLength; i++) {
@@ -297,8 +298,9 @@
 
                       if (data.success_callback_url && window.top.location.href != data.success_callback_url) {
                           setTimeout(function() {
+                            console.log(data.success_callback_url);
                             window.top.postMessage(data.success_callback_url, '*');
-                              window.top.location.href = data.success_callback_url;                              
+                            window.top.location.href = data.success_callback_url;
                           }, 3000);
                       }
                   }
