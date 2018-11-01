@@ -314,6 +314,14 @@
                   if (data.error != undefined) {
                     console.log(data.error);
                     if (data.error === 'gateway expired') {
+                      if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
+                          setTimeout(function() {
+                            console.log("Expired Gateway Callback in error");
+                            console.log(data.err_callback_url);
+                            window.top.postMessage(data.err_callback_url, '*');
+                            window.top.location.href = data.err_callback_url;
+                          }, 3000);
+                      }
                       $("#stage1").css('display', 'none');
                       $("#stage2").css('display', 'none');
                       $("#completed").css('display', 'none');
