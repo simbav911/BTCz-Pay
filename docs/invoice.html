@@ -191,6 +191,10 @@
                 if (request.status >= 200 && request.status < 400) {
 
 
+                  console.log("-------------------------------------");
+                  window.top.postMessage(data.status '*')
+                  console.log("-------------------------------------");
+
                   var endTime = data.timestamp_stop;
                   var startTime = data.timestamp_start;
                   var currentTime = data.timestamp_now;
