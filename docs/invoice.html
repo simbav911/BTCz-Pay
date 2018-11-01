@@ -246,8 +246,8 @@
                       $("#completed").css('display', 'none');
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
+                            window.top.postMessage(data.err_callback_url, '*');
                               window.top.location.href = data.err_callback_url;
-                              window.top.postMessage(data.err_callback_url, '*');
                           }, 3000);
                       }
                   } else if (data.state == "3") {
@@ -297,8 +297,8 @@
 
                       if (data.success_callback_url && window.top.location.href != data.success_callback_url) {
                           setTimeout(function() {
-                              window.top.location.href = data.success_callback_url;
-                              window.top.postMessage(data.success_callback_url, '*');
+                            window.top.postMessage(data.success_callback_url, '*');
+                              window.top.location.href = data.success_callback_url;                              
                           }, 3000);
                       }
                   }
