@@ -313,10 +313,12 @@
 
                   if (data.error != undefined) {
                     console.log(data.error);
+                    console.log("Expired Gateway Callback in !=undefined 1");
                     if (data.error === 'gateway expired') {
+                      console.log("Expired Gateway Callback in in !=undefined 2");
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
-                            console.log("Expired Gateway Callback in error");
+                            console.log("Expired Gateway Callback in in !=undefined 3");
                             console.log(data.err_callback_url);
                             window.top.postMessage(data.err_callback_url, '*');
                             window.top.location.href = data.err_callback_url;
