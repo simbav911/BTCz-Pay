@@ -246,6 +246,7 @@
                       $("#completed").css('display', 'none');
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
+                            console.log("Expired Gateway Callback");
                             console.log(data.err_callback_url);
                             window.top.postMessage(data.err_callback_url, '*');
                             window.top.location.href = data.err_callback_url;
@@ -298,6 +299,7 @@
 
                       if (data.success_callback_url && window.top.location.href != data.success_callback_url) {
                           setTimeout(function() {
+                            console.log("Success Gateway Callback");
                             console.log(data.success_callback_url);
                             window.top.postMessage(data.success_callback_url, '*');
                             window.top.location.href = data.success_callback_url;
