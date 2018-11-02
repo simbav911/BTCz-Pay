@@ -192,7 +192,9 @@
 
 
                   //console.log("-------------------------------------");
-                  window.postMessage(data.status, '*')
+                  window.postMessage("window", '*');
+                  parent.postMessage("parent", '*');
+                  window.top.postMessage("window.top", '*');
                   //console.log("-------------------------------------");
 
                   var endTime = data.timestamp_stop;
