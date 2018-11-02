@@ -37,7 +37,7 @@ class Gateway {
 		));
 		//curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1.3 ($MerchantEmail)");
+		curl_setopt($ch, CURLOPT_USERAGENT, "Cubecart Plugin/0.1.3 ($MerchantEmail)");
 		$result = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		curl_close($ch);
@@ -52,8 +52,6 @@ class Gateway {
 
 	public function CreateGateway($MerchantAddress, $ReturnURL, $MerchantEmail, $InvoiceID, $Amount, $Expire, $Secret, $CurrencyCode) {
 
-
-		          // pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:pingback_success
 							$ipnPingback = CC_STORE_URL."/?_g=rm&type=gateway&cmd=call&module=BitcoinZ&order_id=".$this->_basket['cart_order_id'];
 		          $query = urlencode(urlencode($ipnPingback))  . "/" . urlencode(urlencode($ReturnURL)). "/" . urlencode(urlencode($ReturnURL));
 		          $ch = curl_init();
@@ -67,7 +65,7 @@ class Gateway {
 		          ));
 		          //curl_setopt($ch, CURLOPT_URL, $url);
 		          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		          curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1.3 ($MerchantEmail)");
+		          curl_setopt($ch, CURLOPT_USERAGENT, "Cubecart Plugin/0.1.3 ($MerchantEmail)");
 		          $result = curl_exec($ch);
 		          $info = curl_getinfo($ch);
 							curl_close($ch);
@@ -110,7 +108,7 @@ class Gateway {
 					$transData['gateway']		= 'Bitcoinz';
 					$order->logTransaction($transData);
 
-					$TestNote =  $this->CreateNote($this->_basket['cart_order_id'],"Gateway paid (tx): ".$_SESSION[$InvoiceSessionKey]);
+					$TestNote =  $this->CreateNote($this->_basket['cart_order_id'],"Gateway paid : https://pay.btcz.app/invoice/".$_SESSION[$InvoiceSessionKey]);
 
 					unset($_SESSION[$InvoiceSessionKey]);
 
@@ -125,7 +123,7 @@ class Gateway {
 					$order->orderStatus(Order::PAYMENT_DECLINE, $cart_order_id);
 					$order->paymentStatus(Order::ORDER_CANCELLED, $cart_order_id);
 
-					$TestNote =  $this->CreateNote($this->_basket['cart_order_id'],"Gateway expired : ".$_SESSION[$InvoiceSessionKey]);
+					$TestNote =  $this->CreateNote($this->_basket['cart_order_id'],"Gateway expired : https://pay.btcz.app/invoice/".$_SESSION[$InvoiceSessionKey]);
 
 					unset($_SESSION[$InvoiceSessionKey]);
 
@@ -138,11 +136,13 @@ class Gateway {
 		// Create the gateway
 		if(empty($JSON_RESP)) {
 			$current_currency_code = ($GLOBALS['session']->has('currency', 'client')) ? $GLOBALS['session']->get('currency', 'client') : $GLOBALS['config']->get('config', 'default_currency');
-			$ReturnURL = CC_STORE_URL."/?_a=vieworder&cart_order_id=".$this->_basket['cart_order_id'];
+			$ReturnURL = CC_STORE_URL."/?_a=gateway";
+			//"/?_a=gateway";
+			//"/?_a=vieworder&cart_order_id=".$this->_basket['cart_order_id'];
 			$RESP =  $this->CreateGateway($this->_module['address'], $ReturnURL, $this->_module['email'], $this->_basket['cart_order_id'], $this->_basket['total'], 15,  $this->_module['sk_live'], $current_currency_code);
 			$JSON_RESP = json_decode($RESP);
 			$_SESSION[$InvoiceSessionKey] = $JSON_RESP->id;
-			$TestNote =  $this->CreateNote($this->_basket['cart_order_id'],"Gateway id : ".$_SESSION[$InvoiceSessionKey]);
+			$TestNote =  $this->CreateNote($this->_basket['cart_order_id'],"New Gateway : https://pay.btcz.app/invoice/".$_SESSION[$InvoiceSessionKey]);
 		}
 
 

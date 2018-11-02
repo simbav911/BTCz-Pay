@@ -347,7 +347,7 @@ router.get('/api/cancel/:_id', function (req, res) {
 
       // Fire server side pingback
       logger.log('/api/cancel/', ['firing expired callback: ' , URLset])
-      rp({ uri: URLset, timeout: 2000 })
+      rp({ uri: URLset, timeout: 15000 })
 
     }
 

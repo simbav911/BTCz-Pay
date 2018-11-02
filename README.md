@@ -244,3 +244,5 @@ v0.1.3
 - Rewrite of some code parts.
 - Updated Web UI API explication with examples.
 - Added website icon.
+- Added postMessage(Callback URL) in invoice.html for cross-domain data transfer (iFrame->windows.top).
+- Added Cubecart Plugin (beta)
