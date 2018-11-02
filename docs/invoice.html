@@ -191,11 +191,6 @@
                 if (request.status >= 200 && request.status < 400) {
 
 
-                  //console.log("-------------------------------------");
-                  window.postMessage("window", '*');
-                  parent.postMessage("parent", '*');
-                  window.top.postMessage("window.top", '*');
-                  //console.log("-------------------------------------");
 
                   var endTime = data.timestamp_stop;
                   var startTime = data.timestamp_start;
@@ -250,11 +245,9 @@
                       $("#stage2").css('display', 'none');
                       $("#expired").css('display', 'block');
                       $("#completed").css('display', 'none');
+                      window.top.postMessage(data.err_callback_url, '*');
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
-                            console.log("Expired Gateway Callback");
-                            console.log(data.err_callback_url);
-                            window.top.postMessage(data.err_callback_url, '*');
                             window.top.location.href = data.err_callback_url;
                           }, 3000);
                       }
@@ -302,12 +295,9 @@
                       //}
                       $("#infoTop").html(newInfo);
 
-
+                      window.top.postMessage(data.success_callback_url, '*');
                       if (data.success_callback_url && window.top.location.href != data.success_callback_url) {
                           setTimeout(function() {
-                            console.log("Success Gateway Callback");
-                            console.log(data.success_callback_url);
-                            window.top.postMessage(data.success_callback_url, '*');
                             window.top.location.href = data.success_callback_url;
                           }, 3000);
                       }
@@ -318,15 +308,10 @@
                   }
 
                   if (data.error != undefined) {
-                    console.log(data.error);
-                    console.log("Expired Gateway Callback in !=undefined 1");
                     if (data.error === 'gateway expired') {
-                      console.log("Expired Gateway Callback in in !=undefined 2");
+                      window.top.postMessage(data.err_callback_url, '*');
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
-                            console.log("Expired Gateway Callback in in !=undefined 3");
-                            console.log(data.err_callback_url);
-                            window.top.postMessage(data.err_callback_url, '*');
                             window.top.location.href = data.err_callback_url;
                           }, 3000);
                       }
