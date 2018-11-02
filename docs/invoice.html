@@ -309,12 +309,6 @@
 
                   if (data.error != undefined) {
                     if (data.error === 'gateway expired') {
-                      window.top.postMessage(data.err_callback_url, '*');
-                      if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
-                          setTimeout(function() {
-                            window.top.location.href = data.err_callback_url;
-                          }, 3000);
-                      }
                       $("#stage1").css('display', 'none');
                       $("#stage2").css('display', 'none');
                       $("#completed").css('display', 'none');
