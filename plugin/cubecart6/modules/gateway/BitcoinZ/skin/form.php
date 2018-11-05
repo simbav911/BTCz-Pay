@@ -1,7 +1,5 @@
 <div class="row thickpad">
-   <div class="medium-12 small-12 columns">
 		<iframe  id="iFrame" width="100%" style="min-height: 800px" frameborder="0" src="{$module.BTCz_InvoiceURL}" scrolling="no" onload="resizeIframe()" ></iframe>
-   </div>
 </div>
 {literal}
 <style>
