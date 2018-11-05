@@ -32,25 +32,29 @@
 }
 </style>
 <script type="text/javascript">
-$(document).ready(function() {
-  var i =document.getElementsByTagName("input");
-  for( var n in i){
-    if (i[n].value==="Make Payment"){
-      i[n].style.visibility = "hidden";
+  window.onload = function() {
+    var i =document.getElementsByTagName("input");
+    for( var n in i){
+      if (i[n].value==="Make Payment"){
+        i[n].style.visibility = "hidden";
+      }
     }
+  };
+</script>
+<script type="text/javascript">
+  window.addEventListener('message', function(event) {
+      if (~event.origin.indexOf('pay.btcz.app')) {
+          setTimeout(function() {
+            window.top.location.href = event.data;
+          }, 3000);
+      }
+  });
+</script>
+<script type="text/javascript">
+  function resizeIframe() {
+  	var obj = document.getElementById("iFrame");
+  	obj.style.height = (obj.contentWindow.document.body.scrollHeight) + 'px';
+  	setTimeout('resizeIframe()', 200);
   }
-});
-window.addEventListener('message', function(event) {
-    if (~event.origin.indexOf('pay.btcz.app')) {
-        setTimeout(function() {
-          window.top.location.href = event.data;
-        }, 3000);
-    }
-});
-function resizeIframe() {
-	var obj = document.getElementById("iFrame");
-	obj.style.height = (obj.contentWindow.document.body.scrollHeight) + 'px';
-	setTimeout('resizeIframe()', 200);
-}
 </script>
 {/literal}

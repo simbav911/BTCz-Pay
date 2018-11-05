@@ -135,10 +135,12 @@ class Gateway {
 
 		// Create the gateway
 		if(empty($JSON_RESP)) {
-			$current_currency_code = ($GLOBALS['session']->has('currency', 'client')) ? $GLOBALS['session']->get('currency', 'client') : $GLOBALS['config']->get('config', 'default_currency');
+			$current_currency_code = $GLOBALS['config']->get('config', 'default_currency'); // ($GLOBALS['session']->has('currency', 'client')) ? $GLOBALS['session']->get('currency', 'client') : $GLOBALS['config']->get('config', 'default_currency');
 			$ReturnURL = CC_STORE_URL."/?_a=gateway";
 			//"/?_a=gateway";
 			//"/?_a=vieworder&cart_order_id=".$this->_basket['cart_order_id'];
+
+
 			$RESP =  $this->CreateGateway($this->_module['address'], $ReturnURL, $this->_module['email'], $this->_basket['cart_order_id'], $this->_basket['total'], 15,  $this->_module['sk_live'], $current_currency_code);
 			$JSON_RESP = json_decode($RESP);
 			$_SESSION[$InvoiceSessionKey] = $JSON_RESP->id;

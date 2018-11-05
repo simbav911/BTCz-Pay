@@ -1,4 +1,4 @@
-Cubecart BTCz Plugin (beta v0.1.2)
+Cubecart BTCz Plugin (beta v0.1.3)
 ===================
 
 
@@ -6,7 +6,7 @@ Install
 ---------
 
 Download Zip File:
-https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/Cubecart-BTCz-0.1.2.zip
+https://github.com/MarcelusCH/BTCz-Pay/raw/master/plugin/cubecart6/Cubecart-BTCz-0.1.3.zip
 
 Unzip the content in your Cubecart root folder (ubuntu 16.04):
 ```
