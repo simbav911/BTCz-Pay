@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.1.3 beta
+* Version 0.2.0 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -13,7 +13,7 @@
 * ------------------------------------------------------------------------------
 *
 * Worker iterates through all addresses,
-* marks paid and fires callbacks
+* marks paid and fires pingback
 *
 * ==============================================================================
 */
@@ -27,17 +27,17 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 
 ;(async () => {
   while (1) {
-    logger.log('worker.js', ['.'])
     let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
-    let job = await storage.getUnprocessedAdressesNewerThanPromise(
-                              Date.now() - config.process_unpaid_for_period)
+    let job = await storage.getUnprocessedAdressesNewerThanPromise(Date.now() - config.process_unpaid_for_period)
     await processJob(job)
-    await wait(5000)
+    await wait(5050)
   }
 })()
 
 async function processJob (rows) {
   try {
+
+    console.log('worker.js', ['Check for received and mark as paid...'])
 
     rows = rows || {}
     rows.rows = rows.rows || []
@@ -46,18 +46,25 @@ async function processJob (rows) {
       let json = row.doc
 
       // Check recieved amount by the address - 0 unconfirmed / 1 confirmed
-      let received = await blockchain.getreceivedbyaddress(json.address)
-      logger.log('worker.js', [ 'address:', json.address, 'expect:',json.btc_to_ask, 'confirmed:', received[1].result,'unconfirmed:', received[0].result ])
+      let received = await blockchain.getReceivedByAddress(json.address)
 
       // If confirmed is >= as expected or unconfirmed is >= expected
       // and SpeedSweep true, mark as paid
-      if (received[1].result >= json.btc_to_ask ||
+      if (received[config.confirmation_before_forward].result >= json.btc_to_ask ||
           (received[0].result >= (json.btc_to_ask+((json.btc_to_ask/100)*
           config.speed_sweep_fee))) && json.speed_sweep==1) {
+
+        // Log if paid
+        logger.log('worker.js', [json._id, 'address: '+json.address, ''
+            +'expect: '+json.btc_to_ask, ''
+            +'confirmed: '+received[config.confirmation_before_forward].result, ''
+            +'unconfirmed: '+received[0].result, ''
+            +'speed_sweep: '+json.speed_sweep])
 
         // Update the couchdb document
         json.processed = 'paid'
         json.paid_on = Date.now()
+        logger.log('worker.js', [json._id, 'Mark paid. '])
         await storage.saveJobResultsPromise(json)
 
         // Set URL parameter
@@ -69,13 +76,16 @@ async function processJob (rows) {
         }
 
         // Fire server side pingback
-        logger.log('worker.js', ['firing success callback: ' , URLset])
-        rp({ uri: URLset, timeout: 15000 })
+        rp({uri: URLset}).then((result) => {
+          logger.log('worker.js', [json._id, 'Pingback success done: ' , URLset])
+        }).catch((error) => {
+          logger.error('worker.js', [json._id, 'Pingback success fail: ' , URLset, error.message, error.stack])
+        })
 
       } // end if
     } // end for
 
   } catch (error) {
-    logger.error('worker.js', [ error ])
+    logger.error('worker.js', [ error.message, error.stack ])
   } // end try
 }

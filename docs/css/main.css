@@ -148,7 +148,7 @@ p {
   margin: 20px 0 30px;
 }
 .btc_header_home {
-  min-height: 791px
+  min-height: 585px
 }
 .mark,
 mark {
@@ -431,6 +431,9 @@ abbr[title] {
 }
 .f-boxed_layout .f-header .f-nav ul li {
   padding: 15px 20px;
+}
+.f-nav{
+  padding-top: 10px;
 }
 .f-boxed_layout .f-header .f-search_top {
   padding-top: 30px;
@@ -737,6 +740,10 @@ HEADER
   .f-header .f-nav li.f-has_child > ul {
     max-width: 180px;
     margin-left: -60px;
+
+  }
+  .f-nav{
+    padding-top: 10px;
   }
   .f-header .f-nav li.f-has_child > ul ul {
     margin: auto;
@@ -753,6 +760,9 @@ HEADER
   .f-header .f-nav li.f-has_child > ul {
     max-width: 180px;
     margin-left: -60px;
+  }
+  .f-nav{
+    padding-top: 10px;
   }
   .f-header .f-nav li.f-has_child > ul ul {
     margin: auto;
@@ -779,6 +789,10 @@ HEADER
     cursor: pointer;
     font-size: 26px;
     text-align: center;
+  }
+  .f-header .f-header_bar {
+    background: #030e26;
+    padding: 20px 0;
   }
   .f-header .f-nav {
     position: absolute;
@@ -850,7 +864,7 @@ HEADER
     padding-top: 0;
   }
   .f-header .f-header_bar {
-    padding: 20px 0 20px;
+    padding: 8px 0 0px;
   }
   .f-slider h1 {
     font-size: 40px;
@@ -867,7 +881,7 @@ HEADER
   }
   .f-header .f-nav_sec > div {
     float: none;
-    margin: 15px auto auto;
+    margin: 1px auto auto;
     text-align: center;
   }
   .f-slider .f-slide_text {
@@ -877,6 +891,7 @@ HEADER
     font-size: 22px;
     margin-bottom: 15px;
   }
+
 }
 @media (max-width: 479px) {
   .f-slider h1 {
@@ -4005,7 +4020,7 @@ COMPANY HISTORY
   border: none;
 }
 .f-header .f-nav {
-  margin-top: 20px;
+  margin-top: 1px;
   margin-bottom: 20px;
 }
 .f-header .f-nav ul li.quote_btn {
@@ -4535,6 +4550,9 @@ ul.f-social a:hover {
   .f-404 .f-footer_sec { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; }
 }
 @media screen and (max-width: 1023px) {
+  .logo-f-nav{
+    display: none;
+  }
   .f-menu_toggle {
     text-align: right;
     padding-right: 15px;
@@ -4561,7 +4579,7 @@ ul.f-social a:hover {
     width: 100%;
   }
   .btc_header_home {
-    min-height: 630px;
+    min-height: 585px;
   }
   .f-slider {
     top: 23%
@@ -4572,10 +4590,10 @@ ul.f-social a:hover {
     top: 30%;
   }
   .f-counter_outer {padding-top: 20px; padding-bottom: 50px;}
+
 }
 @media screen and (max-width: 767px) {
   .f-menu_toggle {
-    float: right;
     margin-top: 3px;
   }
   .clock ul {
@@ -4591,10 +4609,11 @@ ul.f-social a:hover {
   }
   .f-header .f-header_bar {
     background: #030e26;
-    padding: 20px 0;
+    padding: 8px 0 0;
   }
   .f-header .f-nav {
     background: #071635;
+
   }
   .f-header .f-nav ul li {
     border-bottom: 1px solid rgba(255, 255, 255, 0.17);
@@ -4602,7 +4621,7 @@ ul.f-social a:hover {
   .f-header.btc_header_home {
     background-repeat: no-repeat;
     background-position: 34% bottom;
-    margin-bottom: 320px;
+
   }
   .clock,
   .ht_rate {
@@ -4748,4 +4767,130 @@ ul.f-social a:hover {
   .f-header form {
     padding: 25px 15px;
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+.faqlist ul, .faqlist a, .contact p , .contact a, .faqlist ol{
+  line-height: 1.3em;
+  font-size: 22px;
+  color: white;
+  list-style: disc;
+  font-weight: bold;
+  text-shadow: -1px 0 black, 0 1px darkgray, 1px 0 black, 0 -1px black;
+}
+
+.contact p {
+  margin-top:-25px;
+}
+
+
+
+.f-section_faq p, .f-section_faq ul {
+  line-height: 1.4em;
+  margin: 5px;
+  padding: 5px;
+  font-size: 18px;
+  list-style: disc;
+}
+.f-section_faq p a, .f-section_faq ul a {
+  font-weight: bold;
+}
+.f-section_faq ul {
+  padding-left:35px;
+}
+.f-section_faq h3 {
+  line-height: 1.4em;
+  margin: 5px;
+  padding: 5px;
+  padding-top: 0;
+  padding-bottom: 5px;
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 22px;
+  list-style: disc;
+  font-weight: bold;
+}
+
+.mainpage ul {
+  font-size: 30px;
+  margin-top: -25px;
+}
+
+
+@media screen and (max-width: 1200px)  {
+  .mainpage ul {
+    font-size: 28px;
+    margin-top: -20px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .mainpage ul {
+    font-size: 24px;
+    margin-top: -5px;
+  }
+  .contact p {
+    margin-top:-20px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .faqlist ul, .faqlist  a,  .faqlist ol {
+    font-size: 18px;
+  }
+  .f-section_faq p, .f-section_faq ul {
+    font-size: 16px;
+    line-height: 1.3em;
+  }
+  .mainpage ul {
+    font-size: 20px;
+  }
+  .contact p , .contact a {
+    font-size: 20px;
+  }
+  .contact p {
+    margin-top:-10px;
+  }
+}
+@media screen and (max-width: 479px) {
+  .faqlist ul, .faqlist  a, .faqlist ol {
+    font-size: 16px;
+  }
+  .f-section_faq p, .f-section_faq ul {
+    font-size: 14px;
+    line-height: 1.2em;
+  }
+  .contact p , .contact a {
+    font-size: 14px;
+  }
+}
+
+
+
+.MsgErr {
+  border: 2px solid red;
+  border-radius: 5px;
+  padding:10px;
+  background:rgba(255, 0, 0, .9);
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+}
+.MsgSuccess {
+  border: 2px solid green;
+  border-radius: 5px;
+  padding:10px;
+  background:rgba(0, 150, 0, .9);
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
 }

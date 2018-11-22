@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.1.3 beta
+* Version 0.2.0 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -12,7 +12,7 @@
 * storage.js                                         Required by other processes
 * ------------------------------------------------------------------------------
 *
-*
+* This file define the storage call functions.
 *
 * ==============================================================================
 */
@@ -21,10 +21,6 @@ let request = require('request')
 let config = require('../config')
 let rp = require('request-promise')
 
-// todo: Replace this function calls in others module by getAddressPromise()
-exports.getDocumentPromise = function (docid) {
-  return exports.getAddressPromise(docid)
-}
 
 exports.saveDocumentPromise = function (body) {
   return new Promise(function (resolve, reject) {
@@ -38,13 +34,11 @@ exports.saveDocumentPromise = function (body) {
   })
 }
 
-exports.getAddressPromise = function (_id) {
+// Get a document entry by id
+exports.getDocumentPromise = function (_id) {
   return new Promise(function (resolve, reject) {
     request.get(config.couchdb + '/' + _id, function (error, response, body) {
-      if (error) {
-        return reject(error)
-      }
-
+      if (error) {return reject(error)}
       resolve(JSON.parse(body))
     })
   })
@@ -100,6 +94,13 @@ exports.saveSellerPromise = function (sellerId, data) {
   })
 }
 
+exports.getUnCheckedAdressesNewerThanPromise = function (timestamp) {
+  return rp.get({url: config.couchdb +
+    '/_design/address/_view/unchecked_return_by_timestamp?startkey=' + timestamp +
+    '&inclusive_end=true&limit=10000&reduce=false&include_docs=true',
+    json: true})
+}
+
 exports.getUnprocessedAdressesNewerThanPromise = function (timestamp) {
   return rp.get({url: config.couchdb +
     '/_design/address/_view/unprocessed_by_timestamp?startkey=' + timestamp +
@@ -138,4 +139,20 @@ exports.CountGatewayExpired = function () {
 exports.CountGatewayPaid = function () {
   return rp.get(config.couchdb +
     '/_design/stats/_view/all_customer_state_paid')
+}
+
+// Get all open gateway by the IP
+exports.CountGatewayOpenByIP = function (ClientIP) {
+  return rp.get({url: config.couchdb +
+    '/_design/gateway/_view/all_gateway_open_by_ip?key="'
+    + ClientIP + '"',
+    json: true})
+}
+
+
+exports.CheckIfAddressExist = function (address) {
+  return rp.get({url: config.couchdb +
+    '/_design/address/_view/Check_if_address_exist?key="'
+    + address + '"',
+    json: true})
 }

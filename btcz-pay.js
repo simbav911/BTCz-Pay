@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.1.3 beta
+* Version 0.2.0 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -28,6 +28,7 @@ let uuid = require('node-uuid')
 let bodyParser = require('body-parser')
 let rp = require('request-promise')
 
+
 let logger = require('./utils/logger')      // Load the logger module
 let config = require('./config')            // Load configuration file
 require('./smoke-test')                     // Checking DB & BtcZ node RPC
@@ -48,6 +49,8 @@ app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] \
     ":method :url HTTP/:http-version" :status :res[content-length] \
     ":referrer" ":user-agent"'))
 app.set('trust proxy', 'loopback')
+
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json(null))
 
@@ -56,6 +59,11 @@ app.use('/qr', express.static('qr'))
 app.use('/css', express.static('docs/css'))
 app.use('/js', express.static('docs/js'))
 app.use('/images', express.static('docs/images'))
+
+// For EJS rendering
+app.set('views', __dirname + '/docs');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 // Load API controlers
 app.use(require('./controllers/api'))
@@ -117,12 +125,20 @@ let updateExchangeRate = async function (pair) {
 }
 
 // Refresh each currency exchange rate by interval
-let CurArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB']
+let CurArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB', 'AUD', 'CAD', 'ZAR', 'JPY']
 CurArray.forEach(function(value){
-  updateExchangeRate(value)
-  setInterval(() => updateExchangeRate(value),
-                      config.marketrate_refresh * 60 * 1000)
+  //updateExchangeRate(value)
+  //setInterval(() => updateExchangeRate(value),
+  //                    config.marketrate_refresh * 60 * 1000)
 })
+
+
+
+
+
+
+
+
 
 // Startup server
 let server = app.listen(config.port, '127.0.0.1', function () {

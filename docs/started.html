@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+
+
+      <title>Getting Started | BTCZ Payment Gateway</title>
+      <meta name="description" content="">
+  		<meta name="Keywords" content="">
+
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+      <link rel="shortcut icon" href="/images/icoBTCZ.png" sizes="32x32" type="image/x-icon">
+      <link rel="apple-touch-icon" type="image/png" href="/images/icoBTCZ.png">
+      <link rel="icon" type="image/png" sizes="144x144" href="/images/icoBTCZ.png">
+
+      <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+      <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700,800" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link rel="stylesheet" href="css/owl.carousel.css">
+      <link rel="stylesheet" type="text/css" href="css/reset.css">
+      <link rel="stylesheet" type="text/css" href="css/main.css">
+      <link rel="stylesheet" type="text/css" href="css/custom.css">
+
+      <link rel="stylesheet" type="text/css" href="css/syntax.css">
+
+
+
+      <script>
+
+          if (!String.prototype.includes) {
+              String.prototype.includes = function(search, start) {
+                  'use strict';
+                  if (typeof start !== 'number') {
+                      start = 0;
+                  }
+
+                  if (start + search.length > this.length) {
+                      return false;
+                  } else {
+                      return this.indexOf(search, start) !== -1;
+                  }
+              };
+          }
+
+
+      </script>
+
+      <!--
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GoogleAnalytics %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '<%= GoogleAnalytics %>');
+      </script> -->
+
+
+
+  </head>
+
+  <body>
+       <div data-template="3" class="f-wrapper ">
+
+           <!-- Top Header of the page  -->
+           <div class="header_topbar">
+               <div class="container">
+                   <div class="row">
+                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                           <div class="ht_left">
+                               <div class="clock">
+                                   <ul>
+                                       <li>UTC</li>
+                                       <li id="hours"></li>
+                                       <li id="point">:</li>
+                                       <li id="min"></li>
+                                       <li id="point-2">:</li>
+                                       <li id="sec"></li>
+                                   </ul>
+                               </div>
+                               <div class="ht_rate">
+                                   <p>BTCz/BTC: <span id="Z_BTC"></span> BTCz/USD: <span id="Z_USD"></span> BTCz/EUR: <span id="Z_EUR"></span></p>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+
+
+           <!-- Top of the page / API Test Form  -->
+           <div class="f-header btc_header_home" style="min-height:430px;">
+
+               <!-- Menu barre  -->
+               <div class="f-header_bar btc_header_bar_home">
+                   <div class="container">
+                       <div class="row">
+
+                           <div class="f-menu_toggle">
+                             <a href="https://btcz.rocks/" target="_blank"><img class="img-responsive" width="175px" src="images/btcz_logo_txt2.png" alt="" style="float: left;"></a>
+                             <img id="f-menu_toggle" class="fa fa-bars" src="images/dropdown2.png" alt="menu" title="menu" style="float: right;"></img>
+
+
+
+                           </div>
+                           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-nav_sec">
+                               <div class="f-nav">
+                                 <a class="logo-f-nav" href="https://btcz.rocks/" target="_blank"><img class="img-responsive" width="175px" src="images/btcz_logo_txt2.png" alt="" style="float: left;"></a>
+                                   <nav>
+                                       <ul>
+                                         <li> <a href="/">Home</a>
+                                         </li>
+                                         <li class="">
+                                           <a href="/#f-api">API</a>
+                                         </li>
+                                         <li class="">
+                                           <a href="/#f-stats">Stats</a>
+                                         </li>
+                                         <li class="">
+                                           <a href="/#plugins">Plugins</a>
+                                         </li>
+                                         <li class="f-active">
+                                           <a href="/started">Getting Started</a>
+                                         </li>
+                                         <li >
+                                           <a href="/faq">FAQ</a>
+                                         </li>
+                                         <li class="">
+                                           <a href="/contact">Contact</a>
+                                         </li>
+                                         <li class="quote_btn">
+                                           <a target="_blank" href="https://www.mybitcoinzwallet.com/">Get a wallet</a>
+                                         </li>
+                                       </ul>
+                                   </nav>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+
+
+               <div class="f-slider" style="top: 15%;">
+                   <div class="f-slide_text container">
+                       <div class="row">
+                           <div class="col-sm-12 col-md-12">
+                             <h1 style="margin-left: 10px;">Getting started</h1>
+
+                             <div class="row contact">
+                               <p  style="padding-left:30px; ">
+                                 This guide introduces you to the basics of using the API and its main feature.
+                                 Find bellow the PHP example for creating a new gateway, fetch the information of it
+                                 and to process the API pingback. For more details, visite the <a href="/#f-api">API</a> section.
+
+                               </p>
+
+                              </div>
+
+                              <div class="row faqlist">
+
+                                 <ol style="padding-left:30px; margin-left:30px;">
+                                    <li><a href="#" onClick="
+                                      $('html, body').animate({
+                                        scrollTop: $('#PHP1').offset().top
+                                      }, 1000);">Using PHP's cURL module to create a new gateway</a></li>
+                                    <li><a href="#" onClick="
+                                      $('html, body').animate({
+                                        scrollTop: $('#PHP2').offset().top
+                                      }, 1000);">Using PHP's cURL module to fetching information from the created gateway</a></li>
+                                    <li><a href="#" onClick="
+                                      $('html, body').animate({
+                                        scrollTop: $('#PHP3').offset().top
+                                      }, 1000);">Using PHP's GET/POST module to process the API pingback</a></li>
+                                 </ol>
+
+                              </div>
+
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+           </div>
+
+
+
+
+
+
+
+
+
+
+
+               <section id="started1" class="container f-section f-contact_var" style="padding-top:25px;">
+                  <div class="container">
+                      <div class="clearfix row">
+                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
+                             <div class="f-section_head">
+                                 <h2>PHP Example</h2>
+                             </div>
+                             <div class="f-section_faq">
+
+
+
+
+<h3 id="PHP1">1) Using PHP's cURL module to create a new gateway</h3>
+<p>By using the bellow code, you will create a basic gateway that you can use in your online store.</p>
+<pre style="padding-left:10px; margin-left:10px;"><code data-language="php">// The func to create a new gateway
+function CreateGateway($Amount, $CurrencyCode, $SuccessURL, $ErrorURL) {
+
+  // This is the base API route
+  $APIroute = "https://pay.btcz.app/api/request_payment/";
+
+  // Set the pingback listens script
+  $ipnPingback = $GLOBALS['MyStoreURL']."/utilities/btcz_pingback.php";
+
+  // The seller (merchant) BTCz address
+  $address = $GLOBALS['MerchantBTCzAddress'];
+
+  // Set the API query string
+  $queryURL = $APIroute."?expect=".$Amount."&amp;currency=".$CurrencyCode."&ipnPingback=".urlencode($ipnPingback).""
+              ."&cliSuccessURL=".urlencode($SuccessURL). "&cliErrorURL=".urlencode($ErrorURL)."&seller=".$address;
+
+  // Init the cURL module
+  $ch = curl_init();
+  curl_setopt_array($ch, array(
+      CURLOPT_URL => $queryURL,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => array("cache-control: no-cache"),
+  ));
+
+  // Set some options
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_USERAGENT, "My store name ($GLOBALS['MerchantEmail'])");
+
+  // Execute the query
+  $result = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+
+  // Check the return code
+  if($info['http_code'] != 200){return false;}
+
+  // Return the result
+  return $result;
+}
+
+// API call to create a new gateway
+$APIresp = CreateGateway(13.56, "USD", $GLOBALS['MyStoreURL']."?paid=done", $GLOBALS['MyStoreURL']."?paid=error");
+
+// Decode the json response
+$JSON_RESP = json_decode($APIresp);
+
+// Check the API response
+if (!empty($JSON_RESP)) {
+
+  // Check if error
+  if (isset($JSON_RESP->error)) {
+    echo "API error: ".$JSON_RESP->error;
+  } else {
+
+    // Else do somthing...
+    // CAUTION: Never print_r the json result like this example in production !
+    print_r($JSON_RESP);
+
+    // Get the needed json informations
+    $InvoiceURL = "https://pay.btcz.app/invoice/".$JSON_RESP->id;
+    $Secret = $JSON_RESP->secret;
+    $_SESSION[$InvoiceID] = $JSON_RESP->id;
+  }
+
+// If no answer from API, nomething is wrong...
+} else {
+  echo "No response from API";
+}
+</code></pre>
+
+
+<p>The <b>$JSON_RESP</b> will be a json string like: </p>
+<pre style="padding-left:10px; margin-left:10px;"><code data-language="json">{
+  "id":"c5e9631d-b107-4022-8de5-ae9f0efd03af",
+  "secret":"7c3993319fdf14c5ac4510a0dd037a8dffad0a21",
+  "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
+  "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=18556.54236&message=NA",
+  "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DNA",
+  "qr_simple":"http://localhost:2222/generate_qr/bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=18556.54236"
+}
+</code></pre>
+
+<p>You can use the invoice <b>$InvoiceURL</b> to include it as iframe in your onlide store.
+    This invoice template will facilite the payment for the buyer:</p>
+<pre style="padding-left:10px; margin-left:10px;">
+&#60iframe id="iFrame" width="100%" frameborder="0" src="&#60%= $InvoiceURL %&#62" scrolling="no" onload="resizeIframe()"&#62&#60/iframe&#62
+</pre>
+<p>The <b>$InvoiceURL</b> URL is something like:</p>
+<pre style="padding-left:10px; margin-left:10px;">https://pay.btcz.app/invoice/c5e9631d-b107-4022-8de5-ae9f0efd03af</pre>
+
+<p>If something is wrong in your code, you will receive a error string in the json answer. Check also the <b>error</b> element:
+  <ul>
+    <li>
+      If you don't set the all mandatory parameters:
+      <pre style="max-width:500px;"><code data-language="json">{"error":"Mandatory query param not set"}</code></pre>
+    </li>
+    <li>
+      If the amound for instant checkout is set higher than autorized:
+      <pre style="max-width:500px;"><code data-language="json">{"error":"To high amound for speed sweep"}</code></pre>
+    </li>
+    <li>
+      If you create more gateway as autorited:
+      <pre style="max-width:500px;"><code data-language="json">{"error":"To many gateway open"}</code></pre>
+    </li>
+    <li>
+      If you set a currency code that is not managed:
+      <pre style="max-width:500px;"><code data-language="json">{"error":"Bad currency"}</code></pre>
+    </li>
+    <li>
+      If a other error happen:
+      <pre style="max-width:500px;"><code data-language="json">{"error":"API error, please contact the pay.btcz.app admin"}</code></pre>
+    </li>
+  </ul>
+</p>
+
+
+
+<h3  id="PHP2">2) Using PHP's cURL module to fetching information from the created gateway</h3>
+<p>By using the bellow code, you will fetch the information from the created gateway.</p>
+<pre style="padding-left:10px; margin-left:10px;"><code data-language="php">// The func to fetch a gateway
+function QueryGateway($gateway_id) {
+
+  // This is the base API route
+  $APIroute = "https://pay.btcz.app/api/check_payment/";
+
+  // Init the cURL module
+  $ch = curl_init();
+  curl_setopt_array($ch, array(
+    CURLOPT_URL => APIroute."/".$gateway_id,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => array("cache-control: no-cache"),
+  ));
+
+  // Set some options
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_USERAGENT, "My store name ($GLOBALS['MerchantEmail'])");
+
+  // Execute the query
+  $result = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+
+  // Check the return code
+  if($info['http_code'] != 200){return false;}
+
+  // Return the result
+  return $result;
+}
+
+// Check if variable with the invoice ID is set
+if (isset($_SESSION[$InvoiceID])) {
+
+  // API call to fetch a gateway
+  $APIresp = QueryGateway($_SESSION[$InvoiceID]);
+
+  // Decode the json response
+  $JSON_RESP = json_decode($APIresp);
+
+  // Check the API response
+  if(!empty($JSON_RESP)) {
+
+    // Check if error
+    if (isset($JSON_RESP->error)) {
+      echo "API error: ".$JSON_RESP->error;
+    } else {
+
+      // If gateway is paid
+      if ($JSON_RESP->state == 5) {
+
+        // Do something if gateway is paid...
+
+      // If gateway is expired
+      } else if ($JSON_RESP->state == 2) {
+
+        // Do something if gateway is expired...
+
+      }
+    }
+
+  } else {
+    echo "No response from API";
+  }
+
+}
+</code></pre>
+
+
+<p>The <b>$JSON_RESP</b> will be a json string like: </p>
+<pre style="padding-left:10px; margin-left:10px;"><code data-language="json">{
+  "generated":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
+  "btcz_expected":18556.5423,
+  "speed_sweep_fee":0,
+  "btcz_actual":0,
+  "btcz_unconfirmed":0,
+  "currency":"USD",
+  "amount":13.56,
+  "timestamp_start":1537815608394,
+  "timestamp_now":1537816142575,
+  "timestamp_stop":1537816808394,
+  "state":0,
+  [optional] "tx": {
+                    "tx":"TX Hex string",
+                    "broadcast":{
+                                  "result":"broadcast Hex string",
+                                  "error":null,"id":"621680ed-ae85-4db3-bd84-58d5ed2edff8"
+                                }
+                   }
+  [optional] "success_callback_url":"https://mysite_or_IP/result/?Hello=1",
+  [optional] "err_callback_url":"https://mysite_or_IP/result/?Hello=0"
+}
+</code></pre>
+
+
+</br>
+<h3  id="PHP3">3) Using PHP's GET/POST module to process the API pingback</h3>
+<pre style="padding-left:10px; margin-left:10px;"><code data-language="php">// Include DB managment script
+require '../../utilities/db.inc.php';
+
+// Check if somthing is sent
+if(!isset($_POST["data"]))
+    die();
+
+// Get the sent param from the API pingback
+$txn_id = $_GET['secret'];
+$status = $_GET['state'];
+
+// Check in the local DB if the secret phrase exist
+$sql = $db->prepare("select count(*) from orders where txn_id = :txn_id");
+$sql->execute(array(':txn_id' => $txn_id));
+$status_count = $sql->fetchColumn(0);
+
+// If the secrete phrase is correct (and exist)
+if ($status_count >= 1) {
+
+  // If gateway is expired
+  if ($status == 2) {
+
+    // Do something if gateway is expired...
+
+  // If gateway is paid
+  } else if ($status == 5) {
+
+    // Do something if gateway is paid...
+
+  }
+
+} else {
+
+  // Do something if the secret is false...
+  return false;
+
+}
+
+</code></pre>
+
+
+
+
+
+                            </div>
+                         </div>
+                     </div>
+                 </div>
+               </section>
+
+
+
+
+
+
+           <footer>
+               <div class="f-footer_strip">
+                   <div class="container">
+                       <div class="row">
+                           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 pull-right f-footer_nav">
+                               <nav>
+                                   <ul>
+                                     <li class="f-active"> <a href="/">Home</a>
+                                     </li>
+                                     <li class="">
+                                       <a href="/#f-api">API</a>
+                                     </li>
+                                     <li class="">
+                                       <a href="/#f-stats">Stats</a>
+                                     </li>
+                                     <li class="">
+                                       <a href="/#plugins">Plugins</a>
+                                     </li>
+                                     <li class="">
+                                       <a href="/started">Getting Started</a>
+                                     </li>
+                                     <li class="">
+                                       <a href="/faq">FAQ</a>
+                                     </li>
+                                     <li class="">
+                                       <a href="/contact">Contact</a>
+                                     </li>
+                                   </ul>
+                               </nav>
+                           </div>
+                           <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                               <p>Copyright pay.btcz.app © 2018. All right reserved</p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </footer>
+       </div>
+
+       <div class="f-back_to_top" id="f-back_to_top"> <i class="material-icons">arrow_upward</i></div>
+
+       <script type="text/javascript" src="js/jquery.min.js"></script>
+       <script type="text/javascript" src="js/cookie.js"></script>
+       <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+       <script type="text/javascript" src="js/jquery.counter.js"></script>
+       <script type="text/javascript" src="js/custom.js"></script>
+
+       <script type="text/javascript" src="js/rainbow-custom.min.js"></script>
+       <script>hljs.initHighlightingOnLoad();</script>
+
+   </body>
+
+
+
+</html>

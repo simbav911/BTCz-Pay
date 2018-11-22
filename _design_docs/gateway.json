@@ -1,0 +1,19 @@
+{
+    "_id": "_design\/gateway",
+    "comment": "ADDRESS represents single bitcoinz invoice. Its a unique generated address that awaits certain amount of btcz. Once it receives this amount - it changes status and fires callback url",
+    "views": {
+        "all_gateway_expired_by_ip": {
+            "map": "function(doc) {\n  if (doc.doctype=='address' && doc.state=='2') {\n               emit(doc.ip, null);\n  }\n}"
+        },
+        "all_gateway_paid_by_ip": {
+            "map": "function(doc) {\n  if (doc.doctype=='address' && doc.state=='5') {\n               emit(doc.ip, null);\n  }\n}"
+        },
+        "all_gateway_open_by_ip": {
+            "map": "function(doc) {\n  if (doc.doctype=='address' && (doc.state=='0' || doc.state=='1' )) {\n               emit(doc.ip, null);\n  }\n}"
+        },
+        "all_gateway_by_ip": {
+            "map": "function(doc) {\n  if (doc.doctype=='address') {\n               emit(doc.ip, null);\n  }\n}"
+        }
+    },
+    "language": "javascript"
+}

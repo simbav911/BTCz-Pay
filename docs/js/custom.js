@@ -548,6 +548,7 @@ $(document).ready(function($) {
 
 
 
+
 function LoadRate(){
 
   var request = new XMLHttpRequest();
@@ -636,25 +637,7 @@ function LoadStats(){
 $(document).ready(function() {
 
 
-  $('#SpeedSweepLabel').click(function () {
-      //Check if checkbox1 is checked or not
-      if (document.getElementById("SpeedSweep").checked) {
-          //Get all checkboxes in page
-          $('input[type=checkbox]').attr('checked', false);
-          $("#SpeedSweepLabel").html("Speed Pay NOT Active");
 
-
-      }
-      else {
-        $('input[type=checkbox]').attr('checked', true);
-        $("#SpeedSweepLabel").html("Speed Pay Active (+5%)");
-
-      }
-
-
-      //<input type="checkbox" id="SpeedSweep" checked="checked">
-
-  });
 
   LoadRate()
   LoadStats()
@@ -693,8 +676,8 @@ $(document).ready(function() {
 
 
 
-  setInterval( function() {LoadRate()}, 60000);
-  setInterval( function() {LoadStats()}, 60000);
+  setInterval( function() {LoadRate()}, 59500);
+  setInterval( function() {LoadStats()}, 60300);
 
 
 

@@ -3,16 +3,17 @@
   <head>
 
 
-      <title>BTCZ Payment Gateway API</title>
-      <meta name="Description" content="Accept BTCz(BitcoinZ) payments now with out BTCz gateway API! Use our service to create gateways and confirm transactions for your website. ">
-  		<meta name="Keywords" content="pay.btcz.app BTCz BTC Payment Gateway API Crypto Bitcoin Bitcoinz Altcoins Block Chain Cryptography ">
+      <title>BTCZ Payment Gateway</title>
+      <meta name="description" content="Accept BitcoinZ (BTCz) payments now with our BTCz gateway API! Use our service to create gateways and confirm transactions for your website. ">
+  		<meta name="Keywords" content="pay.btcz.app BTCz BTC Payment Gateway API Crypto Bitcoin Bitcoinz Altcoins Blockchain Cryptography Plugin">
+
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
       <link rel="shortcut icon" href="/images/icoBTCZ.png" sizes="32x32" type="image/x-icon">
       <link rel="apple-touch-icon" type="image/png" href="/images/icoBTCZ.png">
       <link rel="icon" type="image/png" sizes="144x144" href="/images/icoBTCZ.png">
-      <meta name="description" content="">
-      <meta name="keywords" content="">
+
       <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
       <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700,800" rel="stylesheet">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -119,6 +120,19 @@
 
       </script>
 
+
+      <!--
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GoogleAnalytics %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '<%= GoogleAnalytics %>');
+      </script>-->
+
+
+
   </head>
 
   <body>
@@ -128,7 +142,7 @@
            <div class="header_topbar">
                <div class="container">
                    <div class="row">
-                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10 ">
+                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                            <div class="ht_left">
                                <div class="clock">
                                    <ul>
@@ -150,21 +164,23 @@
            </div>
 
            <!-- Top of the page / API Test Form  -->
-           <div class="f-header btc_header_home">
+           <div class="f-header btc_header_home"  style="min-height:610px;">
 
                <!-- Menu barre  -->
                <div class="f-header_bar btc_header_bar_home">
                    <div class="container">
                        <div class="row">
-                           <div class="col-xs-7 col-sm-3 col-md-3 col-lg-3 f-logo" style="padding: 28px 0;">
-                               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                   <a href="/"><img class="img-responsive" width="175px" src="images/btcz_logo.png" alt=""></a>
-                               </div>
+
+                           <div class="f-menu_toggle">
+                             <a href="https://btcz.rocks/" target="_blank"><img class="img-responsive" width="175px" src="images/btcz_logo_txt2.png" alt="" style="float: left;"></a>
+                             <img id="f-menu_toggle" class="fa fa-bars" src="images/dropdown2.png" alt="menu" title="menu" style="float: right;"></img>
+
+
+
                            </div>
-                           <div class="f-menu_toggle"> <i id="f-menu_toggle" class="fa fa-bars"></i>
-                           </div>
-                           <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 f-nav_sec">
+                           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-nav_sec">
                                <div class="f-nav">
+                                 <a class="logo-f-nav" href="https://btcz.rocks/" target="_blank"><img class="img-responsive" width="175px" src="images/btcz_logo_txt2.png" alt="" style="float: left;"></a>
                                    <nav>
                                        <ul>
                                            <li class="f-active"> <a href="/">Home</a>
@@ -179,18 +195,28 @@
                                            <li class="">
                                              <a href="#" onClick="
                                                $('html, body').animate({
+                                                 scrollTop: $('#f-stats').offset().top
+                                               }, 1000);
+                                                   ">Stats</a>
+                                           </li>
+                                           <li class="">
+                                             <a href="#" onClick="
+                                               $('html, body').animate({
                                                  scrollTop: $('#plugins').offset().top
                                                }, 1000);
                                                    ">Plugins</a>
                                            </li>
                                            <li class="">
-                                             <a href="#" onClick="
-                                               $('html, body').animate({
-                                                 scrollTop: $('#contactUs').offset().top
-                                               }, 1000);
-                                                   ">Contact</a>
+                                             <a href="/started">Getting Started</a>
                                            </li>
-                                           <li class="quote_btn"> <a target="_blank" href="https://www.mybitcoinzwallet.com/">Get a wallet</a>
+                                           <li class="">
+                                             <a href="/faq">FAQ</a>
+                                           </li>
+                                           <li class="">
+                                             <a href="/contact">Contact</a>
+                                           </li>
+                                           <li class="quote_btn">
+                                             <a target="_blank" href="https://www.mybitcoinzwallet.com/">Get a wallet</a>
                                            </li>
                                        </ul>
                                    </nav>
@@ -201,16 +227,29 @@
                </div>
 
                <!-- API test FORM and WEB UI short description section  -->
-               <div class="f-slider" style="top: 25%;">
+               <div class="f-slider" style="top: 15%;">
                    <div class="f-slide_text container">
                        <div class="row">
-                           <div class="col-sm-6 col-md-7">
+                           <div class="col-sm-7 col-md-8">
                                <h1 style="margin-left: 10px;">BTCZ Open-source Payment Gateway</h1>
-                               <h2 style="margin-left: 10px;">&nbsp;&nbsp;- Create instant payment gateways<br>&nbsp;&nbsp;- No registration necessary<br>&nbsp;&nbsp;- No additional fees<br>&nbsp;&nbsp;- Automatic transactions </h2>
+                               <div class="row faqlist mainpage" style="margin-left: 25px; margin-bottom:25px;">
+
+                                      <ul>
+                                         <li>Create easily payment gateways</li>
+                                         <li>Instant checkout confirmation</li>
+                                         <li>No registration necessary</li>
+                                         <li>Auto-generated invoices</li>
+                                         <li>Automatic transactions</li>
+                                         <li>No additional fees</a></li>
+                                         <li>Automatic refund</a></li>
+
+
+
+                                      </ul>
+                              </div>
                            </div>
-                           <div class="col-sm-6 col-md-5">
-                             <div style=" width: 100%; border:5px solid red; background-color: white; padding: 3px"><b>Caution:</b> This version is a "beta" being tested. Use in production is not recommended. We disclaim all resposability in case of loss of funds related to the use of this software.</div>
-                               <form>
+                           <div class="col-sm-5 col-md-4">
+                                <form>
                                    <div class="form-group">
                                        <input type="text" id="form1_btczaddress" placeholder="Receiver BTCz Address*">
                                    </div>
@@ -235,17 +274,20 @@
                                            <div class="col-xs-6">
                                                <select id="form1_currency">
                                                  <option value="BTCZ">BTCZ</option>
+                                                 <option value="BTC">BTC</option>
                                                  <option value="USD">USD</option>
                                                  <option value="EUR">EUR</option>
                                                  <option value="CHF">CHF</option>
                                                  <option value="GBP">GBP</option>
                                                  <option value="RUB">RUB</option>
+                                                 <option value="JPY">JPY</option>
+                                                 <option value="ZAR">ZAR</option>
+                                                 <option value="CAD">CAD</option>
+                                                 <option value="AUD">AUD</option>
                                                </select>
                                            </div>
                                        </div>
                                    </div>
-
-
 
                                    <div class="btn-group" data-toggle="buttons">
                                      <label class="btn btn-default" id="SpeedSweepLabel">Speed Pay NOT Active</label>
@@ -265,57 +307,100 @@
            </div>
 
            <!-- LIVE GATEWAY section / Display info about the gateway -->
-           <section id="f-about_text" style="display:none;">
-               <div class="f-section f-about_text" style="padding-bottom:10px;">
-                   <div class="container">
-                       <div class="row clearfix">
+           <section id="f-about_text" class="container f-section f-contact_var f-about_text" style="display:none; padding-top:25px;">
+             <div class="container">
+                 <div class="clearfix row">
+                   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
 
-                          <!-- Live gateway informations  -->
-                           <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
+                     <div class="f-section_head col-sm-7"  style="padding-left:0px;">
+                       <h2>Your payment gateway is live!</h2>
+                     </div>
 
-                               <h2>Your payment gateway is live!</h2>
+                    <!-- Live gateway informations  -->
+                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-                               <h3>API Response</h3>
-                               <pre><b id="gAPI"></b></pre><br><br>
-                               <h3>Gateway ID</h3>
-                               <pre><b id="gID1"></b></pre><br><br>
-                               <h3>Gateway template URL</h3>
-                               <pre>https://pay.btcz.app/invoice/<b id="gID2"></b></pre><br><br>
+                         <h3>API Response</h3>
+                         <pre><b id="gAPI"></b></pre><br>
+                         <h3>Gateway ID</h3>
+                         <pre><b id="gID1"></b></pre><br>
+                         <h3>Gateway template URL</h3>
+                         <pre>https://pay.btcz.app/invoice/<b id="gID2"></b></pre><br>
 
-                               <br> This is a free and open-source service, please support us by donating.<br><br>
-<pre>
-<b>[BTCz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE
-<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ
-</pre>
+                         <h3>Donations</h3>
+                         <div class="f-section_faq">
+                           <p style="padding-left:0px; margin-left:0px;">This is a free and open-source service, please support us by donating <a href="https://btcz.me/Marcelus" target="_blank">here</a>.</p>
+                         </div>
+                          <pre><b>[BTCz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE</br><b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ</pre><br>
 
-                           </div>
+                      </div>
 
-                           <!-- Gateway Invoice template  -->
-                           <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
-                               <div class="desktop_img">
-                                   <iframe id="iFrame" width="100%" style="min-height: 725px;" frameborder="0" scrolling="no" onload="resizeIframe()"></iframe>
-                               </div>
-                           </div>
+                         <!-- Gateway Invoice template  -->
+                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                             <h3>Invoice template</h3>
+                                 <iframe id="iFrame" width="100%" style="min-height: 725px;" frameborder="0" scrolling="no" onload="resizeIframe()"></iframe>
+                         </div>
 
-                       </div>
-                   </div>
-               </div>
+                      </div>
+                  </div>
+              </div>
            </section>
 
 
 
-           <section id="f-api" style="display:block;" style="padding-top:0px;">
-               <div class="f-section f-about_text" style="padding-top:60px;">
-                   <div class="container">
-                       <div class="row clearfix">
+
+
+           <section id="f-about" class="container f-section f-contact_var" style="padding-top:25px;">
+             <div class="container">
+                 <div class="clearfix row">
+                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
+                         <div class="f-section_head">
+                             <h2>About</h2>
+                         </div>
+                         <div class="f-section_faq">
+                           <p>You can use our API to accept BTCz payments on your website and verify the transaction.
+                           The <a href="/">pay.btcz.app</a> gateway is an free to use API service that provide you end-to-end-user BTCz payment.
+                           It generating a new address (and QR) for each payment.
+                           It also provide you web UI for the payment process and states templates until success.</p>
+
+                           <p>In order to have an alterative regarding the usability of payment gateways,
+                           it is a need to have this open-sourced solution as basis for every developer.
+                           Also mostly to push user acceptance, this project must have to be a lever in the entrepreneurship people.
+                           Please visit the <a href="/started">Getting started</a> page to know more about integrating this API in your online store.</p>
+                           <p>
+                             For any comment, suggestion or issues about this gateway, feel free to contact us via the below community channels.
+                             You can also contact us directly by using the <a href="/contact">contact form</a>.
+                             Please visite first the <a href="/faq">FAQ</a> page for any usage related question.
+                           </p>
+                           <center>
+                             <a class="" href="https://forum.btcz.rocks/t/community-hosted-payment-gateway/842" target="_blank"><img class="" src="images/btcz_forum.png" alt="" style=""></a>
+                             <a class="" href="https://github.com/MarcelusCH/BTCz-Pay/" target="_blank"><img class="" src="images/github_txt.png" alt="" style=""></a>
+                             <a class="" href="https://discordapp.com/channels/365065626668105728/507870900339867662" target="_blank"><img class="" src="images/discord_txt.png" alt="" style=""></a>
+                             <a class="" href="https://bitcointalk.org/" target="_blank"><img class="" src="images/bitcointalk_txt.png" alt="" style=""></a>
+                           </center>
+
+                           <p>
+                             This is a free and open-source service, please support us by donating <a href="https://btcz.me/Marcelus" target="_blank">here</a>.
+                             <pre style="padding-left:10px; margin-left:10px; max-width:500px;"><b>[BTCz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE<b></br>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ</pre>
+                           </p>
+
+
+
+                         </div>
+                     </div>
+                 </div>
+             </div>
+           </section>
+
+
+           <section id="f-api" class="container f-section f-contact_var" style="padding-top:0px;">
+             <div class="container">
+                 <div class="clearfix row">
 
                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                                <div class="f-section_head">
                                    <h2>API Info</h2>
                                </div>
-
-                               <p>You can use our API to accept BTCz payments on your website and verify the transaction.</p>
 
                                <h4>Creating a gateway</h4>
                                <ul>
@@ -349,6 +434,7 @@ https://pay.btcz.app/api/request_payment/?
                                       <ul>
                                         <li>By using full router path, all parameters are mandatory.</li>
                                         <li>By using query string, some parameters are optional.</li>
+                                        <li>The SpeedSweep can only be used up to <%= SpeedSweepAmount %> BTCz.</li>
                                         <li>If the secret is not set, the gateway will generate a 20 bytes hex string.</li>
                                         <li>Encode the URL's to awoid routing issue:</li>
                                           <ul>
@@ -381,7 +467,7 @@ https://pay.btcz.app/api/request_payment/?
   "address":"t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm",
   "link":"bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972&message=Hello",
   "qr":"http://localhost:2222/generate_qr/bitcoinz%3At1gwku8spbCFUodyJ26njknnDxeZGM8hVmm%3Famount%3D14.77818972%26message%3DHello",
-  "qr_simple":"http://localhost:2222/generate_qr/t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm"
+  "qr_simple":"http://localhost:2222/generate_qr/bitcoinz:t1gwku8spbCFUodyJ26njknnDxeZGM8hVmm?amount=14.77818972"
 }
 </pre>
                                    </li>
@@ -419,8 +505,9 @@ https://pay.btcz.app/api/request_payment/?
   "timestamp_now":1537816142575,
   "timestamp_stop":1537816808394,
   "state":0,
-  [optional] "successURL":"https://mysite_or_IP/result/?Hello=1",
-  [optional] "errURL":"https://mysite_or_IP/result/?Hello=0"
+  [optional] "tx": {"tx":"TX Hex string","broadcast":{"result":"broadcast Hex string","error":null,"id":"621680ed-ae85-4db3-bd84-58d5ed2edff8"}}}
+  [optional] "success_callback_url":"https://mysite_or_IP/result/?Hello=1",
+  [optional] "err_callback_url":"https://mysite_or_IP/result/?Hello=0"
 }
 </pre>
 
@@ -429,7 +516,8 @@ https://pay.btcz.app/api/request_payment/?
                                    <li>
                                      <b>Notes: </b>
                                      <ul>
-                                       <li>The speed_sweep_fee is in %. (5% for speed checkout, no extra fee for standard checkout)</li>
+                                       <li>The [optional] are depending on the state.</li>
+                                       <li>The speed_sweep_fee is in %. (<%= speed_sweep_fee %>% for speed checkout, no extra fee for standard checkout)</li>
                                        <li>Use the "id" from the request_payment/ call JSON return.</li>
                                      </ul>
                                    </li>
@@ -465,8 +553,8 @@ https://pay.btcz.app/api/request_payment/?
                                    <li><b>More:</b>
                                        <ul>
                                          <li>You will only receive a callback URL in the JSON with states 2-errURL and 5-successURL</li>
-                                         <li>Standard tx fee: 0.0001</li>
-                                         <li>TX confirmation count: 2</li>
+                                         <li>Standard tx fee: <%= fee_tx %></li>
+                                         <li>TX confirmation count: <%= confirmation_before_forward %></li>
                                          <li>State 2 and 5 execute the :ipnPingback URL (on server side)</li>
                                        </ul>
                                    </li>
@@ -475,45 +563,40 @@ https://pay.btcz.app/api/request_payment/?
 
                            </div>
                        </div>
-                   </div>
+
                </div>
            </section>
 
-           <div id="plugins" class="container f-section f-contact_var" style="padding-top:0px;">
-               <div>
-                   <div class="resp-tabs-container hor_1">
-                       <div class="f-tab_single">
-                           <div class="clearfix row">
+           <section id="f-stats" class="container f-section f-contact_var" style="padding-top:0px;">
+             <div class="container">
+                 <div class="clearfix row">
                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
                                    <div class="f-section_head">
                                        <h2>Statistics</h2>
                                    </div>
-                 <ul>
-                                   <li>
-                                     <b>Total created gateway: </b><span id="TotGateway"></span>
-                                   </li>
-                                   <li>
-                                     <b>Actual open gateway: </b><span id="ActualGateway"></span>
-                                   </li>
-                                   <li>
-                                     <b>Paid gateway: </b><span id="PaidGateway"></span>
-                                   </li>
-                                   <li>
-                                     <b>Expired gateway: </b><span id="ExpiredGateway"></span>
-                                   </li>
-                  </ul>
+                                  <ul>
+                                     <li>
+                                       <b>Total created gateway: </b><span id="TotGateway"></span>
+                                     </li>
+                                     <li>
+                                       <b>Actual open gateway: </b><span id="ActualGateway"></span>
+                                     </li>
+                                     <li>
+                                       <b>Paid gateway: </b><span id="PaidGateway"></span>
+                                     </li>
+                                     <li>
+                                       <b>Expired gateway: </b><span id="ExpiredGateway"></span>
+                                     </li>
+                                 </ul>
                                </div>
                            </div>
                        </div>
-                   </div>
-               </div>
-           </div>
 
-           <div id="plugins" class="container f-section f-contact_var" style="padding-top:0px;">
-               <div>
-                   <div class="resp-tabs-container hor_1">
-                       <div class="f-tab_single">
-                           <div class="clearfix row">
+           </section>
+
+           <section id="plugins" class="container f-section f-contact_var" style="padding-top:0px;">
+             <div class="container">
+                 <div class="clearfix row">
                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
                                    <div class="f-section_head">
                                        <h2>Commerce Plugins</h2>
@@ -521,55 +604,23 @@ https://pay.btcz.app/api/request_payment/?
                  <ul>
                                    <li>
                                      <b>WooCommerce 3.4 - BTCz Gateway (beta)</b> </br>
-                                     <a href="https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/woocommerce3.4">https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/woocommerce3.4</a>
+                                     <a href="https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/woocommerce3.4" target="_blank">https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/woocommerce3.4</a>
                                    </li>
                                    <li>
                                      <b>Cubecart 6 - BTCz Gateway (beta)</b> </br>
-                                     <a href="https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/cubecart6">https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/cubecart6</a>
+                                     <a href="https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/cubecart6" target="_blank">https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin/cubecart6</a>
                                    </li>
                   </ul>
                                </div>
                            </div>
                        </div>
-                   </div>
-               </div>
-           </div>
 
-           <div id="contactUs" class="container f-section f-contact_var" style="padding-top:0px;">
-               <div>
-                   <div class="resp-tabs-container hor_1">
-                       <div class="f-tab_single">
-                           <div class="clearfix row">
-                               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 f-addr_map">
-                                   <div class="f-section_head">
-                                       <h2>Contact us</h2>
-                                   </div>
-                                   <div class="f-contact_in">
+           </section>
 
-                                     For any issues, please contact me via the community forum or via the github repo.</br></br>
-                                     <ul>
-                                                       <li>
-                                                         <a href="https://github.com/MarcelusCH/BTCz-Pay">https://github.com/MarcelusCH/BTCz-Pay</a>
-                                                       </li>
-                                                       <li>
-                                                         <a href="https://forum.btcz.rocks/t/community-hosted-payment-gateway/842">https://forum.btcz.rocks/t/community-hosted-payment-gateway/842</a>
-                                                       </li>
-                                      </ul>
 
-                                      <br><br> This is a <b>free</b> and <b>OPEN SOURCE</b> service, please support us by donating<br><br>
-<pre>
-<b>[pay.btcz.app] BTCz</b>: t1VYSo8VtpKMm1SUwp1KJHbqrtfqj7tgpaE
-<b>[Community] BTCz</b>: t1fHHnAXxoPWGY77sG5Zw2sFfGUTpW6BcSZ
-</pre>
 
-                                        <br><br><br><br>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
+
+
 
 
            <footer>
@@ -581,34 +632,32 @@ https://pay.btcz.app/api/request_payment/?
                                    <ul>
                                        <li class="f-active f-has_child"> <a href="/">Home</a>
                                        </li>
-
-
                                        <li class=""> <a href="#" onClick="
-     $('html, body').animate({
-       scrollTop: $('#f-api').offset().top
-     }, 1000);
-         ">API</a>
+                                         $('html, body').animate({
+                                           scrollTop: $('#f-api').offset().top
+                                         }, 1000);
+                                             ">API</a>
                                        </li>
                                            <li class=""> <a href="#" onClick="
-     $('html, body').animate({
-       scrollTop: $('#plugins').offset().top
-     }, 1000);
-         ">Plugins</a>
+                                             $('html, body').animate({
+                                               scrollTop: $('#plugins').offset().top
+                                             }, 1000);
+                                                 ">Plugins</a>
                                            </li>
-                                       <li class=""> <a href="#" onClick="
-     $('html, body').animate({
-       scrollTop: $('#contactUs').offset().top
-     }, 1000);
-         ">Contact</a>
-                                       </li>
+                                           <li class="">
+                                             <a href="/started">Getting Started</a>
+                                           </li>
+                                           <li class="">
+                                             <a href="/faq">FAQ</a>
+                                           </li>
+                                           <li class="">
+                                             <a href="/contact">Contact</a>
+                                          </li>
                                    </ul>
                                </nav>
                            </div>
                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                               <p>Copyright pay.btcz.app ©
-                                   2018. All right reserved
-
-                 </p>
+                               <p>Copyright pay.btcz.app © 2018. All right reserved</p>
                            </div>
                        </div>
                    </div>
@@ -617,17 +666,26 @@ https://pay.btcz.app/api/request_payment/?
        </div>
        <div class="f-back_to_top" id="f-back_to_top"> <i class="material-icons">arrow_upward</i>
        </div>
-       <!-- JQUERY:: JQUERY.JS -->
-       <!--<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>-->
+
        <script type="text/javascript" src="js/jquery.min.js"></script>
-       <!-- JQUERY:: COOKIE.JS -->
        <script type="text/javascript" src="js/cookie.js"></script>
-       <!-- JQUERY:: OWL.JS -->
        <script type="text/javascript" src="js/owl.carousel.min.js"></script>
-       <!-- JQUERY:: COUNTER.JS -->
        <script type="text/javascript" src="js/jquery.counter.js"></script>
-       <!-- JQUERY:: CUSTOM.JS -->
        <script type="text/javascript" src="js/custom.js"></script>
+
+       <script>
+         $('#SpeedSweepLabel').click(function () {
+             if (document.getElementById("SpeedSweep").checked) {
+                 $('input[type=checkbox]').attr('checked', false);
+                 $("#SpeedSweepLabel").html("Speed Pay NOT Active");
+             } else {
+               $('input[type=checkbox]').attr('checked', true);
+               $("#SpeedSweepLabel").html("Speed Pay Active (+<%= speed_sweep_fee %>%)");
+             }
+         });
+       </script>
+
+
    </body>
 
 

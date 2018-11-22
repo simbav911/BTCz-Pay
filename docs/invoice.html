@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-
     <head>
-        <!-- PAGE TITLE -->
-        <title>pay.btcz.app Invoice</title>
-        <!-- META-DATA -->
+
+
+        <title>Invoice <%= InvoiceID %> | BTCZ Payment Gateway</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <meta http-equiv="ETag" content="1111">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
         <link rel="shortcut icon" href="../images/icoBTCZ.png" sizes="32x32" type="image/x-icon">
         <link rel="apple-touch-icon" type="image/png" href="../images/icoBTCZ.png">
         <link rel="icon" type="image/png" sizes="144x144" href="../images/icoBTCZ.png">
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-        <!-- CSS:: FONTS -->
+
         <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
         <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700,800" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <!-- CSS:: BOOTSTRAP -->
         <link rel="stylesheet" href="../css/bootstrap.min.css">
-        <!-- CSS:: OWL -->
         <link rel="stylesheet" href="../css/owl.carousel.css">
-        <!-- CSS:: -->
         <link rel="stylesheet" type="text/css" href="../css/reset.css">
         <link rel="stylesheet" type="text/css" href="../css/main.css">
         <link rel="stylesheet" type="text/css" href="../css/custom.css">
@@ -31,7 +28,6 @@
               width: 100%;
               background-color: #3c4965;
           }
-
           #myBar {
               width: 0%;
               height: 25px;
@@ -46,98 +42,94 @@
     				font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
     				color: #555;
     			}
-
     			.invoice-box table {
     				width: 100%;
     				line-height: inherit;
     				text-align: left;
     			}
-
     			.invoice-box table td {
     				padding: 5px;
     				vertical-align: top;
     			}
-
     			.invoice-box table tr td:nth-child(2) {
     				text-align: right;
     			}
-
     			.invoice-box table tr.top table td {
     				padding-bottom: 20px;
     			}
-
     			.invoice-box table tr.top table td.title {
     				font-size: 45px;
     				line-height: 45px;
     				color: #333;
     			}
-
     			.invoice-box table tr.information table td {
     				padding-bottom: 40px;
     			}
-
     			.invoice-box table tr.heading td {
     				background: #eee;
     				border-bottom: 1px solid #ddd;
     				font-weight: bold;
     			}
-
     			.invoice-box table tr.details td {
     				padding-bottom: 20px;
     			}
-
     			.invoice-box table tr.item td {
     				border-bottom: 1px solid #eee;
     			}
-
     			.invoice-box table tr.item.last td {
     				border-bottom: none;
     			}
-
     			.invoice-box table tr.total td:nth-child(2) {
     				border-top: 2px solid #eee;
     			}
-
     			@media only screen and (max-width: 600px) {
     				.invoice-box table tr.top table td {
     					width: 100%;
     					display: block;
     					text-align: center;
     				}
-
     				.invoice-box table tr.information table td {
     					width: 100%;
     					display: block;
     					text-align: center;
     				}
     			}
-
-    			/** RTL **/
-
     			.rtl {
     				direction: rtl;
     				font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
     			}
-
     			.rtl table {
     				text-align: right;
     			}
-
     			.rtl table tr td:nth-child(2) {
     				text-align: left;
     			}
+          .MainDisplay {
+            display: table;
+            margin: auto;
+            margin-top: 20px; !important
+            margin-bottom: 20px; !important
+            margin-left: 20px; !important
+            margin-right: 20px; !important
+            width: 56%;
+            padding: 10px;
+            height: 200px;
+            -webkit-box-shadow: 0px 0px 51px -6px rgba(0,0,0,0.65);
+            -moz-box-shadow: 0px 0px 51px -6px rgba(0,0,0,0.65);
+            box-shadow: 0px 0px 51px -6px rgba(0,0,0,0.65);
+    			}
         </style>
 
-		<script>
-			var $buoop = {notify:{e:-6,f:-6,o:-6,s:-6,c:-6},api:5};
-			function $buo_f(){
-			 var e = document.createElement("script");
-			 e.src = "//browser-update.org/update.min.js";
-			 document.body.appendChild(e);
-			};
-			try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
-			catch(e){window.attachEvent("onload", $buo_f)}
-		</script>
+    		<script>
+    			var $buoop = {notify:{e:-6,f:-6,o:-6,s:-6,c:-6},api:5};
+    			function $buo_f(){
+    			 var e = document.createElement("script");
+    			 e.src = "//browser-update.org/update.min.js";
+    			 document.body.appendChild(e);
+    			};
+    			try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
+    			catch(e){window.attachEvent("onload", $buo_f)}
+    		</script>
 
         <script>
             if (!String.prototype.includes) {
@@ -154,34 +146,23 @@
                     }
                 };
             }
+        </script>
 
+        <script>
+
+            // get the invoice ID
+            var v_id='<%= InvoiceID %>';
+
+            // Sleep function
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
 
-
-
-
-
-            var currentPrice = "0.0006093642";
-
-
-
-            // Get ID
-
-            var request = new XMLHttpRequest();
-
-
-            var sPath=window.location.pathname;
-            var v_id=sPath.substring(sPath.lastIndexOf('/') + 1);
-
-
-
-
-
+            // Invoice update function
             function UpdateInvoiceStatus() {
 
-              // Check Payment
+              // Open the HTTP request
+              var request = new XMLHttpRequest();
               request.open('GET', '/api/check_payment/'+v_id, true);
               request.onload = function () {
 
@@ -190,18 +171,17 @@
 
                 if (request.status >= 200 && request.status < 400) {
 
-
-
                   var endTime = data.timestamp_stop;
                   var startTime = data.timestamp_start;
                   var currentTime = data.timestamp_now;
-                  var timeleft = move(startTime, endTime, currentTime);
+                  var timeleft = endTime - currentTime;
+                  move(startTime, endTime, currentTime);
 
                   // For SpeedSweep
                   var SpeedSweepFee = (data.btcz_expected / 100) * data.speed_sweep_fee;
                   var SpeedSweepInfo = ""
                   if (SpeedSweepFee>0) {
-                    SpeedSweepInfo="</br><small>(+5% Speed Pay Fee)</small>"
+                    SpeedSweepInfo="</br><small>(+"+data.speed_sweep_fee+"% Speed Pay Fee)</small>"
                   }
 
                   // For unconfirmed info
@@ -216,18 +196,8 @@
                   $(".clock").html(timeConverter(currentTime) + " (UTC)&nbsp;&nbsp;-&nbsp;&nbsp;");
                   $("#infoToPay").html("Total amount requested:<br><b>"+(data.btcz_expected+SpeedSweepFee)+" BTCz (~"+data.amount+" "+data.currency+")</b>" + SpeedSweepInfo)
                   $("#infoTop").html("Invoice number:<br><h4>"+v_id+"</h4>")
-
-                  document.title ="pay.btcz.app Invoice " +v_id;
-                  var timeleft = endTime - currentTime;
-
-
-
-                  $("#QRGen").html('<a href="bitcoinz:' + data.generated + '">' + data.generated + '</a>');
+                  $("#QRGen").html('<a href="bitcoinz:' + data.generated + '?amount=' + (data.btcz_expected+SpeedSweepFee) +'">' + data.generated + '</a>');
                   $("#QRGenImg").attr("src", "../generate_qr/bitcoinz%253A" + data.generated + '%253Famount=' + (data.btcz_expected+SpeedSweepFee));
-
-
-                  var InvoiceName = "<h4>"+v_id+"</h4>";
-
 
 
                   if (data.state == "0") {
@@ -245,19 +215,16 @@
                       $("#stage2").css('display', 'none');
                       $("#expired").css('display', 'block');
                       $("#completed").css('display', 'none');
+                      $("#TimeLeft").css('display', 'none');
+                      $("#State").css('display', 'none');
+
                       window.top.postMessage(data.err_callback_url, '*');
                       if (data.err_callback_url && window.top.location.href != data.err_callback_url) {
                           setTimeout(function() {
                             window.top.location.href = data.err_callback_url;
                           }, 3000);
                       }
-                  } else if (data.state == "3") {
-                      $("#stage1").css('display', 'none');
-                      $("#stage2").css('display', 'block');
-                      $("#expired").css('display', 'none');
-                      $("#completed").css('display', 'none');
-                      //$("#infoTop").html("Sender address can now not be changed.<br>Expecting more payments from: <b>"+obj.sender+"</b>");
-                  } else if (data.state == "4" || data.state == "5") {
+                  } else if (data.state == "5") {
                       $(document).ready(function() {
                           var audio = new Audio('ding.mp3');
                           audio.play();
@@ -267,6 +234,7 @@
                       $("#completed").css('display', 'block');
                       $("#expired").css('display', 'none');
                       $("#TimeLeft").css('display', 'none');
+                      $("#State").css('display', 'none');
 
                       var OverPayment = data.btcz_actual - data.btcz_expected;
 
@@ -276,23 +244,12 @@
                       var newInfo = "<h3>This invoice has been paid!</h3>Address: <b>" + data.generated + "</b><br><br>Amount Requested: <b>" + data.btcz_expected + " BTCz</b><br>Amount Received: <b>" + data.btcz_actual + " BTCz " + UnconfirmedPaid +"</b><br><br>Associated Transactions:";
 
                       var jsonArray =JSON.stringify(data.tx)
-                      //console.log(jsonArray); // 1537807193895
-
 
 
                       var tx_array = (jsonArray).split(":");
                       var tx_array = tx_array[4].toString();
                       var tx_array = tx_array.split(",");
-
-                      //console.log(tx_array[0]);
-
-                      //var arrayLength = tx_array.length;
-                      //for (var i = 0; i < arrayLength; i++) {
-                      //    if (!tx_array[i])
-                      //        continue;
-
-                          newInfo += '<br><b><a href=https://explorer.btcz.rocks/tx/' + ((tx_array[0]).replace('"',"")).replace('"',"") + '>' + ((tx_array[0]).replace('"',"")).replace('"',"") + '</a></b>';
-                      //}
+                      newInfo += '<br><b><a href="https://explorer.btcz.rocks/tx/' + ((tx_array[0]).replace('"',"")).replace('"',"") + '" target="_blank">' + ((tx_array[0]).replace('"',"")).replace('"',"") + '</a></b>';
                       $("#infoTop").html(newInfo);
 
                       window.top.postMessage(data.success_callback_url, '*');
@@ -303,7 +260,7 @@
                       }
                   }
 
-                  if (data.state == "0" || data.state == "1" || data.state == "3") {
+                  if (data.state == "0" || data.state == "1") {
                     setTimeout('UpdateInvoiceStatus()', 1000);
                   }
 
@@ -331,18 +288,7 @@
 
               request.send();
 
-
-
-
-
             }
-
-
-
-
-
-
-
 
             function timeConverter(UNIX_timestamp) {
                 var a = new Date(UNIX_timestamp);
@@ -419,41 +365,38 @@
             }
 
             function submitAddr() {
-
+              var request = new XMLHttpRequest();
               request.open('GET', '/api/accept/'+v_id, true);
               request.send();
-
             }
 
             function cancelInvoice() {
+              var request = new XMLHttpRequest();
                 request.open('GET', '/api/cancel/'+v_id, true);
                 request.send();
             }
 
 
-
-
-
         </script>
+
+
+        <!--
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GoogleAnalytics %>"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '<%= GoogleAnalytics %>');
+        </script> -->
+
 
 
     </head>
 
-      <body onLoad="UpdateInvoiceStatus()">
-        <div id="containBox " style="
-        	display: table;
-            margin: auto;
-        	margin-top: 20px; !important
-        	margin-bottom: 20px; !important
-        	margin-left: 20px; !important
-        	margin-right: 20px; !important
+    <body onLoad="UpdateInvoiceStatus()">
 
-            width: 56%;
-        	padding: 10px;
-        	height: 200px;
-        	-webkit-box-shadow: 0px 0px 51px -6px rgba(0,0,0,0.65);
-        	-moz-box-shadow: 0px 0px 51px -6px rgba(0,0,0,0.65);
-        	box-shadow: 0px 0px 51px -6px rgba(0,0,0,0.65);">
+        <div id="containBox " class="MainDisplay" >
 
             <div class="header_topbar">
                 <div class="container">
@@ -461,17 +404,11 @@
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10 ">
                             <div class="ht_left">
                                 <a style="text-align: right; color: #fd9410" target="_blank" href="https://pay.btcz.app/">pay.btcz.app</a> -
-
-                                <div class="clock">
-                                </div>
+                                <div class="clock"></div>
                                 <div class="ht_rate">
-                                    <p>
-                                        BTCz/BTC: <span id="Z_BTC"></span> BTCz/USD: <span id="Z_USD"></span> BTCz/EUR: <span id="Z_EUR"></span>
-
-                                    </p>
+                                    <p>BTCz/BTC: <span id="Z_BTC"></span> BTCz/USD: <span id="Z_USD"></span> BTCz/EUR: <span id="Z_EUR"></span></p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -484,22 +421,22 @@
                 <div id="myBar">
                 </div>
             </div>
-		<div style=" width: 100%; border:5px solid red; background-color: white; padding: 3px"><b>Caution:</b> This version is a "beta" being tested. Use in production is not recommended. We disclaim all resposability in case of loss of funds related to the use of this software.</div>
+
             <div id="infoTopWrapper" style="display: block; margin-top: 25px;">
-                <div class="col-sm-6 col-md-4" style=" display: block;width: 100%; margin: auto;text-align: center;">
-                    <center>
-                      <div id="infoTop"></div>
-                      <noscript>
-        						    <h3>Something went wrong!</h3>
-        							  <style type="text/css">
-        								   .pagecontainer {display:none;}
-        							  </style>
-          							<div class="noscriptmsg">
-          								You need javascript enabled in order to use this gateway.
-          							</div>
-        						  </noscript>
-                    </center>
-                </div>
+              <div class="col-sm-6 col-md-4" style=" display: block;width: 100%; margin: auto;text-align: center;">
+                  <center>
+                    <div id="infoTop"></div>
+                    <noscript>
+            			    <h3>Something went wrong!</h3>
+            				  <style type="text/css">
+            					   .pagecontainer {display:none;}
+            				  </style>
+            					<div class="noscriptmsg">
+            						You need javascript enabled in order to use this gateway.
+            					</div>
+            			  </noscript>
+                  </center>
+              </div>
             </div>
 
 
@@ -510,65 +447,41 @@
                         <br>
                         <div id="infoToPay"></div>
                         <form style="margin-top: 25px;">
+                            <a id="updateSenderButton" onClick="cancelInvoice();" class="btn btn-primary">Cancel</a>
                             <a id="updateSenderButton" onClick="submitAddr();" class="btn btn-primary">Continue</a>
                         </form>
                     </center>
                 </div>
             </div>
 
-
             <div id="stage2" style="display: none;">
                 <div class="col-sm-6 col-md-4" style=" display: block;width: 100%; margin: auto;text-align: center;">
                     <center>
-                        <img id="QRGenImg" src="" width="250" />
-                        <br>
+                        <img id="QRGenImg" src="" width="250" /><br>
                         <pre><b id="QRGen"></b></pre>
                         <div class="invoice-box">
                             <table cellpadding="0" cellspacing="0">
                                 <tr class="heading">
-                                    <td>
-                                        Information
-                                    </td>
-                                    <td>
-
-                                    </td>
+                                    <td>Information</td>
+                                    <td></td>
                                 </tr>
-
                                 <tr class="item">
-                                    <td>
-                                        Total amount requested
-                                    </td>
-
-                                    <td>
-                                        <b id="requestedAmount"></b>
-                                    </td>
+                                    <td>Total amount requested</td>
+                                    <td><b id="requestedAmount"></b></td>
                                 </tr>
-
                                 <tr class="item last">
-                                    <td>
-                                        Total amount paid
-                                    </td>
-
-                                    <td>
-                                        <b id="paidAmount">0 BTCz</b>
-                                    </td>
+                                    <td>Total amount paid</td>
+                                    <td><b id="paidAmount">0 BTCz</b></td>
                                 </tr>
-
                                 <tr class="total">
                                     <td></td>
-
-                                    <td>
-                                        Total Due: <b id="amountDue">30 BTCz</b>
-                                    </td>
+                                    <td>Total Due: <b id="amountDue">30 BTCz</b></td>
                                 </tr>
                             </table>
                         </div>
-
                     </center>
                 </div>
             </div>
-
-
 
             <div id="completed" style="display: none;">
                 <div class="col-sm-6 col-md-4" style=" display: block;width: 100%; margin: auto;text-align: center;">
@@ -579,8 +492,6 @@
                 </div>
             </div>
 
-
-
             <div id="expired" style="display: none;">
                 <div class="col-sm-6 col-md-4" style=" display: block; width: 100%; margin: auto;text-align: center;">
                     <center>
@@ -589,7 +500,6 @@
                     </center>
                 </div>
             </div>
-
 
 
             <div id="error" style="display: none;">
@@ -611,20 +521,11 @@
 
 
 
-
-
-        <!-- JQUERY:: JQUERY.JS -->
         <script type="text/javascript" src="../js/jquery.min.js"></script>
-        <!-- JQUERY:: COOKIE.JS -->
         <script type="text/javascript" src="../js/cookie.js"></script>
-        <!-- JQUERY:: OWL.JS -->
         <script type="text/javascript" src="../js/owl.carousel.min.js"></script>
-        <!-- JQUERY:: COUNTER.JS -->
         <script type="text/javascript" src="../js/jquery.counter.js"></script>
-        <!-- JQUERY:: CUSTOM.JS -->
         <script type="text/javascript" src="../js/custom.js"></script>
-
-
 
 
 

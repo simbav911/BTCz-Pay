@@ -1,17 +1,22 @@
 /**
+* ==============================================================================
 * BTCz-Pay
-* -----------
-* Self-hosted bitcoinZ payment gateway
+* ==============================================================================
 *
+* Version 0.2.0 (production v1.0)
+*
+* Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
 *
-**/
-
-/**
- * checks if design docs are deployed
- * to Couchdb and deloys them if not
- *
- */
+* ------------------------------------------------------------------------------
+* deploy-design-docs.js                                  Required by btcz-pay.js
+* ------------------------------------------------------------------------------
+*
+* checks if design docs are deployed
+* to Couchdb and deloys them if not
+*
+* ==============================================================================
+*/
 
 let fs = require('fs')
 let storage = require('./models/storage')

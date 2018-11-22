@@ -1,4 +1,4 @@
-BTCz-Pay (beta v0.1.3)
+BTCz-Pay (v0.2.0)
 ===================
 
 Self-hosted Node.js BitcoinZ payment gateway. Provides REST API (microservice).
@@ -9,14 +9,10 @@ Request payments (invoicing), check payments (whether invoice is paid), receive 
 Depends on Nodejs v8+, BitcoinZ Core, Couchdb for storage and coinmarket.com API for the currency's.
 
 
-Caution
-------------
-This version is a "beta" being tested. Use in production is not recommended. We disclaim all responsability in case of loss of funds related to the use of this software.
-
 Installation
 ------------
 
-* Install [bitcoinz-insight-patched](BITCOIN-CORE-INSTALL.md)
+* Install [bitcoinz-insight-patched](https://github.com/btcz/bitcoinz-insight-patched)
 
 Install nodejs 8.x
 ```
@@ -43,13 +39,9 @@ Edit `config.js`:
 * Point it to a BitcoinZ Core RPC server
 * Update coinmarketcap API key
 * Add tmp wallet with founds for speed payment
+* Update gMail user and password
 
-Tests
------
 
-```
-Tests in progress
-```
 
 Running
 -------
@@ -60,6 +52,7 @@ nodejs worker.js
 nodejs worker2.js
 nodejs worker3.js
 nodejs worker4.js
+nodejs worker5.js
 ```
 (For production use [pm2](https://www.npmjs.com/package/pm2))
 
@@ -215,34 +208,11 @@ or
 https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2
 ```
 
+eCommerce Plugin
+===
+
+
 UPDATES
 =======
 
-v0.1.1
-------
-- Updated install instruction.
-- Updated docs (web UI): CSS style update, form mandatory field and success pingback js code.
-- Corrected server side pingback (in worker.js).
-- Added success & fail (expired) pingback URL for client side (in API return json).
-- Cancel expired gateway check for payment forward (24 hour).
-- Added Gateway usage statistics.
-- Added WP-Woocommerce Plugin (beta).
-
-v0.1.2
-------
-- Added speed payment support.
-- Added unconfirmed founds info in the invoice.
-- Added payment amount in the QR.
-
-v0.1.3
-------
-- Added secret phrase return in JSON by request_payment/ call.
-- Added invoice state and secret param in IPN pingback.
-- added IPN pingback by expired state=2.
-- Manage optional parameters by query string (?) instead of router path (/).
-- Solved double url encoding issue (by using query string). For route full path, you should use double url encoding.
-- Rewrite of some code parts.
-- Updated Web UI API explication with examples.
-- Added website icon.
-- Added postMessage(Callback URL) in invoice.html for cross-domain data transfer (iFrame->windows.top).
-- Added Cubecart Plugin (beta)
+- See updates log for the [BTCz-Pay main server](https://github.com/MarcelusCH/BTCz-Pay/blob/master/UPDATES.md#BTCz-Pay-main-server)
