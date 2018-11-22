@@ -127,9 +127,9 @@ let updateExchangeRate = async function (pair) {
 // Refresh each currency exchange rate by interval
 let CurArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB', 'AUD', 'CAD', 'ZAR', 'JPY']
 CurArray.forEach(function(value){
-  //updateExchangeRate(value)
-  //setInterval(() => updateExchangeRate(value),
-  //                    config.marketrate_refresh * 60 * 1000)
+  updateExchangeRate(value)
+  setInterval(() => updateExchangeRate(value),
+                      config.marketrate_refresh * 60 * 1000)
 })
 
 
