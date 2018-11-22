@@ -211,6 +211,7 @@ https://yourDomaine.com/yourScript.php?secret=01234abcd&state=2
 eCommerce Plugin
 ===
 
+- Check in the [Plugin path](https://github.com/MarcelusCH/BTCz-Pay/tree/master/plugin)
 
 UPDATES
 =======
