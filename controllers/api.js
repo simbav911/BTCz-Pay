@@ -115,6 +115,11 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
                    req.socket.remoteAddress ||
                    req.connection.socket.remoteAddress
 
+     let clientIp_t1 = req.headers['x-forwarded-for']
+     let clientIp_t2 = req.connection.remoteAddress
+     let clientIp_t3 = req.socket.remoteAddress
+     let clientIp_t4 //= req.connection.socket.remoteAddress
+
     // Check maximum opend gateway by client (end if more as expected)
     let gatewayOpenByIP = await storage.CountGatewayOpenByIP(clientIp)
     let totOpenByIP=gatewayOpenByIP.rows.length
@@ -122,7 +127,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
       return res.send(JSON.stringify({'error': 'To many gateway open'}))
     } else {
       logger.log('/api/request_payment/', [ req.id, 'New gateway request by: '
-                  +clientIp, 'Total open gateway: '+totOpenByIP])
+                  +clientIp, 'Total open gateway: '+totOpenByIP, 'IP1: ' +clientIp_t1, 'IP2: ' +clientIp_t2, 'IP3: ' +clientIp_t3, 'IP4: ' +clientIp_t4])
     }
 
 
