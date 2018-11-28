@@ -123,7 +123,14 @@ async function processJob (rows) {
           } // end if/else transactions.result[0] == undefined
 
 
-        } // end if/else unspent > 0
+        } else  {
+
+          // If nothing to return, log an store result
+          json.return_check = 'checked'
+          logger.log('worker5.js', [json._id, 'Nothing to return.','address : '+address ])
+          await storage.saveJobResultsPromise(json)
+
+        }// end if/else unspent > 0
       } // end if state==2 or 5
     } // end for
 

@@ -121,6 +121,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
      let clientIp_t4 //= req.connection.socket.remoteAddress
 
     // Check maximum opend gateway by client (end if more as expected)
+    clientIp=clientIp_t1 // Check/save the complete header...
     let gatewayOpenByIP = await storage.CountGatewayOpenByIP(clientIp)
     let totOpenByIP=gatewayOpenByIP.rows.length
     if (config.max_gateway_client>0 && totOpenByIP>config.max_gateway_client) {
