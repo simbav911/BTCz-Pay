@@ -77,48 +77,60 @@ async function processJob (rows) {
             let transaction = await blockchain.getRawTransaction(transactions.result[0].txid)
             let decodeRaw = await blockchain.decodeRawTransaction(transaction.result)
 
-            // Get the VIN TXID and decode the hex
-            let RawTransactionVin = await blockchain.getRawTransaction(decodeRaw.result.vin[0].txid)
-            let decodeRawTransactionVin = await blockchain.decodeRawTransaction(RawTransactionVin.result)
 
-            // Check if it's not a local address
-            let returnAddress = ""
-            for (let value of decodeRawTransactionVin.result.vout) {
+            // more test for Z addresses
+            if (decodeRaw != undefined && decodeRaw.result.vin[0] != undefined) {
 
-                let retAddressTmp = value.scriptPubKey.addresses[0]
-                let gatewayByAddress = await storage.CheckIfAddressExist(retAddressTmp)
-                let AddressInDB=gatewayByAddress.rows.length //-gatewayByAddress.offset
 
-                // if not in DB, asign it to return address
-                if (AddressInDB==0){
-                  returnAddress=retAddressTmp
-                  break
-                }
+
+
+
+              // Get the VIN TXID and decode the hex
+              let RawTransactionVin = await blockchain.getRawTransaction(decodeRaw.result.vin[0].txid)
+              let decodeRawTransactionVin = await blockchain.decodeRawTransaction(RawTransactionVin.result)
+
+              // Check if it's not a local address
+              let returnAddress = ""
+              for (let value of decodeRawTransactionVin.result.vout) {
+
+                  let retAddressTmp = value.scriptPubKey.addresses[0]
+                  let gatewayByAddress = await storage.CheckIfAddressExist(retAddressTmp)
+                  let AddressInDB=gatewayByAddress.rows.length //-gatewayByAddress.offset
+
+                  // if not in DB, asign it to return address
+                  if (AddressInDB==0){
+                    returnAddress=retAddressTmp
+                    break
+                  }
+              }
+
+              // log
+              logger.log('worker5.js', [json._id, ''
+                  +'refound amount: '+TotUnspent, ''
+                  +'from: '+address, 'to: '+returnAddress])
+
+              // List unspent and create tx
+              let unspentOutputs = await blockchain.listunspent(address)
+              let createTx = signer.createTransaction
+              let tx = createTx(unspentOutputs.result, returnAddress, TotUnspent, config.fee_tx, json.WIF)
+
+              // broadcasting
+              logger.log('worker5.js', [json._id, 'Broadcasting tx: ', tx ])
+              let broadcastResult = await blockchain.broadcastTransaction(tx)
+
+              // Log an store result
+              json.return_check = 'checked'
+              json.sweep_return_result = json.sweep_return_result || {}
+              json.sweep_return_result[Date.now()] = {
+                'tx': tx,
+                'broadcast': broadcastResult
+              }
+              logger.log('worker5.js', [json._id, 'Store result: ', JSON.stringify(broadcastResult) ])
+              await storage.saveJobResultsPromise(json)
+
+
             }
 
-            // log
-            logger.log('worker5.js', [json._id, ''
-                +'refound amount: '+TotUnspent, ''
-                +'from: '+address, 'to: '+returnAddress])
-
-            // List unspent and create tx
-            let unspentOutputs = await blockchain.listunspent(address)
-            let createTx = signer.createTransaction
-            let tx = createTx(unspentOutputs.result, returnAddress, TotUnspent, config.fee_tx, json.WIF)
-
-            // broadcasting
-            logger.log('worker5.js', [json._id, 'Broadcasting tx: ', tx ])
-            let broadcastResult = await blockchain.broadcastTransaction(tx)
-
-            // Log an store result
-            json.return_check = 'checked'
-            json.sweep_return_result = json.sweep_return_result || {}
-            json.sweep_return_result[Date.now()] = {
-              'tx': tx,
-              'broadcast': broadcastResult
-            }
-            logger.log('worker5.js', [json._id, 'Store result: ', JSON.stringify(broadcastResult) ])
-            await storage.saveJobResultsPromise(json)
 
           } // end if/else transactions.result[0] == undefined
 
