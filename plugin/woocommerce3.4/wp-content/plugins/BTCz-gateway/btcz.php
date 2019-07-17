@@ -5,7 +5,7 @@
  * Author:              BTCz.app
  * Author URI:          https://pay.BTCz.app
  * License:             MIT
- * Version:             0.1.3
+ * Version:             0.1.4
  * Requires at least:   3.4
  *
  */
@@ -74,7 +74,6 @@ function add_woocommerce_btcz_gateway() {
             $this->title         = $this->settings['title'];
             $this->description   = $this->settings['description'];
             $this->walletAddress = $this->settings['wallet_address'];
-            $this->secret 	     = $this->settings['secret'];
             $this->email         = $this->settings['merchant_email'];
 
             add_action('woocommerce_update_options_payment_gateways_btcz', array(
@@ -116,7 +115,7 @@ function add_woocommerce_btcz_gateway() {
                     'description' => __('The BTCz Wallet Address you want to receive funds. '),
                     'default' => ''
                 ),
-				        'merchant_email' => array(
+				    'merchant_email' => array(
                     'title' => __('Merchant Email Address'),
                     'type' => 'text',
                     'description' => __('Your email address. '),
@@ -152,9 +151,9 @@ function add_woocommerce_btcz_gateway() {
         } // End admin_options()
 
 
-    		public function CreateGateway($MerchantAddress, $srvPingbackUrl, $errReturnUrl, $successReturnUrl, $MerchantEmail, $InvoiceID, $Amount, $Expire, $Secret, $CurrencyCode) {
+    	public function CreateGateway($MerchantAddress, $srvPingbackUrl, $errReturnUrl, $successReturnUrl, $MerchantEmail, $InvoiceID, $Amount, $Expire, $Secret, $CurrencyCode) {
 
-    			$APIUrl = 'https://pay.btcz.app/api/request_payment';
+    	  $APIUrl = 'https://pay.btcz.app/api/request_payment';
           // pay.btcz.app/api/request_payment/:amount/:currency/:message/:seller_address/:customer_email/:pingback_success
 
           $query = urlencode(urlencode($srvPingbackUrl))  . "/" . urlencode(urlencode($successReturnUrl)). "/" . urlencode(urlencode($errReturnUrl));
@@ -188,62 +187,59 @@ function add_woocommerce_btcz_gateway() {
         // Receipt page
         function receipt_page($order_id) {
 
-          $order = new WC_Order($order_id);
+			$order = new WC_Order($order_id);
 
-    			$dateCompleted = $order->get_date_completed();
-    			if(!empty($dateCompleted))
-    				echo 'Payment has already been completed for this order.';
-
-
-    			$currentTXID = $order->get_transaction_id($this);
+			$dateCompleted = $order->get_date_completed();
+			if(!empty($dateCompleted))
+				echo 'Payment has already been completed for this order.';
 
 
-
-    			if(strlen($currentTXID) != 36) {
+			$currentTXID = $order->get_transaction_id($this);
 
 
 
-    				$srvPingbackUrl = $order->get_checkout_order_received_url();
-            $successPingbackUrl = $order->get_view_order_url();
-            $errPingbackUrl = $successPingbackUrl; // $order->get_view_order_url()."&woocommerce_btcz_confirm=0";
+			if(strlen($currentTXID) != 36) {
+
+				$srvPingbackUrl = $order->get_checkout_order_received_url();
+				$successPingbackUrl = $order->get_view_order_url();
+				$errPingbackUrl = $successPingbackUrl; // $order->get_view_order_url()."&woocommerce_btcz_confirm=0";
+
+    			$RESP =  $this->CreateGateway($this->walletAddress, $srvPingbackUrl, $errPingbackUrl, $successPingbackUrl, $this->email, $order->id, round($order->get_total(), 2), 15, $this->secret, get_woocommerce_currency());
+
+				$JSON_RESP = json_decode($RESP);
+
+				if(!empty($JSON_RESP)) {
+					$uID = $JSON_RESP->id;
+					$currentTXID = $uID;
+					$order->set_transaction_id($currentTXID);
+					$order->add_order_note("BTCz gateway generated: ".$currentTXID);
+					$order->save();
+
+				}
+				
+			} else {
+				$uID = $currentTXID;
+			}
 
 
-    				$RESP =  $this->CreateGateway($this->walletAddress, $srvPingbackUrl, $errPingbackUrl, $successPingbackUrl, $this->email, $order->id, round($order->get_total(), 2), 15, $this->secret, get_woocommerce_currency());
+    		if(isset($uID) && !empty($uID) && strlen($uID) == 36) {
 
-
-
-            $JSON_RESP = json_decode($RESP);
-
-    				if(!empty($JSON_RESP)) {
-    					$uID = $JSON_RESP->id;
-    					$currentTXID = $uID;
-    					$order->set_transaction_id($currentTXID);
-    					$order->add_order_note("BTCz gateway generated: ".$currentTXID);
-    					$order->save();
-
-    				}
-    			} else {
-    				$uID = $currentTXID;
-    			}
-
-
-    			if(isset($uID) && !empty($uID) && strlen($uID) == 36) {
-
-    				$InvoiceURL = "https://pay.btcz.app/invoice/".$uID;
-            echo $order->get_checkout_order_received_url();
-            echo 'Please pay below:<br><br><iframe id="iFrame" style="min-height: 835px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no" onload="resizeIframe()"></iframe>';
-    				echo "<script type=\"text/javascript\">
-    				function resizeIframe() {
-    					var obj = document.getElementById(\"iFrame\");
-    					obj.style.height = (obj.contentWindow.document.body.scrollHeight) + 'px';
-    					setTimeout('resizeIframe()', 200);
-    				}
-    				</script>";
-    			} else if(strlen($RESP)) {
-    				echo $RESP; //Printable error
-    			} else {
-    				echo "Error: No response from API"; //Unknown error
-    			}
+    			$InvoiceURL = "https://pay.btcz.app/invoice/".$uID;
+				echo 'Please pay below:<br><br><iframe id="iFrame" style="min-height: 835px" width="100%"  frameborder="0" src="'.$InvoiceURL.'" scrolling="no" onload="resizeIframe()"></iframe>';
+				echo "<script type=\"text/javascript\">
+				function resizeIframe() {
+					var obj = document.getElementById(\"iFrame\");
+					obj.style.height = (obj.contentWindow.document.body.scrollHeight) + 'px';
+					setTimeout('resizeIframe()', 200);
+				}
+				</script>";
+				
+			} else if(strlen($RESP)) {
+				echo $RESP; //Printable error
+			} else {
+				echo "Error: No response from API"; //Unknown error
+			}
+			
         }
 
 
@@ -270,36 +266,34 @@ function add_woocommerce_btcz_gateway() {
         }
 
 
-    		public function getRealClientIP() {
+		public function getRealClientIP() {
 
-    			if (function_exists('getallheaders')) {
-    				$headers = getallheaders();
-    			} else {
-    				$headers = $_SERVER;
-    			}
+			if (function_exists('getallheaders')) {
+				$headers = getallheaders();
+			} else {
+				$headers = $_SERVER;
+			}
 
-    			//Get the forwarded IP if it exists
-    			if (array_key_exists('X-Forwarded-For', $headers)
-    				&& filter_var($headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
-    			) {
-    				$the_ip = $headers['X-Forwarded-For'];
-    			} elseif (array_key_exists('HTTP_X_FORWARDED_FOR', $headers)
-    				&& filter_var($headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
-    			) {
-    				$the_ip = $headers['HTTP_X_FORWARDED_FOR'];
-    			} elseif(array_key_exists('Cf-Connecting-Ip', $headers)) {
-    				$the_ip = $headers['Cf-Connecting-Ip'];
-    			} else {
-    				$the_ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-    			}
-    			return $the_ip;
-    		}
+			//Get the forwarded IP if it exists
+			if (array_key_exists('X-Forwarded-For', $headers)
+				&& filter_var($headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
+			) {
+				$the_ip = $headers['X-Forwarded-For'];
+			} elseif (array_key_exists('HTTP_X_FORWARDED_FOR', $headers)
+				&& filter_var($headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
+			) {
+				$the_ip = $headers['HTTP_X_FORWARDED_FOR'];
+			} elseif(array_key_exists('Cf-Connecting-Ip', $headers)) {
+				$the_ip = $headers['Cf-Connecting-Ip'];
+			} else {
+				$the_ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+			}
+			return $the_ip;
+		}
 
 
         public function processTX() {
 
-
-          echo "hhh";
 
           if(!isset($_GET['view-order']) || !ctype_alnum($_GET['view-order']) || strlen($_GET['view-order']) > 128 || !isset($_POST["data"]))
           	die();
@@ -371,7 +365,7 @@ function view_order_custom($order_id) {
 
   //curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1 ($MerchantEmail)");
+  curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1.4 ($MerchantEmail)");
 
   $result = curl_exec($ch);
   $info = curl_getinfo($ch);
@@ -418,7 +412,7 @@ function view_order_custom($order_id) {
 
 function callback_handler($order_id) {
 
-
+  sleep(30);
 
   $order = new WC_Order($order_id);
 
@@ -441,7 +435,7 @@ function callback_handler($order_id) {
 
   //curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1 ($MerchantEmail)");
+  curl_setopt($ch, CURLOPT_USERAGENT, "WP-Woo Plugin/0.1.4 ($MerchantEmail)");
 
   $result = curl_exec($ch);
   $info = curl_getinfo($ch);
