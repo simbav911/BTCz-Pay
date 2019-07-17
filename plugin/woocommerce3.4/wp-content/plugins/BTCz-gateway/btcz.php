@@ -60,7 +60,7 @@ function add_woocommerce_btcz_gateway() {
         public function __construct() {
             $this->plugin_dir   = trailingslashit(dirname(__FILE__));
             $this->id           = 'btcz';
-            $this->icon         = apply_filters('woocommerce_btcz_icon', plugin_dir_url(__FILE__) . 'btcz.png');
+            $this->icon         = apply_filters('woocommerce_btcz_icon', plugin_dir_url(__FILE__) . 'BTCZ_Gateway.png');
             $this->has_fields   = false;
             $this->method_title = __('BTCz (Powered by pay.btcz.app)');
 
