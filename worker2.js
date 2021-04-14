@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -37,7 +37,7 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 async function processJob (rows) {
   try {
 
-    console.log('worker2.js', ['Check for paid and transferring...'])
+    console.log('WORKER 2', ['Check for paid and transferring...'])
 
     rows = rows || {}
     rows.rows = rows.rows || []
@@ -53,7 +53,7 @@ async function processJob (rows) {
 
         // Check seller info and log transfer
         let seller = await storage.getSellerPromise(json.seller)
-        logger.log('worker2.js', [json._id, ''
+        logger.log('WORKER 2', [json._id, ''
             +'transferring confirmed: '+received[0].result, ''
             +'from: '+json.address, 'to: '+seller.seller, ''
             +'speed_sweep: '+json.speed_sweep])
@@ -64,7 +64,7 @@ async function processJob (rows) {
         let tx = createTx(unspentOutputs.result, seller.address, json.btc_to_ask, config.fee_tx, json.WIF)
 
         // broadcasting
-        logger.log('worker2.js', [json._id, 'Broadcasting tx: ', tx ])
+        logger.log('WORKER 2', [json._id, 'Broadcasting tx...'])
         let broadcastResult = await blockchain.broadcastTransaction(tx)
 
         // Log an store result
@@ -75,7 +75,7 @@ async function processJob (rows) {
           'tx': tx,
           'broadcast': broadcastResult
         }
-        logger.log('worker2.js', [json._id, 'Store result: ', JSON.stringify(broadcastResult) ])
+        logger.log('WORKER 2', [json._id, 'Mark sweeped !'])
         await storage.saveJobResultsPromise(json)
 
 
@@ -84,7 +84,7 @@ async function processJob (rows) {
 
         // Check seller info and log transfer
         let seller = await storage.getSellerPromise(json.seller)
-        logger.log('worker2.js', [json._id, ''
+        logger.log('WORKER 2', [json._id, ''
             +'transferring unconfirmed: '+received[0].result, ''
             +'from: '+config.tmp_address, 'to: '+seller.seller, ''
             +'speed_sweep: '+json.speed_sweep])
@@ -95,7 +95,7 @@ async function processJob (rows) {
         let tx = createTx(unspentOutputs.result, seller.address, json.btc_to_ask, config.fee_tx, config.tmp_address_WIF)
 
         // broadcasting
-        logger.log('worker2.js', [json._id, 'Broadcasting tx: ', tx ])
+        logger.log('WORKER 2', [json._id, 'Broadcasting tx...'])
         let broadcastResult = await blockchain.broadcastTransaction(tx)
 
         // Log an store result
@@ -106,11 +106,11 @@ async function processJob (rows) {
           'tx': tx,
           'broadcast': broadcastResult
         }
-        logger.log('worker2.js', [json._id, 'Store result: ', JSON.stringify(broadcastResult) ])
+        logger.log('WORKER 2', [json._id, 'Mark sweeped !'])
         await storage.saveJobResultsPromise(json)
 
       } else {
-        logger.error('worker2.js', [json._id, 'Marked as paid but balance not ok.', ''
+        logger.error('WORKER 2', [json._id, 'Marked as paid but balance not ok ?!', ''
             +'address: '+json.address, ''
             +'expect: '+json.btc_to_ask, ''
             +'confirmed: '+received[config.confirmation_before_forward].result, ''

@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -95,17 +95,18 @@ router.post('/contact', function (req, res) {
 
   let mailOpts, smtpTrans;
   smtpTrans = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    host: config.smtp.host,
+    port: config.smtp.port,
+    secure: config.smtp.secure,
+    requireTLS: config.smtp.requireTLS,
     auth: {
-      user: config.gmail_user,
-      pass: config.gmail_pass
+      user: config.smtp.auth.user,
+      pass: config.smtp.auth.pass
     }
   });
   mailOpts = {
     from: req.body.name + ' &lt;' + req.body.email + '&gt;',
-    to: config.gmail_user,
+    to: config.smtp.auth.user,
     subject: 'New message from contact form at pay.btcz.app',
     text: `${req.body.name} (${req.body.email}) says: ${req.body.message}`
   };

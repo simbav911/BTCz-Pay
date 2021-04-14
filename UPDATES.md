@@ -1,6 +1,14 @@
 BTCz-Pay main server
 ===
 
+
+v0.2.1
+-------
+- Package update
+- Change Rate API
+- Remove unused libs
+- Improved logs
+
 v0.2.0
 -------
 - Rewrite source code.

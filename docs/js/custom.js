@@ -561,8 +561,7 @@ function LoadRate(){
 
     if (request.status >= 200 && request.status < 400) {
 
-
-        $("#Z_BTC").html(data.BTC.toFixed(8));
+        $("#Z_BTC").html(  (data.BTC.toFixed(10) * 100000000).toFixed(2)+' sat' );
         $("#Z_EUR").html(data.EUR.toFixed(8));
         $("#Z_USD").html(data.USD.toFixed(8));
 

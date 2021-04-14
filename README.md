@@ -1,4 +1,4 @@
-BTCz-Pay (v0.2.0)
+BTCz-Pay (v0.2.1)
 ===================
 
 Self-hosted Node.js BitcoinZ payment gateway. Provides REST API (microservice).
@@ -6,19 +6,21 @@ Process BitcoinZ payments on your end, securely, with no comission.
 
 Request payments (invoicing), check payments (whether invoice is paid), receive callbacks if payment is made (client and server side).
 
-Depends on Nodejs v8+, BitcoinZ Core, Couchdb for storage and coinmarket.com API for the currency's.
+Required
+--------
+
+* Linux
+* Nodejs v8+  
+* [Bitcoinz Full node](https://github.com/btcz/bitcoinz) with *Insight* features activated.
+* Couchdb
 
 
 Installation
 ------------
 
-* Install [bitcoinz-insight-patched](https://github.com/btcz/bitcoinz-insight-patched)
 
-Install nodejs 8.x
-```
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install nodejs libzmq3-dev
-```
+
+
 
 Clone & install project:
 ```
@@ -35,11 +37,10 @@ curl -u User_Name -X PUT localhost:5984/btczpay
 ```
 
 Edit `config.js`:
-* Point it to a new Couchdb database
+* Point it to a your Couchdb database
 * Point it to a BitcoinZ Core RPC server
-* Update coinmarketcap API key
-* Add tmp wallet with founds for speed payment
-* Update gMail user and password
+* Add tmp wallet with founds for speed payment (disabled)
+* Update email params
 
 
 
@@ -48,7 +49,7 @@ Running
 
 ```
 nodejs btcz-pay.js
-nodejs worker.js
+nodejs worker1.js
 nodejs worker2.js
 nodejs worker3.js
 nodejs worker4.js

@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -23,7 +23,6 @@ let storage = require('./models/storage')       // Load db call functions
 let blockchain = require('./models/blockchain') // Load blockchain functions
 let config = require('./config')                // Load configuration file
 let logger = require('./utils/logger')          // Load the logger module
-require('./smoke-test')                         // Checking DB & BtcZ node RPC
 
 ;(async () => {
   while (1) {
@@ -37,7 +36,7 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 async function processJob (rows) {
   try {
 
-    console.log('worker.js', ['Check for received and mark as paid...'])
+    console.log('WORKER 1', ['Check for received and mark as paid...'])
 
     rows = rows || {}
     rows.rows = rows.rows || []
@@ -55,7 +54,7 @@ async function processJob (rows) {
           config.speed_sweep_fee))) && json.speed_sweep==1) {
 
         // Log if paid
-        logger.log('worker.js', [json._id, 'address: '+json.address, ''
+        logger.log('WORKER 1', [json._id, 'address: '+json.address, ''
             +'expect: '+json.btc_to_ask, ''
             +'confirmed: '+received[config.confirmation_before_forward].result, ''
             +'unconfirmed: '+received[0].result, ''
@@ -64,7 +63,7 @@ async function processJob (rows) {
         // Update the couchdb document
         json.processed = 'paid'
         json.paid_on = Date.now()
-        logger.log('worker.js', [json._id, 'Mark paid. '])
+        logger.log('WORKER 1', [json._id, 'Mark paid ! '])
         await storage.saveJobResultsPromise(json)
 
         // Set URL parameter
@@ -77,15 +76,15 @@ async function processJob (rows) {
 
         // Fire server side pingback
         rp({uri: URLset}).then((result) => {
-          logger.log('worker.js', [json._id, 'Pingback success done: ' , URLset])
+          logger.log('WORKER 1', [json._id, 'Pingback success done: ' , URLset])
         }).catch((error) => {
-          logger.error('worker.js', [json._id, 'Pingback success fail: ' , URLset, error.message, error.stack])
+          logger.error('WORKER 1', [json._id, 'Pingback success fail: ' , URLset, error.message, error.stack])
         })
 
       } // end if
     } // end for
 
   } catch (error) {
-    logger.error('worker.js', [ error.message, error.stack ])
+    logger.error('WORKER 1', [ error.message, error.stack ])
   } // end try
 }

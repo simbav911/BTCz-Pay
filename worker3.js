@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -38,7 +38,7 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 async function processJob (rows) {
   try {
 
-    console.log('worker3.js', ['Check for expired gateway...'])
+    console.log('WORKER 3', ['Check for expired gateway...'])
 
     rows = rows || {}
     rows.rows = rows.rows || []
@@ -51,7 +51,7 @@ async function processJob (rows) {
         let received = await blockchain.getReceivedByAddress(json.address)
 
         // Log if expired
-        logger.log('worker3.js', [json._id, 'address: '+json.address, ''
+        logger.log('WORKER 3', [json._id, 'address: '+json.address, ''
             +'expect: '+json.btc_to_ask, ''
             +'confirmed: '+received[config.confirmation_before_forward].result, ''
             +'unconfirmed: '+received[0].result, ''
@@ -59,6 +59,7 @@ async function processJob (rows) {
 
         json.state=2
         json.processed = 'expired'
+        logger.log('WORKER 3', [json._id, 'Mark expired ! '])
         await storage.saveJobResultsPromise(json)
 
         // Set URL parameter
@@ -71,15 +72,15 @@ async function processJob (rows) {
 
         // Fire server side pingback
         rp({uri: URLset}).then((result) => {
-          logger.log('worker3.js', [json._id, 'Pingback expired done: ' , URLset])
+          logger.log('WORKER 3', [json._id, 'Pingback expired done: ' , URLset])
         }).catch((error) => {
-          logger.error('worker3.js', [json._id, 'Pingback expired fail: ' , URLset, error.message, error.stack])
+          logger.error('WORKER 3', [json._id, 'Pingback expired fail: ' , URLset, error.message, error.stack])
         })
 
       } // end if
     } // end for
 
   } catch (error) {
-    logger.error('worker3.js', [ error.message, error.stack ])
+    logger.error('WORKER 3', [ error.message, error.stack ])
   }
 }

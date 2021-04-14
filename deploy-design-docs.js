@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay

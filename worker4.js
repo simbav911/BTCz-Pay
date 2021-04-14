@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -38,7 +38,7 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 async function processJob (rows) {
   try {
 
-    console.log('worker4.js', ['Check for paid (uncomfirmed) and transferring back to tmp...'])
+    console.log('WORKER 4', ['Check for paid (uncomfirmed) and transferring back to tmp...'])
 
     rows = rows || {}
     rows.rows = rows.rows || []
@@ -57,7 +57,7 @@ async function processJob (rows) {
         if (received[config.confirmation_before_forward].result >= received[0].result && received[0].result > 0) {
 
           // log
-          logger.log('worker4.js', [json._id, ''
+          logger.log('WORKER 4', [json._id, ''
               +'transferring (back): '+received[0].result, ''
               +'from: '+json.address, 'to: '+config.tmp_address, ''
               +'speed_sweep: '+json.speed_sweep])
@@ -69,7 +69,7 @@ async function processJob (rows) {
                               config.speed_sweep_fee)), config.fee_tx, json.WIF)
 
           // broadcasting
-          logger.log('worker4.js', [json._id, 'Broadcasting tx: ', tx ])
+          logger.log('WORKER 4', [json._id, 'Broadcasting tx... ' ])
           let broadcastResult = await blockchain.broadcastTransaction(tx)
 
           // Log an store result
@@ -80,12 +80,12 @@ async function processJob (rows) {
             'tx': tx,
             'broadcast': broadcastResult
           }
-          logger.log('worker4.js', [json._id, 'Store result: ', JSON.stringify(broadcastResult) ])
+          logger.log('WORKER 4', [json._id, 'Mark as sweeped ! '])
           await storage.saveJobResultsPromise(json)
 
 
         } else {
-          logger.error('worker4.js', [json._id, 'Marked as paid (uncomfirmed) but balance not ok.', ''
+          logger.error('WORKER 4', [json._id, 'Marked as paid (uncomfirmed) but balance not ok.', ''
               +'address: '+json.address, ''
               +'expect: '+json.btc_to_ask, ''
               +'confirmed: '+received[config.confirmation_before_forward].result, ''
@@ -97,6 +97,6 @@ async function processJob (rows) {
     } // end for
 
   } catch (error) {
-    logger.error('worker4.js', [ error.message, error.stack ])
+    logger.error('WORKER 4', [ error.message, error.stack ])
   }
 }

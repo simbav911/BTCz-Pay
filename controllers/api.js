@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -67,7 +67,7 @@ router.get('/api/request_payment/', function (req, res) {
   if (!secret) {secret=crypto.randomBytes(20).toString('hex')}
 
   // redirect to the main router
-  return res.redirect('/api/request_payment/'+expect+'/'+currency+'/'
+  res.redirect('/api/request_payment/'+expect+'/'+currency+'/'
                       +message+'/'+seller+'/'+customer+'/'
                       +encodeURIComponent(encodeURIComponent(ipnPingback))+'/'
                       +encodeURIComponent(encodeURIComponent(cliSuccessURL))+'/'
@@ -101,7 +101,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
 
     // Check speed sweep and not more than x BTCZ
     if (SpeedSweep==1 && expect>config.speedSweep_max){
-      return res.send(JSON.stringify({'error': 'To high amound for speed sweep'}))
+      return res.send(JSON.stringify({'error': 'To high amound for speed sweep (it may be disabled)'}))
     }
 
     // Check if address is valid
@@ -109,42 +109,36 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
       return res.send(JSON.stringify({'error': 'Seller address not valide'}))
     }
 
-    // Get client IP
-    let clientIp = (req.headers['x-forwarded-for'] || '').split(',').pop() ||
-                   req.connection.remoteAddress ||
-                   req.socket.remoteAddress ||
-                   req.connection.socket.remoteAddress
-
-     let clientIp_t1 = req.headers['x-forwarded-for']
-     let clientIp_t2 = req.connection.remoteAddress
-     let clientIp_t3 = req.socket.remoteAddress
-     let clientIp_t4 //= req.connection.socket.remoteAddress
-
-    // Check maximum opend gateway by client (end if more as expected)
-    clientIp=clientIp_t1 // Check/save the complete header...
-    let gatewayOpenByIP = await storage.CountGatewayOpenByIP(clientIp)
-    let totOpenByIP=gatewayOpenByIP.rows.length
-    if (config.max_gateway_client>0 && totOpenByIP>config.max_gateway_client) {
-      return res.send(JSON.stringify({'error': 'To many gateway open'}))
-    } else {
-      logger.log('/api/request_payment/', [ req.id, 'New gateway request by: '
-                  +clientIp, 'Total open gateway: '+totOpenByIP, 'IP1: ' +clientIp_t1, 'IP2: ' +clientIp_t2, 'IP3: ' +clientIp_t3, 'IP4: ' +clientIp_t4])
-    }
-
+    // // Get client IP (disabled)
+    // let clientIp = (req.headers['x-forwarded-for'] || '').split(',').pop() ||
+    //                req.connection.remoteAddress ||
+    //                req.socket.remoteAddress ||
+    //                req.connection.socket.remoteAddress
+    //
+    //  let clientIp_t1 = req.headers['x-forwarded-for']
+    //  let clientIp_t2 = req.connection.remoteAddress
+    //  let clientIp_t3 = req.socket.remoteAddress
+    //  let clientIp_t4 //= req.connection.socket.remoteAddress
+    //
+    // // Check maximum opend gateway by client (end if more as expected)
+    // clientIp=clientIp_t1 // Check/save the complete header...
+    // let gatewayOpenByIP = await storage.CountGatewayOpenByIP(clientIp)
+    // let totOpenByIP=gatewayOpenByIP.rows.length
+    // if (config.max_gateway_client>0 && totOpenByIP>config.max_gateway_client) {
+    //   return res.send(JSON.stringify({'error': 'To many gateway open'}))
+    // } else {
+    //   logger.log('/api/request_payment/', [ req.id, 'New gateway request by: '
+    //               +clientIp, 'Total open gateway: '+totOpenByIP, 'IP1: ' +clientIp_t1, 'IP2: ' +clientIp_t2, 'IP3: ' +clientIp_t3, 'IP4: ' +clientIp_t4])
+    // }
+    logger.log('/api/request_payment/', [ req.id, 'New gateway request... '])
 
 
     // Get exchange rate
     switch (currency) {
-      case 'AUD': exchangeRate = btczAud; break
-      case 'GBP': exchangeRate = btczGbp; break
-      case 'CAD': exchangeRate = btczCad; break
-      case 'RUB': exchangeRate = btczRub; break
       case 'USD': exchangeRate = btczUsd; break
       case 'EUR': exchangeRate = btczEur; break
-      case 'ZAR': exchangeRate = btczZar; break
-      case 'JPY': exchangeRate = btczJpy; break
-      case 'CHF': exchangeRate = btczChf; break
       case 'BTC': exchangeRate = btczBTC; break
+      case 'CHF': exchangeRate = btczChf; break
       case 'BTCZ': exchangeRate = 1; break
       default:
         return res.send(JSON.stringify({'error': 'Bad currency'}))
@@ -174,7 +168,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
       'state': 0,
       'speed_sweep': SpeedSweep,
       'secret': secret,
-      'ip' : clientIp,
+      'ip' : 'disabled',
       '_id': req.id
     }
 
@@ -230,7 +224,7 @@ router.get('/api/request_payment/:expect/:currency/:message/:seller/:customer/'
     await blockchain.importaddress(addressData.address)
 
     // Return answer
-    logger.log('/api/request_payment/', [ req.id, 'Return gateway id: '+req.id ])
+    logger.log('/api/request_payment/', [ req.id, 'Gateway ready !'])
     return res.send(JSON.stringify(answer))
   })().catch((error) => {
     logger.error('/api/request_payment/', [ req.id, error.message, error.stack ])
@@ -383,7 +377,7 @@ router.get('/api/cancel/:_id', function (req, res) {
     if (values[0].state==0 || values[0].state==1){
 
       // Change gateway state
-      logger.log('/api/cancel/', [req.id, 'Cancelled gateway: '+ req.params._id])
+      logger.log('/api/cancel/', [req.params._id, 'Gateway Canceled.'])
       storage.saveJobResultsPromise(json)
 
       // Set callback URL parameter
@@ -396,9 +390,9 @@ router.get('/api/cancel/:_id', function (req, res) {
 
       // Fire server side pingback
       rp({uri: URLset}).then((result) => {
-        logger.log('/api/cancel/', [req.id, 'Pingback expired done: ' , URLset])
+        logger.log('/api/cancel/', [req.params._id, 'Pingback expired done: ' , URLset])
       }).catch((error) => {
-        logger.error('/api/cancel/', [req.id, 'Pingback expired fail: ' , URLset, error.message, error.stack])
+        logger.error('/api/cancel/', [req.params._id, 'Pingback expired fail: ' , URLset, error.message, error.stack])
       })
     }
 
@@ -447,7 +441,7 @@ router.get('/api/accept/:_id', function (req, res) {
 
     // Change gateway state to 1
     if (values[0].state==0){
-      logger.log('/api/accept/', [req.id, 'Accepted gateway: '+ req.params._id])
+      logger.log('/api/accept/', [req.params._id, 'Gateway accepted.'])
       storage.saveJobResultsPromise(json)
     }
 
@@ -464,14 +458,8 @@ router.get('/api/accept/:_id', function (req, res) {
 router.get('/api/get_btcz_rate', function (req, res) {
 
   let answer = {
-    'AUD': btczAud,
-    'GBP': btczGbp,
-    'CAD': btczCad,
-    'RUB': btczRub,
     'USD': btczUsd,
     'EUR': btczEur,
-    'ZAR': btczZar,
-    'JPY': btczJpy,
     'CHF': btczChf,
     'BTC': btczBTC
   };

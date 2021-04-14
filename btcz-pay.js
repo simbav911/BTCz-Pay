@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -21,18 +21,25 @@
 * ==============================================================================
 */
 
+let logger = require('./utils/logger')
+logger.log('BOOTING UP', ['...'])
+
+
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 let express = require('express')
 let morgan = require('morgan')
-let uuid = require('node-uuid')
+let uuid = require('uuid')
 let bodyParser = require('body-parser')
 let rp = require('request-promise')
+logger.log('BOOTING UP', ['Packages loaded.'])
 
 
-let logger = require('./utils/logger')      // Load the logger module
+     // Load the logger module
 let config = require('./config')            // Load configuration file
 require('./smoke-test')                     // Checking DB & BtcZ node RPC
 require('./deploy-design-docs')             // Checking design docs in Couchdb
+logger.log('BOOTING UP', ['Config, BC & DB read ok.'])
 
 morgan.token('id', function getId (req) {
   return req.id
@@ -64,85 +71,76 @@ app.use('/images', express.static('docs/images'))
 app.set('views', __dirname + '/docs');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+logger.log('BOOTING UP', ['Web services configured.'])
 
 // Load API controlers
 app.use(require('./controllers/api'))
 app.use(require('./controllers/website'))
+logger.log('BOOTING UP', ['Controlers loaded.'])
 
-// Curencies exchange rate global variables
-global.btczUsd = 7000
-global.btczEur = 6000
-global.btczZar = 6000
-global.btczJpy = 6000
-global.btczChf = 6000
-global.btczRub = 6000
-global.btczCad = 6000
-global.btczGbp = 6000
-global.btczAud = 6000
-global.btczBTC = 6000
 
-// Currency exchange rate update function
-let updateExchangeRate = async function (pair) {
+// Loop trought the API array (redudency)
+async function updateExchangeRate () {
+  try {
 
-  let requestOptions = {
-    method: 'GET',
-    uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
-    qs: {
-      symbol: 'BTCZ',
-      convert: pair,
-    },
-    headers: {
-      'X-CMC_PRO_API_KEY': config.coinmarketcap_API
-    },
-    json: true,
-    gzip: true
-  };
+    let apiCallStr = "";
+    let APIreq = {};
+    let apiType = "";
 
-  rp(requestOptions).then(response => {
+    // ----- Set currency rates informations -----
+    // Get it from the rate API array in config file
+    global.Rates = [];
+    for (i = 0; i < config.rate.api.length; i++){
+      apiCallStr = config.rate.api[i];
+      APIreq = {method: 'GET', uri: apiCallStr};
 
-    var json = JSON.stringify(response);
-    var json = JSON.parse(json);
-    logger.log('Get currency exchange rate',
-                [pair, json.data['BTCZ'].quote[pair].price])
+      await rp(APIreq).then(response => {
+         for (item of JSON.parse(response)){
+           if (config.rate.currency.includes(item.code)) {
+             global.Rates.push({"code":item.code,"name":item.name,"rate":item.rate})
+           }
+         }
+      }).catch((err) => {
+        logger.error('updateExchangeRate()', [ err.message, err.stack ])
+      });
 
-    switch (pair) {
-      case 'AUD': global.btczAud = json.data['BTCZ'].quote[pair].price; break
-      case 'GBP': global.btczGbp = json.data['BTCZ'].quote[pair].price; break
-      case 'CAD': global.btczCad = json.data['BTCZ'].quote[pair].price; break
-      case 'RUB': global.btczRub = json.data['BTCZ'].quote[pair].price; break
-      case 'USD': global.btczUsd = json.data['BTCZ'].quote[pair].price; break
-      case 'EUR': global.btczEur = json.data['BTCZ'].quote[pair].price; break
-      case 'ZAR': global.btczZar = json.data['BTCZ'].quote[pair].price; break
-      case 'JPY': global.btczJpy = json.data['BTCZ'].quote[pair].price; break
-      case 'CHF': global.btczChf = json.data['BTCZ'].quote[pair].price; break
-      case 'BTC': global.btczBTC = json.data['BTCZ'].quote[pair].price; break
+      // break if data pulled correctly on the actual rate API
+      if (global.Rates.length>0){
+        for (item of global.Rates){
+          if(item.code=="BTC"){global.btczBTC=item.rate}
+          if(item.code=="EUR"){global.btczEur=item.rate}
+          if(item.code=="USD"){global.btczUsd=item.rate}
+          if(item.code=="CHF"){global.btczChf=item.rate}
+        }
+        logger.log('updateExchangeRate()', [global.Rates])
+        break;
+      }
     }
 
-  }).catch((err) => {
-    logger.error('updateExchangeRate', err.message)
-  });
+    // Return error if no data pulled
+    if (global.Rates.length<1){
+      global.Rates = [{"error": "No rate info set."}];
+      logger.error('updateExchangeRate()', "No currency rates set.");
+      return;
+    } else {
 
+    }
+
+  } catch (error) {
+    logger.error('updateExchangeRate()', [ error.message, error.stack ])
+  }
 }
 
-// Refresh each currency exchange rate by interval
-let CurArray = ['USD', 'EUR', 'BTC', 'CHF', 'GBP', 'RUB', 'AUD', 'CAD', 'ZAR', 'JPY']
-CurArray.forEach(function(value){
-  updateExchangeRate(value)
-  setInterval(() => updateExchangeRate(value),
-                      config.marketrate_refresh * 60 * 1000)
-})
 
-
-
-
-
-
+updateExchangeRate()
+setInterval(() => updateExchangeRate(), 60 * 1000 * config.marketrate_refresh)
+logger.log('BOOTING UP', ['Initial exchange rate loaded.'])
 
 
 
 // Startup server
 let server = app.listen(config.port, '127.0.0.1', function () {
-  logger.log('BOOTING UP', ['Listening on port %d', config.port])
+  logger.log('BOOTING UP', ['Listening on port '+config.port])
 })
 
 module.exports = server

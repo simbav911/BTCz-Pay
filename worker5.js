@@ -3,7 +3,7 @@
 * BTCz-Pay
 * ==============================================================================
 *
-* Version 0.2.0 (production v1.0)
+* Version 0.2.1 (production v1.0)
 *
 * Self-hosted bitcoinZ payment gateway
 * https://github.com/MarcelusCH/BTCz-Pay
@@ -38,7 +38,7 @@ require('./smoke-test')                         // Checking DB & BtcZ node RPC
 async function processJob (rows) {
   try {
 
-    console.log('worker5.js', ['Check for return founds...'])
+    console.log('WORKER 5', ['Check for return founds...'])
 
     rows = rows || {}
     rows.rows = rows.rows || []
@@ -63,7 +63,7 @@ async function processJob (rows) {
         if (TotUnspent>0) {
 
           // log
-          logger.log('worker5.js', [json._id, ''
+          logger.log('WORKER 5', [json._id, ''
               +'total unspent: '+TotUnspent, ''
               +'address: '+address])
 
@@ -80,10 +80,6 @@ async function processJob (rows) {
 
             // more test for Z addresses
             if (decodeRaw != undefined && decodeRaw.result.vin[0] != undefined) {
-
-
-
-
 
               // Get the VIN TXID and decode the hex
               let RawTransactionVin = await blockchain.getRawTransaction(decodeRaw.result.vin[0].txid)
@@ -105,7 +101,7 @@ async function processJob (rows) {
               }
 
               // log
-              logger.log('worker5.js', [json._id, ''
+              logger.log('WORKER 5', [json._id, ''
                   +'refound amount: '+TotUnspent, ''
                   +'from: '+address, 'to: '+returnAddress])
 
@@ -115,7 +111,7 @@ async function processJob (rows) {
               let tx = createTx(unspentOutputs.result, returnAddress, TotUnspent, config.fee_tx, json.WIF)
 
               // broadcasting
-              logger.log('worker5.js', [json._id, 'Broadcasting tx: ', tx ])
+              logger.log('WORKER 5', [json._id, 'Broadcasting return tx... ' ])
               let broadcastResult = await blockchain.broadcastTransaction(tx)
 
               // Log an store result
@@ -125,21 +121,19 @@ async function processJob (rows) {
                 'tx': tx,
                 'broadcast': broadcastResult
               }
-              logger.log('worker5.js', [json._id, 'Store result: ', JSON.stringify(broadcastResult) ])
+              logger.log('WORKER 5', [json._id, 'Mark as checked ! ' ])
               await storage.saveJobResultsPromise(json)
 
 
             }
 
-
           } // end if/else transactions.result[0] == undefined
-
 
         } else  {
 
           // If nothing to return, log an store result
           json.return_check = 'checked'
-          logger.log('worker5.js', [json._id, 'Nothing to return.','address : '+address ])
+          logger.log('WORKER 5', [json._id, 'Mark as checked ! Nothing to return.','address : '+address ])
           await storage.saveJobResultsPromise(json)
 
         }// end if/else unspent > 0
@@ -147,6 +141,6 @@ async function processJob (rows) {
     } // end for
 
   } catch (error) {
-    logger.error('worker5.js', [ error.message, error.stack ])
+    logger.error('WORKER 5', [ error.message, error.stack ])
   }
 }

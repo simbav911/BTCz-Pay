@@ -24,7 +24,7 @@ let rpc = url.parse(config.bitcoind.rpc)
 rpc.timeout = 5000
 let client = jayson.client.http(rpc)
 
-function importaddress (address) {
+exports.importaddress = function (address) {
   return client.request('importaddress', [address, address, false])
 }
 
@@ -66,19 +66,14 @@ exports.decodeRawTransaction = function (hex) {
 
 
 
-function getblockchaininfo () {
+exports.getblockchaininfo = function () {
   return client.request('getblockchaininfo', [])
 }
 
-function listunspent (address) {
+exports.listunspent = function (address) {
   return client.request('listunspent', [0, 9999999, [address]])
 }
 
-function broadcastTransaction (tx) {
+exports.broadcastTransaction = function (tx) {
   return client.request('sendrawtransaction', [tx])
 }
-
-exports.importaddress = importaddress
-exports.getblockchaininfo = getblockchaininfo
-exports.listunspent = listunspent
-exports.broadcastTransaction = broadcastTransaction
