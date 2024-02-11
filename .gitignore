@@ -2,3 +2,6 @@ node_modules
 config.js
 qr/
 logs/
+[url "https://"]
+	insteadOf = git://
+        insteadOf = ssh://
