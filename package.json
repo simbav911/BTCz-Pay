@@ -3,7 +3,7 @@
   "version": "0.2.1",
   "description": "Self-hosted BitcoinZ payment gateway",
   "main": "btcz-pay.js",
-  "repository": "https://github.com/MarceluCH/BTCz-Pay",
+  "repository": "https://github.com/simbav911/BTCz-Pay",
   "license": "MIT",
   "author": "Marcelus",
   "scripts": {
@@ -12,7 +12,7 @@
     "clean": "rm -r -f ./node_modules/ && rm -r -f ./qr/"
   },
   "dependencies": {
-    "bitcore-lib-btcz": "https://github.com/bitcoinz-dev-tools/bitcore-lib-btcz.git",
+    "bitcore-lib-btcz": "https://github.com/simbav911/bitcore-lib-btcz.git",
     "body-parser": "^1.19.0",
     "chai": "^4.3.4",
     "ejs": "^3.1.6",
